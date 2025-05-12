@@ -1,6 +1,6 @@
 import csv
 from typing import Optional, List
-from models import Streamer, StreamerWithID, UpdatedStreamer
+from models_streamers import Streamer, StreamerWithID, UpdatedStreamer
 
 FILENAME = "streamers.csv"
 FIELDS = ["id", "name", "game", "follower_count", "avg_viewers"]  # Eliminado uses_makeup
