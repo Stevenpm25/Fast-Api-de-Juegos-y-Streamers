@@ -1,6 +1,6 @@
 import csv
 from typing import List, Optional
-from models_game import Game, GameWithID, UpdatedGame
+from models_games import Game, GameWithID, UpdatedGame
 
 FILENAME_GAMES = "games.csv"
 FIELDS_GAMES = ["id", "date", "game", "hours_watched", "peak_viewers", "peak_channels"]

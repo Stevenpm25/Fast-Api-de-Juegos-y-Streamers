@@ -1,1 +1,1501 @@
 id,name,game,follower_count,avg_viewers
+1,Rubius,Valorant,6079825,2812
+2,Asmongold,GTA V,9654278,35803
+3,Shroud,GTA V,9144183,5298
+4,Asmongold,Apex Legends,3524970,42524
+5,Asmongold,Counter-Strike,6705857,48571
+6,xQc,League of Legends,5033750,49635
+7,Pokimane,Counter-Strike,4590554,30352
+8,Pokimane,Call of Duty,6648584,35670
+9,Asmongold,GTA V,6586735,48740
+10,Summit1G,World of Warcraft,1579353,13377
+11,Myth,League of Legends,7073562,46501
+12,Tfue,Counter-Strike,3497734,37162
+13,DrDisrespect,GTA V,7887662,5079
+14,xQc,Minecraft,9996130,23958
+15,Pokimane,Dota 2,3595177,4941
+16,DrDisrespect,Valorant,4232432,14912
+17,Rubius,Apex Legends,372219,21609
+18,Pokimane,Apex Legends,984397,40586
+19,Asmongold,Apex Legends,4563892,13285
+20,DrDisrespect,Minecraft,8018924,27186
+21,Ninja,Counter-Strike,2366923,19445
+22,xQc,Valorant,2241100,38080
+23,xQc,League of Legends,4815848,38418
+24,xQc,Minecraft,3273590,41440
+25,Tfue,Dota 2,7138706,39603
+26,Rubius,Fortnite,3872409,30612
+27,Tfue,Call of Duty,4881472,11146
+28,Rubius,Valorant,5639831,43827
+29,Rubius,World of Warcraft,9775025,47829
+30,Rubius,Call of Duty,892403,7015
+31,DrDisrespect,Call of Duty,683516,14028
+32,Shroud,Counter-Strike,8235660,46446
+33,DrDisrespect,Fortnite,4543825,29485
+34,Pokimane,Call of Duty,5820927,35836
+35,Myth,Call of Duty,9007526,11267
+36,DrDisrespect,World of Warcraft,8400668,11574
+37,Summit1G,GTA V,2779830,13765
+38,Tfue,Fortnite,1928042,30339
+39,xQc,GTA V,2756904,11219
+40,Rubius,World of Warcraft,5238229,21870
+41,DrDisrespect,Minecraft,4274224,18825
+42,Ninja,World of Warcraft,7705315,10253
+43,xQc,Call of Duty,5258484,16305
+44,Rubius,Dota 2,237224,2302
+45,Summit1G,Counter-Strike,2480817,42417
+46,Myth,Apex Legends,3596888,33927
+47,Asmongold,Call of Duty,4934286,16442
+48,Ninja,Minecraft,5033345,25450
+49,Rubius,Fortnite,8275722,41918
+50,Shroud,Counter-Strike,9066049,17262
+51,Rubius,GTA V,7130201,13141
+52,Ninja,League of Legends,2834961,10554
+53,Summit1G,Minecraft,196272,4699
+54,Tfue,Counter-Strike,9623006,48347
+55,Myth,Dota 2,4139814,42201
+56,Summit1G,Apex Legends,4294258,45289
+57,Pokimane,Call of Duty,5122586,19704
+58,Ninja,Dota 2,7580880,2278
+59,DrDisrespect,Dota 2,6827996,48331
+60,DrDisrespect,World of Warcraft,6518015,40774
+61,Ninja,Valorant,4231658,24693
+62,Ninja,League of Legends,8349103,24564
+63,Rubius,League of Legends,3646207,47443
+64,Pokimane,GTA V,7046626,23254
+65,Asmongold,Fortnite,9706420,17060
+66,Pokimane,League of Legends,2792026,25773
+67,Rubius,Counter-Strike,3976737,43736
+68,Rubius,Minecraft,4156082,47038
+69,Summit1G,Valorant,3660066,20346
+70,Rubius,Valorant,7140621,36344
+71,Asmongold,Counter-Strike,6496183,32781
+72,xQc,Fortnite,2275162,37029
+73,Pokimane,Call of Duty,7490819,24324
+74,Shroud,Dota 2,2135849,44387
+75,Summit1G,Dota 2,7934926,47763
+76,Myth,World of Warcraft,7008950,39808
+77,DrDisrespect,Call of Duty,7618930,2407
+78,Rubius,Fortnite,5356102,28722
+79,Pokimane,League of Legends,8164520,47919
+80,Pokimane,Fortnite,7651960,13863
+81,Tfue,Counter-Strike,8171309,4667
+82,xQc,Dota 2,8628525,28048
+83,Shroud,Minecraft,9476607,29097
+84,Asmongold,World of Warcraft,8300063,20518
+85,Shroud,Minecraft,6290359,32330
+86,Asmongold,Minecraft,3161795,30953
+87,xQc,World of Warcraft,7406238,48958
+88,Pokimane,GTA V,6221470,37594
+89,Asmongold,Dota 2,4050590,32631
+90,xQc,Valorant,4920539,35613
+91,Shroud,Minecraft,6153598,30282
+92,Shroud,Counter-Strike,5207454,24420
+93,xQc,Call of Duty,2865756,10873
+94,Asmongold,Minecraft,4109173,35044
+95,DrDisrespect,Valorant,5311559,46646
+96,Asmongold,Counter-Strike,3375482,16619
+97,DrDisrespect,Minecraft,7839909,20204
+98,xQc,Valorant,9748924,9634
+99,Pokimane,Call of Duty,1178084,32928
+100,Shroud,Minecraft,5244971,34291
+101,DrDisrespect,GTA V,7677895,48817
+102,Myth,Fortnite,3494643,42091
+103,Rubius,Valorant,5263228,15732
+104,Shroud,GTA V,2767396,28730
+105,Ninja,World of Warcraft,6519608,26916
+106,xQc,Apex Legends,1407924,16852
+107,Pokimane,Fortnite,9150176,43373
+108,xQc,Call of Duty,4687333,21797
+109,Ninja,Valorant,4021513,776
+110,Tfue,Fortnite,2884711,34426
+111,Shroud,Valorant,2421041,31077
+112,Asmongold,Dota 2,9689489,44795
+113,DrDisrespect,Counter-Strike,2890584,16462
+114,Summit1G,Valorant,1067485,37182
+115,Tfue,Call of Duty,5201639,46405
+116,DrDisrespect,Call of Duty,5414272,39902
+117,Rubius,Fortnite,2772585,31801
+118,Pokimane,Minecraft,8825143,24505
+119,Rubius,Dota 2,1249040,42890
+120,Shroud,GTA V,4592671,26662
+121,xQc,Minecraft,7349566,3531
+122,xQc,Fortnite,4044727,7872
+123,Summit1G,Dota 2,9618962,22945
+124,Rubius,Minecraft,5136806,23608
+125,Tfue,Fortnite,8202183,7754
+126,Summit1G,Minecraft,4015767,29692
+127,Myth,Apex Legends,8237968,43103
+128,Ninja,Minecraft,6994206,5617
+129,DrDisrespect,League of Legends,3818662,46698
+130,Rubius,Call of Duty,9330159,43863
+131,Pokimane,World of Warcraft,1987131,30253
+132,Ninja,World of Warcraft,2885199,22621
+133,Asmongold,GTA V,1256822,34295
+134,Rubius,Minecraft,941207,42537
+135,Shroud,Minecraft,2933740,31767
+136,Myth,Apex Legends,4318539,38645
+137,Shroud,GTA V,5514744,8275
+138,Shroud,Call of Duty,1324399,27072
+139,Shroud,Call of Duty,3566460,20120
+140,xQc,Call of Duty,3940904,27837
+141,Tfue,Counter-Strike,5885722,45494
+142,DrDisrespect,Valorant,2647610,10135
+143,Rubius,World of Warcraft,1620022,33795
+144,Pokimane,Apex Legends,2649592,16425
+145,Tfue,Minecraft,9782906,28260
+146,Ninja,World of Warcraft,1113034,48887
+147,Shroud,GTA V,8827281,5775
+148,Shroud,League of Legends,7755243,14017
+149,Ninja,Apex Legends,6892532,8544
+150,Ninja,World of Warcraft,1403074,36529
+151,xQc,Minecraft,6395588,23811
+152,xQc,World of Warcraft,3590933,40206
+153,DrDisrespect,Valorant,3519789,8014
+154,Myth,Counter-Strike,9684991,30923
+155,Summit1G,World of Warcraft,1254157,6745
+156,Asmongold,Call of Duty,9079333,3127
+157,Pokimane,Counter-Strike,6816094,14159
+158,Myth,Call of Duty,5637457,45846
+159,Rubius,Dota 2,4000423,40814
+160,Asmongold,Minecraft,6124240,30543
+161,Myth,GTA V,577305,47248
+162,Ninja,World of Warcraft,2859791,36181
+163,DrDisrespect,Fortnite,3788455,47909
+164,Rubius,Apex Legends,985754,2890
+165,Myth,Counter-Strike,2509203,41393
+166,DrDisrespect,Dota 2,4258888,19578
+167,Asmongold,Counter-Strike,1492400,35452
+168,Ninja,World of Warcraft,9721513,28971
+169,Asmongold,Apex Legends,8788751,2404
+170,xQc,Valorant,7500115,36995
+171,Ninja,Minecraft,958426,24470
+172,Tfue,Call of Duty,3087047,40416
+173,Tfue,League of Legends,5199019,22906
+174,DrDisrespect,GTA V,5406627,24829
+175,Summit1G,Counter-Strike,5556393,35666
+176,Summit1G,GTA V,699314,4473
+177,Asmongold,GTA V,1075758,39637
+178,Rubius,World of Warcraft,3036943,21955
+179,Rubius,Minecraft,1601721,49716
+180,Summit1G,Call of Duty,8750626,19275
+181,Ninja,Minecraft,6682669,40553
+182,DrDisrespect,League of Legends,9246612,23694
+183,Pokimane,Counter-Strike,9555705,40236
+184,Asmongold,League of Legends,5356081,42822
+185,Myth,Valorant,6303084,36134
+186,Shroud,Fortnite,1998785,25242
+187,Tfue,Counter-Strike,2300758,6681
+188,DrDisrespect,Counter-Strike,2123379,36208
+189,Rubius,Call of Duty,1433326,46861
+190,Rubius,GTA V,440261,36477
+191,Tfue,Minecraft,8121433,22085
+192,DrDisrespect,Dota 2,552631,6195
+193,Pokimane,Counter-Strike,4883034,34495
+194,DrDisrespect,Fortnite,8490506,14861
+195,Shroud,Apex Legends,4956635,11153
+196,Asmongold,League of Legends,3601901,38289
+197,xQc,Apex Legends,1218533,41097
+198,DrDisrespect,Counter-Strike,8378331,8471
+199,Pokimane,Apex Legends,2767835,30683
+200,Tfue,Dota 2,9032463,8442
+201,Asmongold,Fortnite,298879,28550
+202,Shroud,Counter-Strike,5973061,3511
+203,Ninja,World of Warcraft,8061050,7571
+204,Tfue,Dota 2,4581904,36310
+205,Myth,Valorant,5413818,19796
+206,Ninja,Counter-Strike,5738751,6956
+207,Tfue,Minecraft,5661812,2876
+208,Tfue,League of Legends,9206624,11570
+209,DrDisrespect,League of Legends,887999,30188
+210,xQc,Valorant,9540147,10645
+211,Myth,Dota 2,6863744,18243
+212,Tfue,Apex Legends,9106306,8605
+213,DrDisrespect,GTA V,923125,14139
+214,xQc,Fortnite,901764,10742
+215,Tfue,GTA V,3105016,41404
+216,Summit1G,Minecraft,4894373,21781
+217,Tfue,GTA V,1643582,32808
+218,Rubius,Minecraft,267075,41650
+219,DrDisrespect,Apex Legends,2787685,39299
+220,Summit1G,Call of Duty,9436706,22608
+221,Asmongold,League of Legends,4131200,19701
+222,DrDisrespect,Valorant,5357595,7421
+223,Tfue,Apex Legends,488628,39534
+224,DrDisrespect,Call of Duty,6720078,23579
+225,Ninja,Valorant,6700054,22796
+226,DrDisrespect,Fortnite,8044824,5062
+227,Ninja,World of Warcraft,9708506,17755
+228,Summit1G,Counter-Strike,3120164,33263
+229,xQc,Counter-Strike,994635,2225
+230,Shroud,Apex Legends,2303941,19106
+231,Summit1G,Valorant,663314,27324
+232,Ninja,Call of Duty,9539063,30951
+233,Asmongold,Valorant,455594,20054
+234,Tfue,Fortnite,4499807,36611
+235,Summit1G,Minecraft,4880952,48530
+236,Pokimane,Counter-Strike,6738400,28462
+237,Myth,Counter-Strike,7812666,31547
+238,Tfue,World of Warcraft,3855899,49407
+239,Summit1G,Minecraft,5740981,5898
+240,Ninja,Minecraft,9849773,35354
+241,Myth,Call of Duty,3479732,9585
+242,Pokimane,Apex Legends,6006888,42321
+243,Ninja,Counter-Strike,5377622,49197
+244,Rubius,World of Warcraft,6811883,28939
+245,DrDisrespect,GTA V,4112282,11844
+246,Pokimane,GTA V,1051104,40043
+247,Myth,Call of Duty,9394207,11835
+248,Ninja,Call of Duty,3059216,21039
+249,Myth,Apex Legends,4242826,44787
+250,Asmongold,GTA V,1902415,48496
+251,xQc,GTA V,9812825,15530
+252,Asmongold,Call of Duty,2917645,46249
+253,xQc,Fortnite,1092187,2952
+254,Shroud,Dota 2,2716479,22817
+255,Pokimane,Counter-Strike,1722384,32443
+256,Ninja,Fortnite,5981587,4756
+257,Tfue,Apex Legends,6596229,48493
+258,DrDisrespect,Minecraft,6298728,5158
+259,Ninja,Fortnite,6699572,7964
+260,Pokimane,Dota 2,2158638,38193
+261,Summit1G,GTA V,3789165,24029
+262,Asmongold,Valorant,6142674,48546
+263,xQc,Call of Duty,2979864,43624
+264,Ninja,Call of Duty,2630757,2148
+265,Summit1G,Fortnite,8889268,39228
+266,xQc,GTA V,111679,2631
+267,Ninja,Dota 2,2372147,31279
+268,xQc,GTA V,6188506,22195
+269,Ninja,Apex Legends,6677483,38008
+270,Rubius,Counter-Strike,9376144,3800
+271,xQc,Apex Legends,8539923,23898
+272,DrDisrespect,GTA V,648399,49984
+273,Myth,World of Warcraft,5296767,2360
+274,DrDisrespect,Apex Legends,7936111,33824
+275,xQc,League of Legends,6309571,30889
+276,Summit1G,Valorant,5245720,23368
+277,Tfue,Dota 2,5030186,30825
+278,Ninja,Valorant,3226556,31944
+279,Shroud,Call of Duty,1998845,18465
+280,Summit1G,GTA V,8896517,43449
+281,Myth,Dota 2,1915754,12597
+282,DrDisrespect,World of Warcraft,8106422,34259
+283,Myth,Call of Duty,2345880,20820
+284,Shroud,Dota 2,7579185,25239
+285,Tfue,World of Warcraft,5664983,7063
+286,xQc,Dota 2,4466784,16403
+287,DrDisrespect,Fortnite,6808659,34493
+288,Ninja,Minecraft,9131326,35310
+289,Shroud,GTA V,2479760,17076
+290,Asmongold,League of Legends,9230501,40892
+291,Shroud,Fortnite,3380104,821
+292,DrDisrespect,Dota 2,901072,14476
+293,Ninja,Apex Legends,1898780,11663
+294,Tfue,GTA V,6271346,6486
+295,Tfue,GTA V,3667632,46303
+296,Asmongold,Counter-Strike,5620006,17637
+297,Shroud,Valorant,114693,19336
+298,Shroud,Fortnite,7254491,17782
+299,xQc,Minecraft,5332240,30932
+300,Asmongold,Apex Legends,1317234,7811
+301,xQc,Call of Duty,3872521,17612
+302,Asmongold,Counter-Strike,7810137,31179
+303,Myth,Call of Duty,9472851,19072
+304,Myth,Valorant,7398285,16527
+305,Asmongold,Minecraft,9168984,19373
+306,xQc,Minecraft,5578948,7686
+307,Myth,Valorant,3480494,43187
+308,Ninja,League of Legends,8854316,25382
+309,Summit1G,Counter-Strike,6059504,11876
+310,Asmongold,Call of Duty,7661414,49744
+311,Asmongold,World of Warcraft,4264254,6684
+312,Summit1G,Valorant,2734043,26555
+313,Rubius,Minecraft,650011,35742
+314,xQc,World of Warcraft,2595946,10284
+315,Shroud,Dota 2,3255448,49380
+316,Shroud,Fortnite,4743469,15680
+317,Pokimane,Valorant,2428460,1361
+318,Tfue,League of Legends,3546795,28223
+319,Asmongold,League of Legends,3528535,36016
+320,Asmongold,Minecraft,4738798,26751
+321,DrDisrespect,Fortnite,3464269,9269
+322,Ninja,Call of Duty,6730173,23576
+323,Asmongold,World of Warcraft,4143157,1079
+324,Pokimane,League of Legends,1917108,17329
+325,Tfue,Call of Duty,588305,17494
+326,xQc,Valorant,9550871,46398
+327,Ninja,Apex Legends,2314112,44723
+328,Myth,Counter-Strike,1427468,3052
+329,Rubius,GTA V,1893644,21430
+330,xQc,Apex Legends,8160348,6768
+331,Rubius,GTA V,5181871,43368
+332,Tfue,League of Legends,8051887,4573
+333,Asmongold,Counter-Strike,2902048,2908
+334,DrDisrespect,World of Warcraft,5967386,24608
+335,Shroud,Apex Legends,9352572,17457
+336,Tfue,Call of Duty,3489378,31492
+337,xQc,World of Warcraft,4721315,27869
+338,DrDisrespect,GTA V,9492130,29068
+339,Ninja,Apex Legends,8609786,46841
+340,Rubius,Apex Legends,9039114,36711
+341,xQc,Valorant,358848,8556
+342,Tfue,GTA V,5916491,37487
+343,Summit1G,League of Legends,3430821,32378
+344,DrDisrespect,Call of Duty,671412,5469
+345,Asmongold,League of Legends,3919615,38522
+346,Pokimane,World of Warcraft,8509140,26173
+347,Asmongold,Counter-Strike,7511426,16029
+348,Rubius,Fortnite,7893118,19464
+349,Summit1G,Call of Duty,1893951,9998
+350,Rubius,Counter-Strike,5956538,49314
+351,Rubius,League of Legends,2722976,31877
+352,Rubius,Call of Duty,4722007,36701
+353,Shroud,Fortnite,7690541,31415
+354,Tfue,Valorant,5140666,42028
+355,Pokimane,Apex Legends,658294,38042
+356,Summit1G,Valorant,9520106,44141
+357,Shroud,League of Legends,8936875,39581
+358,Ninja,GTA V,3266073,40799
+359,DrDisrespect,GTA V,4004958,15230
+360,Shroud,Minecraft,7752746,42568
+361,DrDisrespect,GTA V,6019718,1642
+362,Myth,Fortnite,2618245,43035
+363,Summit1G,Valorant,2681807,4271
+364,Tfue,World of Warcraft,7160896,31746
+365,Rubius,World of Warcraft,513135,30368
+366,Ninja,Apex Legends,9146017,8506
+367,Pokimane,League of Legends,8617177,30164
+368,Pokimane,Fortnite,7897940,6459
+369,Asmongold,League of Legends,8379142,22766
+370,Asmongold,Counter-Strike,5638776,21051
+371,Rubius,League of Legends,8658219,33086
+372,Asmongold,GTA V,7709097,10783
+373,Summit1G,League of Legends,8865177,10069
+374,Summit1G,World of Warcraft,7426924,31601
+375,DrDisrespect,Minecraft,7606221,28318
+376,Rubius,Apex Legends,3772750,11492
+377,Myth,Minecraft,7054113,42611
+378,Rubius,Fortnite,4252036,41289
+379,Tfue,League of Legends,2214760,2981
+380,Ninja,Dota 2,5614286,32650
+381,Myth,Fortnite,3994046,26113
+382,DrDisrespect,Call of Duty,5798100,11062
+383,Pokimane,Dota 2,6606967,26981
+384,Ninja,Counter-Strike,3663638,24622
+385,Asmongold,World of Warcraft,1533696,13467
+386,Shroud,Minecraft,3159517,40631
+387,Rubius,League of Legends,4166972,48722
+388,Tfue,GTA V,5988933,25375
+389,xQc,Minecraft,2191921,41095
+390,DrDisrespect,Dota 2,1189361,3628
+391,xQc,Call of Duty,6508078,23961
+392,Tfue,Fortnite,2442752,15076
+393,Asmongold,GTA V,639878,49072
+394,Pokimane,Call of Duty,3681715,17644
+395,Ninja,League of Legends,738947,13905
+396,Myth,Fortnite,6816134,32875
+397,Asmongold,Fortnite,3562176,16496
+398,Ninja,GTA V,8698426,2811
+399,Pokimane,Minecraft,3776309,25155
+400,DrDisrespect,Counter-Strike,4581418,45017
+401,DrDisrespect,Valorant,7392963,31131
+402,Tfue,League of Legends,4377138,26413
+403,Rubius,GTA V,1522005,17991
+404,DrDisrespect,World of Warcraft,8738280,48405
+405,Myth,Dota 2,8572354,22533
+406,Shroud,League of Legends,4286216,44378
+407,xQc,League of Legends,3040272,46144
+408,Asmongold,Fortnite,1981180,31538
+409,Shroud,League of Legends,7219472,3703
+410,Rubius,Minecraft,8230304,48604
+411,Ninja,Minecraft,7322453,5407
+412,Tfue,Apex Legends,2231992,670
+413,Rubius,World of Warcraft,4513006,41034
+414,xQc,GTA V,978036,26376
+415,Asmongold,League of Legends,4811497,25411
+416,Rubius,Dota 2,9206198,39078
+417,Tfue,Dota 2,6880422,1003
+418,xQc,Call of Duty,6748916,3127
+419,Pokimane,Dota 2,9957359,40426
+420,Shroud,Minecraft,1523150,3916
+421,Shroud,GTA V,9995303,20992
+422,Rubius,Call of Duty,3171512,45493
+423,Summit1G,GTA V,3114112,42151
+424,Ninja,Apex Legends,1722756,7408
+425,Myth,Dota 2,3659772,34150
+426,Asmongold,Fortnite,7834838,37336
+427,Asmongold,Valorant,3668112,28027
+428,Ninja,Fortnite,6310019,36747
+429,Summit1G,Minecraft,3933025,41259
+430,Shroud,World of Warcraft,5465812,8164
+431,Myth,World of Warcraft,9831497,19336
+432,Asmongold,Call of Duty,1027734,35290
+433,DrDisrespect,Minecraft,3434202,3777
+434,Asmongold,Valorant,4809350,36591
+435,Summit1G,Fortnite,6653806,37906
+436,DrDisrespect,Fortnite,6107615,42289
+437,Asmongold,Dota 2,2456954,40036
+438,Myth,Minecraft,5187014,17820
+439,Asmongold,World of Warcraft,4203122,4805
+440,xQc,League of Legends,9366732,44378
+441,Rubius,League of Legends,9574945,31090
+442,Shroud,Valorant,1041095,47720
+443,Myth,Dota 2,4266183,19161
+444,Asmongold,League of Legends,400347,13866
+445,Asmongold,GTA V,1942919,25339
+446,Shroud,GTA V,5705894,17081
+447,Asmongold,League of Legends,3833139,15543
+448,Ninja,Fortnite,5976957,5403
+449,Asmongold,World of Warcraft,2854496,973
+450,Summit1G,Counter-Strike,4412103,23179
+451,Summit1G,Valorant,8385663,18104
+452,Myth,Fortnite,6753439,46158
+453,Myth,GTA V,1825627,1382
+454,Shroud,Minecraft,3156408,9577
+455,Rubius,World of Warcraft,8107233,25105
+456,Asmongold,World of Warcraft,2478919,12539
+457,Summit1G,Apex Legends,7950227,17223
+458,Summit1G,World of Warcraft,1097281,41326
+459,Ninja,League of Legends,4634029,42111
+460,Shroud,Counter-Strike,8603214,3009
+461,Myth,Minecraft,5793976,21548
+462,Pokimane,Apex Legends,8752292,23729
+463,Ninja,Minecraft,1966027,1396
+464,Myth,Call of Duty,3826777,21419
+465,Shroud,GTA V,2868214,40880
+466,Summit1G,League of Legends,4243849,6742
+467,Tfue,Valorant,1098400,44668
+468,DrDisrespect,Fortnite,8401416,26330
+469,Myth,Fortnite,4002863,2559
+470,Myth,Minecraft,1905736,32669
+471,Summit1G,Dota 2,4480806,33326
+472,xQc,World of Warcraft,1470032,19284
+473,Tfue,League of Legends,9686439,27136
+474,Ninja,League of Legends,4508957,39460
+475,DrDisrespect,World of Warcraft,8322912,4658
+476,Summit1G,GTA V,3293336,7140
+477,Shroud,Minecraft,1615592,8906
+478,Pokimane,GTA V,3912702,6390
+479,Tfue,Valorant,2070430,49359
+480,Pokimane,World of Warcraft,3712976,21430
+481,Rubius,Dota 2,3702974,9977
+482,Summit1G,Dota 2,7107404,10030
+483,xQc,Valorant,3537365,28159
+484,Pokimane,World of Warcraft,9816675,35243
+485,Tfue,World of Warcraft,5056465,1659
+486,Tfue,Fortnite,3829069,8397
+487,Shroud,Fortnite,2473939,11643
+488,Tfue,GTA V,6205069,12421
+489,Asmongold,World of Warcraft,5463697,42487
+490,xQc,Dota 2,8828750,47854
+491,Myth,Call of Duty,6196260,25091
+492,Rubius,Valorant,5072585,14480
+493,Shroud,World of Warcraft,5988994,26044
+494,Asmongold,Valorant,8535718,48503
+495,DrDisrespect,Fortnite,8674137,24036
+496,Asmongold,Apex Legends,2232148,19735
+497,Asmongold,Valorant,9812856,26942
+498,Summit1G,Counter-Strike,5451771,31097
+499,Summit1G,Counter-Strike,986656,33195
+500,Summit1G,Valorant,2270891,39687
+501,Shroud,GTA V,5753454,4660
+502,xQc,Valorant,5855453,27906
+503,Asmongold,Apex Legends,4285904,21588
+504,Myth,Apex Legends,990144,46344
+505,Asmongold,League of Legends,6687001,39832
+506,Asmongold,Valorant,2980634,17489
+507,Tfue,Fortnite,2109261,45053
+508,xQc,Valorant,8104348,28824
+509,Ninja,Minecraft,4053596,24354
+510,Summit1G,Fortnite,4318602,44968
+511,Summit1G,GTA V,9665220,21897
+512,DrDisrespect,Dota 2,3187772,10259
+513,Shroud,GTA V,1788827,2600
+514,Pokimane,Dota 2,8217500,36061
+515,Summit1G,Minecraft,583552,39115
+516,Ninja,Apex Legends,7825185,10417
+517,Ninja,League of Legends,1908917,4066
+518,Shroud,Counter-Strike,3772781,9905
+519,Asmongold,Fortnite,8402508,9462
+520,Pokimane,Call of Duty,6628302,24721
+521,Shroud,Valorant,2847233,16269
+522,DrDisrespect,Dota 2,4368433,22793
+523,Myth,Fortnite,1501156,29099
+524,Myth,Valorant,8201110,15280
+525,Shroud,Apex Legends,7961812,44226
+526,Myth,League of Legends,4860610,49806
+527,Ninja,League of Legends,4443598,43559
+528,Myth,Counter-Strike,8598131,17545
+529,Pokimane,Dota 2,9877923,3086
+530,Tfue,GTA V,4642940,13250
+531,DrDisrespect,Fortnite,6615631,3525
+532,Summit1G,Dota 2,5918591,25933
+533,Tfue,Valorant,279113,6655
+534,Rubius,Minecraft,1454164,6342
+535,Myth,Dota 2,8092892,30568
+536,Rubius,League of Legends,6176963,33861
+537,Shroud,Dota 2,1103370,21722
+538,DrDisrespect,Dota 2,5427974,4864
+539,Summit1G,Fortnite,6195782,23789
+540,Rubius,Minecraft,4802262,22403
+541,Pokimane,Counter-Strike,9205585,41563
+542,xQc,Valorant,881873,48224
+543,Shroud,World of Warcraft,7676637,30723
+544,Rubius,Apex Legends,3366825,32044
+545,Myth,Dota 2,3416986,30868
+546,Pokimane,Call of Duty,7085052,8030
+547,xQc,Valorant,8222541,36544
+548,Pokimane,Minecraft,8976139,15605
+549,Summit1G,Call of Duty,9646549,7168
+550,Tfue,League of Legends,9996476,14116
+551,Summit1G,Fortnite,8969766,29032
+552,Summit1G,GTA V,5116997,12048
+553,Asmongold,World of Warcraft,8993629,42456
+554,Myth,Apex Legends,6630840,33631
+555,Shroud,Counter-Strike,5257550,21004
+556,Asmongold,Counter-Strike,5774271,40228
+557,Pokimane,GTA V,2971111,49757
+558,Myth,Dota 2,4968757,4799
+559,Rubius,Minecraft,1735565,49752
+560,Pokimane,Call of Duty,9603876,18779
+561,Asmongold,GTA V,8832193,6177
+562,Summit1G,Minecraft,7461154,11837
+563,Asmongold,League of Legends,4429685,28269
+564,Myth,League of Legends,849669,34209
+565,Asmongold,World of Warcraft,1628992,40697
+566,Summit1G,World of Warcraft,4104921,45543
+567,Ninja,Minecraft,1264178,15723
+568,DrDisrespect,Valorant,635604,23564
+569,Shroud,Counter-Strike,1672830,39442
+570,Pokimane,Fortnite,2912571,3503
+571,DrDisrespect,Dota 2,1980199,3342
+572,Myth,Call of Duty,9553927,41324
+573,Summit1G,Fortnite,937651,27342
+574,Ninja,Valorant,5659590,49619
+575,Tfue,Call of Duty,5110164,13301
+576,Asmongold,Counter-Strike,6536308,3837
+577,Rubius,Counter-Strike,2296889,29412
+578,Summit1G,Call of Duty,6303960,47298
+579,Shroud,Counter-Strike,6708950,26072
+580,Myth,Dota 2,7708279,19184
+581,Myth,Call of Duty,699956,8724
+582,Pokimane,Fortnite,3802700,24283
+583,Asmongold,GTA V,3431412,46184
+584,Myth,Apex Legends,6179134,36921
+585,Summit1G,Fortnite,504310,13800
+586,Rubius,Valorant,4350550,27756
+587,Asmongold,League of Legends,2304116,47366
+588,Shroud,Call of Duty,669276,34826
+589,Summit1G,Fortnite,9080027,18125
+590,Tfue,Call of Duty,6933155,9165
+591,Pokimane,World of Warcraft,9638734,12619
+592,Rubius,World of Warcraft,8210619,40888
+593,Rubius,GTA V,4233520,7465
+594,Myth,Apex Legends,9326403,27564
+595,Ninja,World of Warcraft,343124,36544
+596,Tfue,Fortnite,6001310,20275
+597,DrDisrespect,World of Warcraft,8907398,18586
+598,Summit1G,Counter-Strike,6028638,47878
+599,Ninja,Apex Legends,9047823,31076
+600,Shroud,World of Warcraft,9473937,31372
+601,Tfue,Valorant,6554071,7786
+602,Rubius,Apex Legends,4611109,20702
+603,Myth,Minecraft,7952174,25505
+604,Myth,GTA V,718983,37892
+605,Rubius,Minecraft,5527127,45293
+606,Rubius,Call of Duty,5679867,18850
+607,Pokimane,Fortnite,7952383,7840
+608,xQc,League of Legends,9901311,36081
+609,Ninja,Counter-Strike,7020751,29586
+610,Asmongold,Dota 2,7374504,10979
+611,Summit1G,Dota 2,3486582,46721
+612,Asmongold,League of Legends,5203758,40407
+613,Tfue,Apex Legends,451551,47688
+614,Myth,Apex Legends,5151690,2336
+615,Shroud,Apex Legends,8048474,49788
+616,Asmongold,Fortnite,178551,29099
+617,Asmongold,League of Legends,1948683,881
+618,DrDisrespect,GTA V,2278510,46449
+619,Rubius,Apex Legends,4546429,43200
+620,xQc,Fortnite,3797642,11100
+621,xQc,Call of Duty,7637881,23452
+622,Shroud,Fortnite,3607968,26288
+623,Myth,Minecraft,9766704,33278
+624,Rubius,World of Warcraft,3550200,16408
+625,Asmongold,Dota 2,1624177,31168
+626,xQc,Counter-Strike,8697727,27293
+627,Asmongold,Counter-Strike,6982038,6651
+628,Summit1G,Call of Duty,3058617,7789
+629,Pokimane,Call of Duty,1433957,20579
+630,xQc,Fortnite,4432632,9951
+631,Tfue,Call of Duty,5769010,40545
+632,Asmongold,Fortnite,143199,24274
+633,xQc,GTA V,6700095,33167
+634,DrDisrespect,Dota 2,3230353,49260
+635,Summit1G,Counter-Strike,8026288,39707
+636,xQc,Dota 2,1504979,21168
+637,Myth,Call of Duty,8134900,42862
+638,Ninja,League of Legends,3901621,28867
+639,Myth,Call of Duty,255735,10956
+640,Asmongold,Apex Legends,4146761,9744
+641,Summit1G,Minecraft,1008923,19425
+642,DrDisrespect,Counter-Strike,9931891,26220
+643,Shroud,League of Legends,2490414,4093
+644,Rubius,Dota 2,2521827,28470
+645,Tfue,Apex Legends,5064191,12870
+646,Tfue,League of Legends,1532681,23844
+647,Myth,League of Legends,7333676,13942
+648,Myth,Call of Duty,5909315,27766
+649,Summit1G,Fortnite,2828522,45712
+650,Asmongold,Fortnite,7567725,46263
+651,Summit1G,Counter-Strike,1647991,5162
+652,Shroud,Valorant,4770797,1433
+653,Shroud,GTA V,4637926,29114
+654,Ninja,GTA V,9338206,32139
+655,Ninja,Counter-Strike,5228769,20170
+656,Tfue,Call of Duty,2249556,4682
+657,Ninja,World of Warcraft,4944233,11720
+658,Rubius,World of Warcraft,7632391,48746
+659,Asmongold,Apex Legends,3397943,27493
+660,Pokimane,Counter-Strike,6472760,25355
+661,Shroud,Call of Duty,6212773,35427
+662,Asmongold,Dota 2,2494774,21614
+663,DrDisrespect,Fortnite,369022,17343
+664,xQc,Minecraft,6702212,1632
+665,Asmongold,Minecraft,6084108,25636
+666,Myth,Call of Duty,1169956,17773
+667,Shroud,World of Warcraft,2372514,28750
+668,Pokimane,Valorant,2891894,24073
+669,Tfue,League of Legends,3844891,2657
+670,Ninja,League of Legends,1019867,8397
+671,DrDisrespect,League of Legends,6140692,37284
+672,Tfue,League of Legends,9710709,28396
+673,Shroud,Apex Legends,1178580,41463
+674,xQc,Dota 2,1743454,34609
+675,xQc,Minecraft,9037854,36255
+676,xQc,Apex Legends,5164665,10957
+677,Rubius,GTA V,6640678,18099
+678,Rubius,Valorant,2091159,44710
+679,Pokimane,GTA V,948194,32415
+680,Tfue,GTA V,5504612,38735
+681,Rubius,World of Warcraft,2817391,40983
+682,DrDisrespect,Call of Duty,7473862,29386
+683,Myth,World of Warcraft,5813968,33344
+684,xQc,Call of Duty,4624049,24195
+685,xQc,GTA V,2369725,25785
+686,Summit1G,GTA V,5569069,25080
+687,Asmongold,Apex Legends,8931936,4178
+688,xQc,Call of Duty,3618589,3730
+689,Ninja,World of Warcraft,2714387,11940
+690,Summit1G,Apex Legends,3159410,16765
+691,Asmongold,Apex Legends,7859894,5326
+692,Tfue,Valorant,3807829,26665
+693,Pokimane,Apex Legends,4715210,36412
+694,Pokimane,Counter-Strike,6640660,43560
+695,Tfue,League of Legends,4178228,6747
+696,Shroud,Minecraft,4758551,26114
+697,DrDisrespect,Apex Legends,8673423,32770
+698,xQc,Call of Duty,4612260,43611
+699,Rubius,Dota 2,9040854,19816
+700,Asmongold,Valorant,5536369,45384
+701,Summit1G,Minecraft,2058616,30518
+702,Tfue,Call of Duty,5200341,46694
+703,xQc,Apex Legends,7639286,39412
+704,Summit1G,Dota 2,1141689,20203
+705,Summit1G,Valorant,3743301,4662
+706,xQc,World of Warcraft,3105679,9267
+707,Summit1G,Valorant,2099764,47673
+708,Rubius,Minecraft,6136676,14789
+709,Myth,Minecraft,2626385,28580
+710,Tfue,Apex Legends,3086073,15290
+711,Shroud,World of Warcraft,2918168,11745
+712,Ninja,Counter-Strike,3859286,27638
+713,Pokimane,GTA V,6635846,19921
+714,Ninja,Fortnite,9313199,49318
+715,Shroud,Counter-Strike,7047313,33857
+716,Shroud,World of Warcraft,6146620,35560
+717,Ninja,Minecraft,7192489,25863
+718,xQc,Counter-Strike,875599,13474
+719,Ninja,Call of Duty,4738554,35902
+720,Ninja,GTA V,9791344,47276
+721,Pokimane,World of Warcraft,8687262,20344
+722,Rubius,Fortnite,732304,6505
+723,Asmongold,Fortnite,1577615,45567
+724,Myth,GTA V,1310885,34616
+725,Pokimane,GTA V,1551134,25001
+726,Myth,Apex Legends,818520,2940
+727,Rubius,Dota 2,8682089,48827
+728,DrDisrespect,Call of Duty,9348254,31672
+729,Rubius,GTA V,7978788,35098
+730,DrDisrespect,Apex Legends,2087575,45268
+731,DrDisrespect,GTA V,257980,30588
+732,Shroud,Call of Duty,2391617,41387
+733,xQc,World of Warcraft,1934902,49967
+734,Summit1G,Valorant,5979914,33014
+735,Ninja,Minecraft,1647733,17500
+736,Summit1G,Minecraft,3578093,18342
+737,Ninja,Call of Duty,1186111,12478
+738,Asmongold,Minecraft,2504429,26606
+739,Tfue,GTA V,9681264,2467
+740,Ninja,Counter-Strike,812287,23745
+741,Rubius,League of Legends,5523117,11250
+742,Myth,Dota 2,571332,20782
+743,Rubius,Counter-Strike,397492,23497
+744,Shroud,Counter-Strike,6411250,10170
+745,DrDisrespect,League of Legends,4484999,22446
+746,Summit1G,GTA V,6563910,15204
+747,Shroud,Counter-Strike,1511919,40869
+748,Asmongold,Counter-Strike,4658085,6309
+749,Asmongold,GTA V,8169227,2713
+750,Rubius,GTA V,5936090,40885
+751,Summit1G,Minecraft,8926630,21518
+752,DrDisrespect,GTA V,5613826,15938
+753,xQc,Valorant,5510539,47629
+754,Shroud,Apex Legends,271962,42354
+755,Pokimane,Dota 2,6394510,17635
+756,Ninja,Counter-Strike,1580298,5403
+757,DrDisrespect,Dota 2,4801115,533
+758,Tfue,Minecraft,3033083,17896
+759,xQc,Valorant,8262207,4293
+760,Pokimane,Call of Duty,7474584,12633
+761,Shroud,GTA V,2053110,26734
+762,Shroud,GTA V,6026477,25959
+763,Ninja,Apex Legends,4258787,22352
+764,xQc,Dota 2,9897080,13662
+765,Asmongold,Minecraft,3643729,11747
+766,Rubius,GTA V,5282033,8123
+767,Pokimane,Counter-Strike,4466957,4933
+768,Ninja,GTA V,3575774,14008
+769,xQc,Minecraft,1786544,4700
+770,Asmongold,World of Warcraft,4788325,34525
+771,Tfue,Dota 2,3416321,13034
+772,Ninja,Minecraft,8482363,41531
+773,Asmongold,Valorant,6832538,27847
+774,Asmongold,League of Legends,556562,26022
+775,Asmongold,Fortnite,3276346,48738
+776,Rubius,World of Warcraft,8838797,39976
+777,xQc,GTA V,1319211,35398
+778,Tfue,World of Warcraft,1304745,20573
+779,Asmongold,World of Warcraft,8119200,49789
+780,Shroud,League of Legends,7604598,16751
+781,Asmongold,League of Legends,5462831,15223
+782,Tfue,Valorant,3188786,22803
+783,xQc,Minecraft,1056084,3984
+784,Pokimane,Valorant,820919,21120
+785,Tfue,Call of Duty,4199773,30907
+786,DrDisrespect,World of Warcraft,4166433,14969
+787,Shroud,Call of Duty,5622768,38505
+788,Ninja,Apex Legends,6648163,47645
+789,Tfue,Call of Duty,6755247,8081
+790,Shroud,Fortnite,7435442,10324
+791,Pokimane,League of Legends,3113883,3768
+792,Rubius,Apex Legends,7138993,21379
+793,Rubius,Dota 2,9158848,2092
+794,Summit1G,World of Warcraft,2704063,20876
+795,DrDisrespect,Apex Legends,4305897,34314
+796,Rubius,Dota 2,393840,33728
+797,DrDisrespect,Fortnite,2329767,851
+798,xQc,League of Legends,3730480,3019
+799,Summit1G,World of Warcraft,6738531,20944
+800,Ninja,Valorant,7699397,26279
+801,DrDisrespect,Counter-Strike,6974461,11111
+802,Summit1G,Valorant,8762380,7767
+803,Shroud,GTA V,429572,14347
+804,Tfue,Counter-Strike,7819524,49352
+805,Myth,Minecraft,2896376,12286
+806,Rubius,GTA V,4542492,47675
+807,Pokimane,League of Legends,4494435,37385
+808,Summit1G,Fortnite,9886035,25024
+809,Asmongold,GTA V,4462135,8825
+810,Tfue,Fortnite,1430841,8900
+811,Shroud,World of Warcraft,3234433,5987
+812,Shroud,GTA V,5932613,30240
+813,Myth,Dota 2,1193152,28865
+814,Shroud,Apex Legends,5172960,24574
+815,Myth,Call of Duty,775598,3887
+816,Pokimane,Call of Duty,8745223,41793
+817,Myth,Counter-Strike,5202767,9445
+818,Summit1G,Fortnite,5973354,10586
+819,Rubius,Minecraft,6699990,16317
+820,xQc,Dota 2,7544147,2878
+821,Asmongold,Fortnite,3667243,32178
+822,Myth,Dota 2,6383866,39136
+823,Myth,Call of Duty,8893023,4309
+824,Ninja,World of Warcraft,4923602,49071
+825,Asmongold,Apex Legends,5207387,38736
+826,Myth,Counter-Strike,8366128,9086
+827,Asmongold,Apex Legends,5497570,46586
+828,Tfue,Dota 2,2193015,47269
+829,xQc,GTA V,5388096,30923
+830,Myth,League of Legends,1709912,6192
+831,Myth,Valorant,3489038,10557
+832,Tfue,Minecraft,8369817,8231
+833,Rubius,Minecraft,1933242,34056
+834,DrDisrespect,Fortnite,7133526,22027
+835,Ninja,Dota 2,8039520,49598
+836,Asmongold,GTA V,7861301,42340
+837,Rubius,GTA V,938184,26270
+838,Pokimane,Fortnite,4106184,45677
+839,Pokimane,GTA V,6745581,15734
+840,Ninja,Dota 2,8524301,21124
+841,Summit1G,League of Legends,7183329,30702
+842,Summit1G,Fortnite,2001639,7459
+843,DrDisrespect,Counter-Strike,3932467,8364
+844,Rubius,Dota 2,5118215,40263
+845,Tfue,Valorant,5407514,48576
+846,Myth,Valorant,3523106,19711
+847,Tfue,Valorant,8734341,38881
+848,DrDisrespect,Valorant,3633504,39973
+849,Ninja,Fortnite,9045392,6040
+850,xQc,Dota 2,6573046,30792
+851,DrDisrespect,League of Legends,529764,19822
+852,Pokimane,Minecraft,8002919,46237
+853,Ninja,League of Legends,2378305,28702
+854,xQc,GTA V,2712829,15906
+855,xQc,Apex Legends,2774931,38945
+856,Rubius,Dota 2,6282656,48928
+857,Tfue,Dota 2,1793854,18886
+858,Shroud,Valorant,3529074,38074
+859,Tfue,Fortnite,785541,11596
+860,Asmongold,Call of Duty,9595272,39559
+861,Pokimane,Minecraft,6515342,47051
+862,DrDisrespect,Valorant,975827,34380
+863,Pokimane,GTA V,2621455,22582
+864,Asmongold,Valorant,4764856,12161
+865,xQc,World of Warcraft,1578864,25225
+866,xQc,World of Warcraft,185594,27985
+867,Summit1G,Valorant,7396124,11734
+868,Tfue,Dota 2,6643771,4176
+869,Pokimane,League of Legends,911641,45319
+870,Summit1G,Call of Duty,6375152,26379
+871,Summit1G,Counter-Strike,2265919,16689
+872,Asmongold,Apex Legends,6319121,21544
+873,Shroud,Apex Legends,445343,19376
+874,DrDisrespect,League of Legends,9001408,1736
+875,Shroud,Minecraft,2809712,36783
+876,Pokimane,Dota 2,8900268,31715
+877,Summit1G,Counter-Strike,121580,27503
+878,Pokimane,Call of Duty,9469480,41378
+879,Ninja,Minecraft,4543386,26482
+880,Pokimane,Fortnite,3379722,38334
+881,Rubius,Fortnite,3619020,25713
+882,DrDisrespect,Apex Legends,8026227,44832
+883,Summit1G,Minecraft,8774657,33534
+884,Asmongold,Counter-Strike,9319098,30181
+885,DrDisrespect,Dota 2,7126187,5462
+886,Summit1G,GTA V,230912,2397
+887,xQc,Dota 2,3455858,29228
+888,xQc,Minecraft,7170606,30236
+889,Summit1G,League of Legends,6033510,29733
+890,Myth,GTA V,5720905,43121
+891,Tfue,Apex Legends,9019160,47696
+892,Tfue,Dota 2,3073810,36865
+893,Rubius,World of Warcraft,1599535,24780
+894,Asmongold,Dota 2,9104549,17499
+895,Summit1G,League of Legends,5949288,37656
+896,Pokimane,GTA V,2944947,33717
+897,Ninja,World of Warcraft,4545806,37871
+898,Pokimane,Minecraft,8763608,7879
+899,Rubius,Call of Duty,2029447,41147
+900,Asmongold,Counter-Strike,2549628,7825
+901,DrDisrespect,Call of Duty,9814099,18289
+902,DrDisrespect,Apex Legends,9443523,20680
+903,Ninja,World of Warcraft,106813,4502
+904,DrDisrespect,Minecraft,7240176,36187
+905,Asmongold,Minecraft,5199234,23808
+906,Asmongold,Call of Duty,7949187,13636
+907,Asmongold,Minecraft,7740634,7045
+908,Pokimane,World of Warcraft,4223421,20430
+909,Rubius,Counter-Strike,4906241,17671
+910,Summit1G,Apex Legends,5108268,7492
+911,Rubius,World of Warcraft,1763273,7701
+912,Tfue,Counter-Strike,3011808,42504
+913,Shroud,Call of Duty,1267010,45498
+914,Myth,Valorant,7713749,36975
+915,DrDisrespect,GTA V,4464698,2299
+916,Summit1G,GTA V,8917087,26049
+917,DrDisrespect,Counter-Strike,3823013,10528
+918,Summit1G,Counter-Strike,8069385,22691
+919,Pokimane,Call of Duty,9772285,11630
+920,Tfue,Call of Duty,891678,30870
+921,DrDisrespect,GTA V,9944557,18894
+922,Ninja,Dota 2,1833331,2645
+923,Asmongold,GTA V,8314257,1814
+924,Tfue,Counter-Strike,3897520,11792
+925,xQc,Minecraft,8514723,35533
+926,Summit1G,Counter-Strike,2456636,32931
+927,Tfue,Call of Duty,8631283,23494
+928,Shroud,Valorant,3189625,47867
+929,Tfue,Counter-Strike,7389783,21680
+930,Rubius,Minecraft,7749822,4843
+931,DrDisrespect,Counter-Strike,1423187,39865
+932,Asmongold,Counter-Strike,167759,15949
+933,Ninja,Call of Duty,9872025,33040
+934,Tfue,Valorant,8056328,18053
+935,Tfue,Apex Legends,5162674,5143
+936,Tfue,GTA V,1095976,39949
+937,Shroud,Apex Legends,5757323,2805
+938,Tfue,Dota 2,2471467,12451
+939,Asmongold,GTA V,3079636,13415
+940,Pokimane,Valorant,5165248,18589
+941,Shroud,Counter-Strike,2106723,34175
+942,Pokimane,Fortnite,1313135,23926
+943,Summit1G,World of Warcraft,8081978,14281
+944,Shroud,Valorant,9284819,13365
+945,Pokimane,Valorant,909211,7228
+946,Rubius,Valorant,5951173,2655
+947,Pokimane,Valorant,518177,18180
+948,DrDisrespect,League of Legends,7287651,36335
+949,Rubius,Fortnite,9457144,2036
+950,Summit1G,Counter-Strike,4115137,45051
+951,Pokimane,Valorant,1632079,16229
+952,xQc,League of Legends,2836787,35721
+953,Tfue,Dota 2,6917876,32041
+954,Rubius,Fortnite,7540525,24968
+955,xQc,Call of Duty,235792,27033
+956,Summit1G,Dota 2,3632058,48137
+957,Pokimane,Fortnite,3727421,571
+958,Myth,Valorant,2333144,49439
+959,DrDisrespect,League of Legends,136539,13238
+960,Asmongold,League of Legends,8597432,43655
+961,Shroud,Counter-Strike,5052046,44761
+962,Myth,GTA V,7182033,43274
+963,Shroud,Call of Duty,476522,33330
+964,Summit1G,Fortnite,6967550,49977
+965,DrDisrespect,Fortnite,6697610,42023
+966,Ninja,League of Legends,3177177,25419
+967,Pokimane,Minecraft,7571218,19979
+968,Ninja,Dota 2,6454696,48594
+969,Myth,Call of Duty,1271754,15557
+970,Rubius,League of Legends,6707787,26467
+971,Asmongold,Call of Duty,9959833,32939
+972,Myth,Counter-Strike,4358482,6900
+973,Pokimane,GTA V,244266,4770
+974,Tfue,Fortnite,5014293,17937
+975,Ninja,Fortnite,4837387,39478
+976,Pokimane,World of Warcraft,8986651,46878
+977,xQc,Apex Legends,2127258,29077
+978,Rubius,World of Warcraft,4883275,21935
+979,xQc,Call of Duty,9798626,27124
+980,Shroud,Minecraft,8947674,27118
+981,Rubius,World of Warcraft,5861661,36585
+982,Ninja,Counter-Strike,1032713,25597
+983,Shroud,GTA V,3749244,21675
+984,Rubius,GTA V,6354036,8869
+985,Rubius,GTA V,5273416,1271
+986,Tfue,Call of Duty,402298,41911
+987,Rubius,Call of Duty,5438636,43444
+988,Summit1G,Dota 2,6918123,23662
+989,Summit1G,Valorant,1105138,20817
+990,Summit1G,Dota 2,2213143,12278
+991,Ninja,World of Warcraft,2163806,19582
+992,Myth,Dota 2,5083811,19296
+993,Tfue,Valorant,2870439,33852
+994,DrDisrespect,Fortnite,565057,34297
+995,DrDisrespect,GTA V,5385777,12219
+996,Myth,Minecraft,8811940,3412
+997,Asmongold,Call of Duty,6837882,19609
+998,Myth,League of Legends,6585029,47195
+999,Myth,Call of Duty,2798111,42961
+1000,Pokimane,Fortnite,6074867,47917
+1001,Myth,Call of Duty,1085619,42940
+1002,Shroud,Apex Legends,5052556,14833
+1003,Myth,Apex Legends,6633543,10354
+1004,Ninja,Counter-Strike,8673252,23427
+1005,xQc,Valorant,1122907,47988
+1006,Summit1G,World of Warcraft,4931710,12648
+1007,Myth,Fortnite,8275856,18681
+1008,Ninja,Minecraft,7727663,18468
+1009,Ninja,Counter-Strike,4507704,14681
+1010,Pokimane,Minecraft,4321203,37365
+1011,Tfue,Counter-Strike,5672669,33621
+1012,Tfue,Counter-Strike,2172535,3227
+1013,DrDisrespect,Valorant,8002406,49021
+1014,Pokimane,Call of Duty,4094269,39040
+1015,xQc,Minecraft,8662290,23581
+1016,Tfue,Valorant,5356071,26879
+1017,DrDisrespect,Dota 2,4252488,34191
+1018,Pokimane,Valorant,9613715,12267
+1019,Summit1G,Valorant,8502534,38127
+1020,Ninja,Call of Duty,6663575,46615
+1021,Summit1G,Dota 2,9918337,6223
+1022,Myth,Dota 2,2598256,15745
+1023,Pokimane,Fortnite,7312766,45977
+1024,Asmongold,Fortnite,4607155,46423
+1025,Shroud,World of Warcraft,6453774,5359
+1026,xQc,Call of Duty,1852292,15595
+1027,DrDisrespect,League of Legends,8154851,44902
+1028,Tfue,World of Warcraft,176214,15250
+1029,Summit1G,Fortnite,7217520,26111
+1030,Ninja,GTA V,819570,790
+1031,Rubius,Minecraft,7340837,19336
+1032,Ninja,Call of Duty,4479551,7577
+1033,Tfue,Fortnite,1684515,18439
+1034,Rubius,Fortnite,4798070,9870
+1035,Tfue,Valorant,8899637,41479
+1036,Tfue,Call of Duty,2882443,12745
+1037,xQc,Call of Duty,5290204,46198
+1038,Summit1G,GTA V,382163,14794
+1039,Rubius,Counter-Strike,8718340,36984
+1040,Pokimane,Apex Legends,2145645,11523
+1041,Myth,Call of Duty,2751598,9739
+1042,Shroud,GTA V,4885504,12867
+1043,Pokimane,Call of Duty,6262864,33889
+1044,Tfue,Minecraft,9395054,47669
+1045,Tfue,Counter-Strike,7914150,6086
+1046,Myth,Apex Legends,8520714,30001
+1047,Myth,Dota 2,594382,15657
+1048,xQc,Valorant,9726693,10347
+1049,Rubius,World of Warcraft,7569669,4562
+1050,Summit1G,Minecraft,2199176,6777
+1051,Shroud,Call of Duty,9371750,39151
+1052,DrDisrespect,Valorant,3420328,26353
+1053,Asmongold,Apex Legends,2701981,1461
+1054,Summit1G,Dota 2,8286150,44648
+1055,DrDisrespect,Fortnite,6172389,16119
+1056,Tfue,GTA V,8226364,22972
+1057,DrDisrespect,League of Legends,771645,33406
+1058,Tfue,Fortnite,7524010,14182
+1059,xQc,Valorant,8233629,8335
+1060,Ninja,Counter-Strike,4669873,3518
+1061,Myth,Call of Duty,7208038,12137
+1062,Myth,GTA V,9743359,21598
+1063,Shroud,GTA V,736841,19152
+1064,Ninja,Dota 2,4650981,17065
+1065,Rubius,World of Warcraft,8720516,24860
+1066,Shroud,League of Legends,9201742,37620
+1067,Asmongold,Apex Legends,5891600,3557
+1068,Pokimane,Dota 2,9784289,36940
+1069,Ninja,Fortnite,7793885,10336
+1070,Rubius,Valorant,3984213,15123
+1071,Asmongold,World of Warcraft,2247133,44627
+1072,Asmongold,Counter-Strike,367257,14005
+1073,xQc,League of Legends,6864908,17461
+1074,DrDisrespect,Dota 2,182391,45743
+1075,Myth,GTA V,7319572,22926
+1076,Summit1G,Call of Duty,5488377,31578
+1077,DrDisrespect,Counter-Strike,733159,20802
+1078,DrDisrespect,GTA V,765299,14265
+1079,Asmongold,League of Legends,1666610,29630
+1080,Rubius,World of Warcraft,7936118,25231
+1081,Rubius,Minecraft,249508,27763
+1082,Summit1G,Fortnite,7136103,33945
+1083,xQc,Fortnite,7132184,28574
+1084,Tfue,Minecraft,5031274,29857
+1085,Shroud,League of Legends,8464118,41806
+1086,Summit1G,Fortnite,756768,17689
+1087,Tfue,Apex Legends,2168363,14098
+1088,Pokimane,Call of Duty,8861394,17973
+1089,Shroud,World of Warcraft,6469527,43656
+1090,Summit1G,Dota 2,7276308,12744
+1091,Summit1G,Valorant,3606008,48477
+1092,Rubius,Call of Duty,1967580,12051
+1093,Summit1G,Counter-Strike,9495245,12740
+1094,Rubius,GTA V,8457222,15768
+1095,Asmongold,Dota 2,6093632,40511
+1096,Tfue,Minecraft,9463046,971
+1097,Rubius,Minecraft,9842317,17570
+1098,DrDisrespect,Counter-Strike,434783,28525
+1099,Myth,Minecraft,4642093,47830
+1100,Myth,Minecraft,6224696,21307
+1101,xQc,World of Warcraft,139732,11984
+1102,Asmongold,World of Warcraft,238128,12310
+1103,xQc,Dota 2,9009013,34178
+1104,Summit1G,Dota 2,5362246,7640
+1105,DrDisrespect,Counter-Strike,9290839,45376
+1106,Summit1G,Counter-Strike,4002724,30209
+1107,Shroud,Valorant,4617273,2134
+1108,xQc,Minecraft,7772416,2730
+1109,Summit1G,World of Warcraft,268665,36866
+1110,Rubius,World of Warcraft,1235072,8427
+1111,xQc,Valorant,1130558,28639
+1112,Shroud,Counter-Strike,5356877,16257
+1113,Tfue,Counter-Strike,9823042,12137
+1114,Asmongold,Apex Legends,6598476,8336
+1115,xQc,Call of Duty,2091582,21938
+1116,Pokimane,Call of Duty,8883536,8450
+1117,Rubius,GTA V,5621067,47466
+1118,xQc,GTA V,2639355,33685
+1119,Rubius,Minecraft,4804307,17532
+1120,xQc,World of Warcraft,9026321,39521
+1121,Summit1G,Counter-Strike,8270095,13729
+1122,Rubius,Apex Legends,3948743,42406
+1123,Myth,League of Legends,7551810,40445
+1124,Myth,Counter-Strike,9608584,42377
+1125,Asmongold,World of Warcraft,2571496,27478
+1126,Asmongold,Call of Duty,7682622,20624
+1127,DrDisrespect,Call of Duty,6591177,20486
+1128,Rubius,Apex Legends,7137788,17130
+1129,Summit1G,League of Legends,3643648,19481
+1130,Summit1G,Call of Duty,7242309,37058
+1131,DrDisrespect,World of Warcraft,239198,21585
+1132,Rubius,GTA V,6904097,12458
+1133,Summit1G,Call of Duty,3843850,21027
+1134,Rubius,Fortnite,1487628,14784
+1135,xQc,League of Legends,4673509,36660
+1136,xQc,League of Legends,2780872,21037
+1137,Ninja,Apex Legends,6205361,8774
+1138,Ninja,League of Legends,6495087,41250
+1139,Asmongold,Fortnite,3286935,30034
+1140,Myth,Call of Duty,8194653,24231
+1141,Rubius,Fortnite,7359447,8558
+1142,Summit1G,League of Legends,2054540,18219
+1143,Summit1G,League of Legends,9745771,47306
+1144,Asmongold,GTA V,6806328,8381
+1145,Summit1G,GTA V,4484428,11252
+1146,Asmongold,Call of Duty,8376670,42763
+1147,xQc,GTA V,5491567,40354
+1148,xQc,Fortnite,3888496,10883
+1149,DrDisrespect,Minecraft,7128738,46688
+1150,Summit1G,Valorant,1083908,39848
+1151,DrDisrespect,Dota 2,8400872,27414
+1152,Tfue,Dota 2,8925233,17308
+1153,DrDisrespect,Dota 2,9284163,33146
+1154,Tfue,League of Legends,6127399,44713
+1155,Pokimane,Dota 2,7417326,47287
+1156,Rubius,Minecraft,1415089,3663
+1157,DrDisrespect,Counter-Strike,6631770,36297
+1158,Shroud,Apex Legends,952981,27539
+1159,Asmongold,World of Warcraft,1400373,1684
+1160,Shroud,League of Legends,4570226,26009
+1161,Shroud,Counter-Strike,2840400,32837
+1162,DrDisrespect,Apex Legends,3167493,3073
+1163,xQc,Call of Duty,7579558,35160
+1164,Asmongold,Apex Legends,2497427,1859
+1165,DrDisrespect,Valorant,7715344,6807
+1166,Asmongold,Fortnite,6349607,41423
+1167,Rubius,Fortnite,9112875,24300
+1168,Asmongold,Counter-Strike,8466787,44810
+1169,Summit1G,World of Warcraft,7057526,24192
+1170,xQc,GTA V,455125,33949
+1171,Shroud,League of Legends,5237835,34398
+1172,Myth,Dota 2,6620707,7494
+1173,DrDisrespect,Minecraft,9775696,22281
+1174,Tfue,Counter-Strike,7030589,45332
+1175,Tfue,Valorant,8370735,34046
+1176,DrDisrespect,World of Warcraft,4739468,10992
+1177,Ninja,World of Warcraft,339558,9830
+1178,DrDisrespect,League of Legends,4076189,45856
+1179,Myth,League of Legends,9828688,34600
+1180,DrDisrespect,Valorant,3155341,7343
+1181,xQc,Fortnite,1302208,11586
+1182,Tfue,Counter-Strike,6964392,23570
+1183,Ninja,GTA V,5359329,43044
+1184,Tfue,Valorant,3132852,17560
+1185,Tfue,Minecraft,5509401,34264
+1186,Asmongold,Minecraft,1773985,8397
+1187,Rubius,Minecraft,3105685,41617
+1188,xQc,Valorant,241448,48450
+1189,Rubius,Minecraft,5266454,47286
+1190,xQc,World of Warcraft,1736436,16098
+1191,DrDisrespect,GTA V,4415477,11866
+1192,Asmongold,GTA V,215852,28593
+1193,DrDisrespect,Valorant,2997812,49494
+1194,Tfue,Call of Duty,9866192,38690
+1195,Asmongold,Minecraft,866760,1093
+1196,Asmongold,World of Warcraft,7378260,37451
+1197,xQc,Apex Legends,8546246,26443
+1198,xQc,League of Legends,8418677,5237
+1199,Summit1G,Dota 2,3390555,39490
+1200,Pokimane,Dota 2,9744349,9288
+1201,Asmongold,Apex Legends,2651994,39956
+1202,Shroud,Valorant,7913309,2431
+1203,xQc,League of Legends,4416149,9728
+1204,Ninja,Fortnite,4133041,15021
+1205,Shroud,Minecraft,2833702,33300
+1206,xQc,League of Legends,9038680,6169
+1207,Asmongold,Minecraft,1411061,537
+1208,Ninja,League of Legends,4963873,45808
+1209,Myth,Valorant,9757590,24452
+1210,Rubius,Call of Duty,3814061,20275
+1211,Rubius,Call of Duty,1601228,17781
+1212,Rubius,Minecraft,4106450,31756
+1213,Asmongold,Valorant,9982595,33201
+1214,DrDisrespect,Apex Legends,2273341,26171
+1215,xQc,Fortnite,8707356,8262
+1216,Rubius,Dota 2,5262220,27465
+1217,Rubius,GTA V,3012437,18645
+1218,Summit1G,League of Legends,2852248,9825
+1219,Asmongold,League of Legends,7798733,36325
+1220,Asmongold,Apex Legends,6551254,41538
+1221,Ninja,Fortnite,342479,19307
+1222,Summit1G,Fortnite,1408244,15182
+1223,Rubius,Counter-Strike,2649186,12372
+1224,Shroud,Apex Legends,3637578,28882
+1225,xQc,Call of Duty,5099276,16956
+1226,Tfue,Apex Legends,2692483,23933
+1227,Asmongold,Apex Legends,2174998,19370
+1228,Asmongold,Call of Duty,4266169,45664
+1229,Asmongold,Minecraft,4015862,5148
+1230,Ninja,Valorant,2907119,47215
+1231,Rubius,Dota 2,7825796,17985
+1232,Myth,Apex Legends,3675503,24737
+1233,Pokimane,World of Warcraft,8066543,41678
+1234,DrDisrespect,Minecraft,835654,2573
+1235,Summit1G,Minecraft,8002029,27456
+1236,DrDisrespect,GTA V,8785763,22423
+1237,Myth,Fortnite,8843081,23898
+1238,Asmongold,Apex Legends,1370615,22164
+1239,Summit1G,World of Warcraft,8546235,31090
+1240,xQc,Dota 2,3371803,18635
+1241,Tfue,Fortnite,8453120,6875
+1242,DrDisrespect,World of Warcraft,541623,41208
+1243,Myth,Counter-Strike,9006957,47822
+1244,Shroud,Fortnite,5745524,14600
+1245,Ninja,Counter-Strike,1941073,48783
+1246,Rubius,World of Warcraft,2826150,2502
+1247,Pokimane,Dota 2,7757842,46203
+1248,Myth,Counter-Strike,612809,12224
+1249,xQc,Apex Legends,7930396,17608
+1250,Shroud,Valorant,1360510,39446
+1251,Shroud,League of Legends,2280775,9032
+1252,Ninja,League of Legends,2093461,32089
+1253,Pokimane,Counter-Strike,3473486,47851
+1254,DrDisrespect,Valorant,852630,45832
+1255,Tfue,Fortnite,7658000,3494
+1256,Myth,Apex Legends,5857254,41418
+1257,Summit1G,World of Warcraft,342380,16681
+1258,Tfue,GTA V,7554786,29784
+1259,DrDisrespect,World of Warcraft,9742634,23277
+1260,Ninja,League of Legends,2697293,41293
+1261,Myth,Valorant,9155854,20687
+1262,Myth,Dota 2,5373016,20962
+1263,Shroud,League of Legends,3601191,20785
+1264,Ninja,League of Legends,1300475,10229
+1265,Ninja,Minecraft,3567866,39117
+1266,Myth,GTA V,3843983,39511
+1267,Ninja,Fortnite,3526684,19722
+1268,Tfue,Apex Legends,9105033,23503
+1269,Ninja,World of Warcraft,1537872,39141
+1270,DrDisrespect,Dota 2,6096901,27783
+1271,Pokimane,Fortnite,8770589,10223
+1272,Shroud,Dota 2,1075127,34605
+1273,Ninja,GTA V,261915,12036
+1274,Rubius,World of Warcraft,3075954,46898
+1275,Pokimane,Counter-Strike,2406690,33605
+1276,Shroud,World of Warcraft,4980891,32378
+1277,Asmongold,Dota 2,7233347,41577
+1278,Rubius,Minecraft,4112898,29377
+1279,Rubius,Call of Duty,4510389,26616
+1280,xQc,Call of Duty,6322146,24461
+1281,xQc,Dota 2,5682462,12527
+1282,Tfue,Dota 2,2691514,23484
+1283,Ninja,League of Legends,8960627,32908
+1284,Asmongold,Apex Legends,6971896,10651
+1285,Shroud,Dota 2,397402,18643
+1286,Rubius,League of Legends,8092267,20610
+1287,Rubius,Counter-Strike,2136423,48848
+1288,Pokimane,World of Warcraft,1192205,26987
+1289,xQc,Apex Legends,5727491,31758
+1290,DrDisrespect,Fortnite,8389081,11310
+1291,Asmongold,World of Warcraft,6078633,29471
+1292,Tfue,Minecraft,6283185,4144
+1293,Pokimane,World of Warcraft,8388894,42229
+1294,Rubius,Minecraft,3509828,1752
+1295,Ninja,Call of Duty,9181922,22445
+1296,Rubius,World of Warcraft,1719779,20553
+1297,Pokimane,World of Warcraft,3258280,12524
+1298,Summit1G,Minecraft,5096074,22870
+1299,Ninja,GTA V,9540750,35978
+1300,Myth,League of Legends,4375212,45577
+1301,Tfue,League of Legends,8860269,37105
+1302,Ninja,Valorant,4263909,1728
+1303,Shroud,League of Legends,3347793,1631
+1304,xQc,Call of Duty,9531111,8317
+1305,Rubius,Valorant,7187852,49554
+1306,Tfue,Call of Duty,5978133,15637
+1307,DrDisrespect,Valorant,1867845,19167
+1308,xQc,Valorant,4765734,17212
+1309,DrDisrespect,GTA V,9811843,11386
+1310,Summit1G,Counter-Strike,7443826,11045
+1311,Tfue,GTA V,8991139,40633
+1312,Myth,Valorant,2323300,7568
+1313,Ninja,Minecraft,4499547,22635
+1314,Pokimane,Apex Legends,3667912,39813
+1315,Pokimane,GTA V,6106301,40907
+1316,Asmongold,Apex Legends,9797812,42683
+1317,Rubius,Minecraft,5442422,12012
+1318,Summit1G,World of Warcraft,3220526,13353
+1319,Tfue,Fortnite,6433096,45317
+1320,Pokimane,Valorant,9123500,48600
+1321,xQc,Valorant,4512893,45877
+1322,Ninja,Minecraft,784662,1424
+1323,Myth,Minecraft,3345338,48653
+1324,Summit1G,Dota 2,4170524,38732
+1325,Myth,Call of Duty,6644192,22613
+1326,Ninja,Call of Duty,3913522,21431
+1327,Ninja,Dota 2,9867411,11090
+1328,Asmongold,GTA V,9929284,39996
+1329,Asmongold,Minecraft,668711,28847
+1330,Shroud,Counter-Strike,9084943,7222
+1331,Shroud,Dota 2,8567207,33206
+1332,xQc,Valorant,5802176,44222
+1333,Shroud,World of Warcraft,1441513,36855
+1334,Pokimane,Dota 2,8793586,19513
+1335,Pokimane,GTA V,4380710,25243
+1336,xQc,World of Warcraft,5344739,2065
+1337,Asmongold,Valorant,1980242,6914
+1338,xQc,Call of Duty,3488385,44561
+1339,Pokimane,League of Legends,7390869,14870
+1340,Ninja,Valorant,5939763,16481
+1341,xQc,Dota 2,5645770,21355
+1342,Summit1G,World of Warcraft,2671265,29597
+1343,Tfue,GTA V,2422813,4340
+1344,Pokimane,Dota 2,9640842,4197
+1345,Rubius,Dota 2,7736872,18511
+1346,Rubius,Fortnite,4797195,22880
+1347,Summit1G,Valorant,7953596,41245
+1348,Pokimane,Call of Duty,8198628,10080
+1349,DrDisrespect,Dota 2,8326950,5501
+1350,Shroud,Counter-Strike,8830065,20902
+1351,Summit1G,Apex Legends,8733236,44894
+1352,Shroud,GTA V,4669160,13901
+1353,Myth,World of Warcraft,1856151,28235
+1354,DrDisrespect,Dota 2,7083760,40439
+1355,Myth,Call of Duty,1178996,43629
+1356,xQc,Valorant,7833123,45732
+1357,Shroud,World of Warcraft,1420452,43963
+1358,xQc,League of Legends,7664876,47848
+1359,Myth,Dota 2,8090191,35295
+1360,Summit1G,Dota 2,1079696,23282
+1361,Pokimane,World of Warcraft,7845411,1960
+1362,Ninja,Apex Legends,8605962,15299
+1363,Myth,GTA V,8922768,49931
+1364,Tfue,Call of Duty,2952628,6417
+1365,DrDisrespect,Apex Legends,1091954,47221
+1366,Pokimane,World of Warcraft,4564457,25206
+1367,Asmongold,Valorant,9995074,18581
+1368,Rubius,Fortnite,1496216,36980
+1369,Shroud,League of Legends,5639107,19782
+1370,xQc,Apex Legends,8395719,16261
+1371,Myth,GTA V,8766461,35290
+1372,Summit1G,Apex Legends,6358961,33187
+1373,xQc,Fortnite,2030372,26646
+1374,DrDisrespect,Fortnite,4132858,4112
+1375,Tfue,Apex Legends,1906844,17438
+1376,Ninja,Apex Legends,6892312,40955
+1377,Pokimane,GTA V,9187479,10841
+1378,Pokimane,Valorant,710876,2201
+1379,DrDisrespect,Counter-Strike,3752290,31266
+1380,Tfue,Dota 2,4555164,29331
+1381,Ninja,League of Legends,4268055,39435
+1382,Shroud,GTA V,6088327,20001
+1383,Shroud,League of Legends,5595701,7101
+1384,Shroud,Dota 2,7349872,43722
+1385,Tfue,Counter-Strike,1965942,8913
+1386,Summit1G,Call of Duty,9173827,27593
+1387,Ninja,Dota 2,7864492,1132
+1388,Pokimane,Fortnite,2921845,13089
+1389,Ninja,GTA V,7366007,40988
+1390,Summit1G,Call of Duty,7197188,49567
+1391,Summit1G,League of Legends,7994371,8532
+1392,Shroud,Apex Legends,2445945,7673
+1393,Shroud,World of Warcraft,8752605,31712
+1394,Pokimane,Fortnite,7059584,32477
+1395,Myth,Fortnite,5924980,1882
+1396,DrDisrespect,Minecraft,5956989,3243
+1397,Pokimane,Minecraft,524729,22982
+1398,Tfue,GTA V,3074635,46139
+1399,Ninja,Fortnite,8668355,28704
+1400,DrDisrespect,GTA V,8650017,11704
+1401,Asmongold,Valorant,2169958,31019
+1402,Ninja,Valorant,4975207,2608
+1403,Pokimane,Valorant,7261241,26636
+1404,DrDisrespect,Minecraft,7267615,43636
+1405,Summit1G,Dota 2,2272407,932
+1406,DrDisrespect,Valorant,9690030,22202
+1407,Asmongold,GTA V,4633137,36822
+1408,Asmongold,Call of Duty,6905997,28110
+1409,Myth,World of Warcraft,2245437,16918
+1410,Myth,Minecraft,7760635,33553
+1411,Rubius,Apex Legends,959770,17607
+1412,DrDisrespect,Valorant,2842776,15518
+1413,Shroud,Minecraft,1373610,7412
+1414,Tfue,Valorant,3139188,31682
+1415,Rubius,GTA V,7221402,20437
+1416,Shroud,Valorant,8129874,40816
+1417,Rubius,Valorant,9076258,21129
+1418,DrDisrespect,Dota 2,5032757,17860
+1419,DrDisrespect,Valorant,3844495,11566
+1420,Summit1G,Fortnite,1957078,30045
+1421,Pokimane,Call of Duty,153313,31239
+1422,Myth,League of Legends,7721627,21063
+1423,Shroud,GTA V,1479092,33722
+1424,Rubius,Call of Duty,7327485,18896
+1425,Shroud,Minecraft,6581218,41869
+1426,DrDisrespect,Fortnite,5165698,19997
+1427,Shroud,Fortnite,5319809,25413
+1428,Ninja,Counter-Strike,4063580,30440
+1429,Pokimane,Fortnite,5816659,48873
+1430,Summit1G,Dota 2,2591785,49689
+1431,Summit1G,Valorant,9297181,16083
+1432,Pokimane,Call of Duty,474189,36099
+1433,Pokimane,World of Warcraft,4370982,49773
+1434,Asmongold,GTA V,8937830,21779
+1435,Asmongold,Valorant,3439743,5454
+1436,Shroud,Call of Duty,2204810,39251
+1437,Rubius,Call of Duty,2959675,11666
+1438,Tfue,Apex Legends,2536364,27270
+1439,Myth,Counter-Strike,7104777,42471
+1440,Myth,Counter-Strike,7257343,33836
+1441,Pokimane,Valorant,4350156,36849
+1442,Asmongold,League of Legends,4074402,18530
+1443,Ninja,Dota 2,3566993,44010
+1444,xQc,GTA V,2350133,33297
+1445,Tfue,Apex Legends,7452091,35085
+1446,xQc,Fortnite,8807939,36111
+1447,DrDisrespect,Valorant,5503347,29258
+1448,Pokimane,GTA V,3996901,49919
+1449,Shroud,World of Warcraft,1425009,26394
+1450,Rubius,Call of Duty,6243373,9119
+1451,DrDisrespect,Valorant,2520176,42738
+1452,xQc,Call of Duty,9778897,44134
+1453,Summit1G,Minecraft,9110141,21034
+1454,Rubius,Apex Legends,2813829,48733
+1455,Myth,Fortnite,1126816,16162
+1456,Tfue,Apex Legends,5918688,35948
+1457,Myth,Apex Legends,4762507,30512
+1458,Pokimane,Minecraft,1726848,36794
+1459,xQc,World of Warcraft,4492623,27125
+1460,xQc,Dota 2,6614481,16853
+1461,Pokimane,Counter-Strike,6041264,47837
+1462,Summit1G,GTA V,6367703,45759
+1463,Summit1G,Counter-Strike,4919364,3799
+1464,Shroud,League of Legends,6636544,6227
+1465,Tfue,Call of Duty,7433594,44429
+1466,Rubius,Call of Duty,2140188,47835
+1467,DrDisrespect,World of Warcraft,9877248,2762
+1468,xQc,Minecraft,7838137,15187
+1469,DrDisrespect,World of Warcraft,1451786,17718
+1470,Pokimane,Fortnite,5131312,28373
+1471,DrDisrespect,Minecraft,5091020,22368
+1472,xQc,GTA V,835514,29056
+1473,Summit1G,GTA V,5605294,19103
+1474,Shroud,World of Warcraft,3802558,20981
+1475,DrDisrespect,Apex Legends,9655533,36095
+1476,Summit1G,Counter-Strike,7455797,38347
+1477,xQc,Valorant,1048976,24421
+1478,Myth,Counter-Strike,8741251,44379
+1479,Shroud,Dota 2,6384291,9741
+1480,Shroud,GTA V,523572,33282
+1481,Shroud,Apex Legends,4970550,19242
+1482,Tfue,World of Warcraft,4161939,26384
+1483,Myth,GTA V,3790285,30169
+1484,xQc,World of Warcraft,7312084,45261
+1485,Myth,Dota 2,7951486,11250
+1486,Myth,World of Warcraft,8849859,45932
+1487,xQc,League of Legends,433803,33837
+1488,Pokimane,GTA V,2980881,44953
+1489,DrDisrespect,GTA V,4508950,5949
+1490,Pokimane,Valorant,3930115,48993
+1491,Pokimane,Minecraft,596104,1556
+1492,Myth,Valorant,855090,34596
+1493,Asmongold,League of Legends,4065057,27638
+1494,Pokimane,World of Warcraft,412851,1794
+1495,xQc,World of Warcraft,1966887,25553
+1496,xQc,World of Warcraft,1431464,11435
+1497,DrDisrespect,Counter-Strike,7370124,29365
+1498,xQc,Valorant,3860563,28641
+1499,Asmongold,GTA V,7443816,43758
+1500,Ninja,Valorant,5822403,38930
