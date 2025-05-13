@@ -4,7 +4,7 @@ from sqlmodel import SQLModel, Field
 
 class GameBase(SQLModel):
     date: str = Field(..., min_length=4, description="Fecha del registro en formato AAAA-MM")
-    game: str = Field(..., min_length=1, max_length=100, description="Nombre del videojuego")
+    game: str = Field(..., min_length=1, max_length=1000, description="Nombre del videojuego")
     hours_watched: int = Field(..., ge=0, description="Total de horas vistas")
     peak_viewers: int = Field(..., ge=0, description="Máximo de espectadores simultáneos")
     peak_channels: int = Field(..., ge=0, description="Máximo de canales transmitiendo el juego")

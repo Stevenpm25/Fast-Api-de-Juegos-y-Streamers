@@ -6,8 +6,9 @@ import csv
 
 
 async def read_all_streamers(session: AsyncSession) -> List[StreamerWithID]:
-    result = await session.exec(select(Streamer))
-    return result.all()
+    result = await session.execute(select(Streamer))
+    return result.scalars().all()
+
 
 
 async def read_one_streamer(session: AsyncSession, streamer_id: int) -> Optional[StreamerWithID]:
@@ -65,13 +66,17 @@ async def import_streamers_from_csv(session: AsyncSession, csv_path: str = "stre
     with open(csv_path, mode="r", encoding="utf-8") as file:
         reader = csv.DictReader(file)
         for row in reader:
-            streamer = Streamer(
-                name=row["name"],
-                game=row["game"],
-                follower_count=int(row["follower_count"]),
-                avg_viewers=int(row["avg_viewers"]),
-            )
-            session.add(streamer)
-            inserted += 1
+            try:
+                streamer = Streamer(
+                    id=int(row["id"]),
+                    name=row["name"],
+                    game=row["game"],
+                    follower_count=int(row["follower_count"]),
+                    avg_viewers=int(row["avg_viewers"]),
+                )
+                session.add(streamer)
+                inserted += 1
+            except Exception as e:
+                print(f"Error importing row: {row} => {e}")
     await session.commit()
     return inserted

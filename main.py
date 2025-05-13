@@ -87,6 +87,52 @@ async def get_session() -> AsyncSession:
 
 
 # --- Juegos ---
+@app.post("/games/import", tags=["Games"])
+async def import_games(file: UploadFile = File(...), session: AsyncSession = Depends(get_session)):
+    try:
+        # Verificar tipo de archivo
+        if not file.filename.endswith('.csv'):
+            raise HTTPException(status_code=400, detail="Solo se aceptan archivos CSV")
+
+        contents = await file.read()
+        text = contents.decode('utf-8')
+        reader = csv.DictReader(io.StringIO(text))
+
+        # Verificar columnas requeridas
+        required_columns = {"date", "game", "hours_watched", "peak_viewers", "peak_channels"}
+        if not required_columns.issubset(reader.fieldnames):
+            raise HTTPException(
+                status_code=400,
+                detail=f"El CSV debe contener las columnas: {required_columns}"
+            )
+
+        inserted = 0
+        games = []  # Almacenar temporalmente los juegos
+        for row in reader:
+            try:
+                game = Game(
+                    date=row["date"],
+                    game=row["game"],
+                    hours_watched=int(row["hours_watched"]),
+                    peak_viewers=int(row["peak_viewers"]),
+                    peak_channels=int(row["peak_channels"]),
+                )
+                games.append(game)
+                inserted += 1
+            except (ValueError, KeyError) as e:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Error en fila {inserted + 1}: {str(e)}"
+                )
+
+        # Agregar todos los juegos de una vez
+        session.add_all(games)
+        await session.commit()
+
+        return {"message": f"Successfully imported {inserted} games"}
+    except Exception as e:
+        await session.rollback()
+        raise HTTPException(status_code=400, detail=str(e))
 @app.get("/games", response_model=List[GameWithID], tags=["Games"])
 async def get_all_games(session: AsyncSession = Depends(get_session)):
     return await read_all_games(session)
@@ -130,32 +176,55 @@ async def search_game(
     return await search_games(session, game_name, year)
 
 
-@app.post("/games/import", tags=["Games"])
-async def import_games(file: UploadFile = File(...), session: AsyncSession = Depends(get_session)):
+
+
+
+# --- Streamers ---
+@app.post("/streamers/import", tags=["Streamers"])
+async def import_streamers(file: UploadFile = File(...), session: AsyncSession = Depends(get_session)):
     try:
+        # Verificar tipo de archivo
+        if not file.filename.endswith('.csv'):
+            raise HTTPException(status_code=400, detail="Solo se aceptan archivos CSV")
+
         contents = await file.read()
         text = contents.decode('utf-8')
         reader = csv.DictReader(io.StringIO(text))
 
-        inserted = 0
-        for row in reader:
-            game = Game(
-                date=row["date"],
-                game=row["game"],
-                hours_watched=int(row["hours_watched"]),
-                peak_viewers=int(row["peak_viewers"]),
-                peak_channels=int(row["peak_channels"]),
+        # Verificar columnas requeridas
+        required_columns = {"name", "game", "follower_count", "avg_viewers"}
+        if not required_columns.issubset(reader.fieldnames):
+            raise HTTPException(
+                status_code=400,
+                detail=f"El CSV debe contener las columnas: {required_columns}"
             )
-            session.add(game)
-            inserted += 1
 
+        inserted = 0
+        streamers = []  # Almacenar temporalmente los streamers
+        for row in reader:
+            try:
+                streamer = Streamer(
+                    name=row["name"],
+                    game=row["game"],
+                    follower_count=int(row["follower_count"]),
+                    avg_viewers=int(row["avg_viewers"]),
+                )
+                streamers.append(streamer)
+                inserted += 1
+            except (ValueError, KeyError) as e:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Error en fila {inserted + 1}: {str(e)}"
+                )
+
+        # Agregar todos los streamers de una vez
+        session.add_all(streamers)
         await session.commit()
-        return {"message": f"Successfully imported {inserted} games"}
+
+        return {"message": f"Successfully imported {inserted} streamers"}
     except Exception as e:
+        await session.rollback()
         raise HTTPException(status_code=400, detail=str(e))
-
-
-# --- Streamers ---
 @app.get("/streamers", response_model=List[StreamerWithID], tags=["Streamers"])
 async def get_all_streamers(session: AsyncSession = Depends(get_session)):
     return await read_all_streamers(session)
@@ -200,28 +269,7 @@ async def search_streamer(
     return await search_streamers(session, name, game)
 
 
-@app.post("/streamers/import", tags=["Streamers"])
-async def import_streamers(file: UploadFile = File(...), session: AsyncSession = Depends(get_session)):
-    try:
-        contents = await file.read()
-        text = contents.decode('utf-8')
-        reader = csv.DictReader(io.StringIO(text))
 
-        inserted = 0
-        for row in reader:
-            streamer = Streamer(
-                name=row["name"],
-                game=row["game"],
-                follower_count=int(row["follower_count"]),
-                avg_viewers=int(row["avg_viewers"]),
-            )
-            session.add(streamer)
-            inserted += 1
-
-        await session.commit()
-        return {"message": f"Successfully imported {inserted} streamers"}
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
 
 
 # Inicialización de la base de datos

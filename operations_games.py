@@ -6,8 +6,9 @@ import csv
 
 
 async def read_all_games(session: AsyncSession) -> List[GameWithID]:
-    result = await session.exec(select(Game))
-    return result.all()
+    result = await session.execute(select(Game))
+    return result.scalars().all()
+
 
 
 async def read_one_game(session: AsyncSession, game_id: int) -> Optional[GameWithID]:
