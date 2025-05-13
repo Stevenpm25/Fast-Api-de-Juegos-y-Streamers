@@ -1,19 +1,27 @@
-from pydantic import BaseModel, Field
 from typing import Optional
+from sqlmodel import SQLModel, Field
 
-class Game(BaseModel):
+
+class GameBase(SQLModel):
     date: str = Field(..., min_length=4, description="Fecha del registro en formato AAAA-MM")
     game: str = Field(..., min_length=1, max_length=100, description="Nombre del videojuego")
     hours_watched: int = Field(..., ge=0, description="Total de horas vistas")
     peak_viewers: int = Field(..., ge=0, description="Máximo de espectadores simultáneos")
     peak_channels: int = Field(..., ge=0, description="Máximo de canales transmitiendo el juego")
 
-class GameWithID(Game):
+
+class Game(GameBase, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+
+
+class GameWithID(GameBase):
     id: int
 
-class UpdatedGame(BaseModel):
-    date: Optional[str] = Field(None, min_length=4)
-    game: Optional[str] = Field(None, min_length=1, max_length=100)
-    hours_watched: Optional[int] = Field(None, ge=0)
-    peak_viewers: Optional[int] = Field(None, ge=0)
-    peak_channels: Optional[int] = Field(None, ge=0)
+
+class UpdatedGame(SQLModel):
+    date: Optional[str] = Field(default=None, min_length=4)
+    game: Optional[str] = Field(default=None, min_length=1, max_length=100)
+    hours_watched: Optional[int] = Field(default=None, ge=0)
+    peak_viewers: Optional[int] = Field(default=None, ge=0)
+    peak_channels: Optional[int] = Field(default=None, ge=0)
+
