@@ -1,7 +1,7 @@
 from typing import Optional, List
 from sqlmodel import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from models_streamers import Streamer, StreamerWithID, UpdatedStreamer
+from models_streamers import *
 import csv
 
 

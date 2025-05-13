@@ -1,7 +1,7 @@
 from typing import Optional, List
 from sqlmodel import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from models_games import Game, GameWithID, UpdatedGame
+from models_games import Game, GameWithID, UpdatedGame,GameCreate, Game
 import csv
 
 

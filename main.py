@@ -147,9 +147,14 @@ async def get_game(game_id: int, session: AsyncSession = Depends(get_session)):
 
 
 # Crear juego
-@app.post("/games", response_model=GameWithID, tags=["Games"])
-async def create_new_game(game: GameCreate, session: AsyncSession = Depends(get_session)):
-    return await create_game(session, game)
+@app.post("/games/", response_model=GameWithID, tags=["Games"])
+async def create_game(game: GameCreate, session: AsyncSession = Depends(get_session)):
+    new_game = Game(**game.dict())
+    session.add(new_game)
+    await session.commit()
+    await session.refresh(new_game)
+    return new_game
+
 
 
 @app.put("/games/{game_id}", response_model=GameWithID, tags=["Games"])
@@ -312,5 +317,6 @@ async def db_check(session: AsyncSession = Depends(get_session)):
     except Exception as e:
         raise HTTPException(
             status_code=500,
-            detail=f"Database connection failed: {str(e)}"
+            detail=f"Databas"
+                   f"e connection failed: {str(e)}"
         )
