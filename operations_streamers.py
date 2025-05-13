@@ -1,108 +1,77 @@
-import csv
 from typing import Optional, List
+from sqlmodel import select
+from sqlalchemy.ext.asyncio import AsyncSession
 from models_streamers import Streamer, StreamerWithID, UpdatedStreamer
-
-FILENAME = "streamers.csv"
-FIELDS = ["id", "name", "game", "follower_count", "avg_viewers"]  # Eliminado uses_makeup
+import csv
 
 
+async def read_all_streamers(session: AsyncSession) -> List[StreamerWithID]:
+    result = await session.exec(select(Streamer))
+    return result.all()
 
 
-def read_all_streamers() -> List[StreamerWithID]:
-    streamers = []
-    with open(FILENAME, mode="r", encoding="utf-8") as file:
+async def read_one_streamer(session: AsyncSession, streamer_id: int) -> Optional[StreamerWithID]:
+    return await session.get(Streamer, streamer_id)
+
+
+async def create_streamer(session: AsyncSession, streamer: Streamer) -> StreamerWithID:
+    new_streamer = Streamer(**streamer.model_dump())
+    session.add(new_streamer)
+    await session.commit()
+    await session.refresh(new_streamer)
+    return new_streamer
+
+
+async def update_streamer(session: AsyncSession, streamer_id: int, update: UpdatedStreamer) -> Optional[StreamerWithID]:
+    existing = await session.get(Streamer, streamer_id)
+    if not existing:
+        return None
+
+    for key, value in update.model_dump(exclude_unset=True).items():
+        setattr(existing, key, value)
+
+    session.add(existing)
+    await session.commit()
+    await session.refresh(existing)
+    return existing
+
+
+async def delete_streamer(session: AsyncSession, streamer_id: int) -> Optional[StreamerWithID]:
+    existing = await session.get(Streamer, streamer_id)
+    if not existing:
+        return None
+
+    await session.delete(existing)
+    await session.commit()
+    return existing
+
+
+async def search_streamers(session: AsyncSession, name: str = None, game: str = None) -> List[StreamerWithID]:
+    query = select(Streamer)
+
+    if name:
+        query = query.where(Streamer.name.ilike(f"%{name}%"))
+
+    if game:
+        query = query.where(Streamer.game.ilike(f"%{game}%"))
+
+    result = await session.exec(query)
+    return result.all()
+
+
+# ✅ Operación para importar todos los streamers desde CSV a la base de datos
+async def import_streamers_from_csv(session: AsyncSession, csv_path: str = "streamers.csv") -> int:
+    inserted = 0
+    with open(csv_path, mode="r", encoding="utf-8") as file:
         reader = csv.DictReader(file)
         for row in reader:
-            streamers.append(StreamerWithID(
-                id=int(row["id"]),
+            streamer = Streamer(
                 name=row["name"],
                 game=row["game"],
                 follower_count=int(row["follower_count"]),
                 avg_viewers=int(row["avg_viewers"]),
-            ))
-    return streamers
-
-
-
-# Leer un streamer por ID
-def read_one_streamer(streamer_id: int) -> Optional[StreamerWithID]:
-    streamers = read_all_streamers()
-    for s in streamers:
-        if s.id == streamer_id:
-            return s
-    return None
-
-
-# Obtener el siguiente ID
-def get_next_id() -> int:
-    try:
-        streamers = read_all_streamers()
-        return max(s.id for s in streamers) + 1 if streamers else 1
-    except FileNotFoundError:
-        return 1
-
-
-# Crear un nuevo streamer
-def create_streamer(streamer: Streamer) -> StreamerWithID:
-    new_id = get_next_id()
-    new_streamer = StreamerWithID(id=new_id, **streamer.model_dump())
-    with open(FILENAME, mode="a", newline="", encoding="utf-8") as file:
-        writer = csv.DictWriter(file, fieldnames=FIELDS)
-        writer.writerow(new_streamer.model_dump())
-    return new_streamer
-
-
-# Actualizar un streamer
-def update_streamer(streamer_id: int, update: UpdatedStreamer) -> Optional[StreamerWithID]:
-    streamers = read_all_streamers()
-    updated_streamer = None
-    for i, s in enumerate(streamers):
-        if s.id == streamer_id:
-            data = s.model_dump()
-            for key, value in update.model_dump(exclude_unset=True).items():
-                data[key] = value
-            updated_streamer = StreamerWithID(**data)
-            streamers[i] = updated_streamer
-            break
-
-    if updated_streamer:
-        with open(FILENAME, mode="w", newline="", encoding="utf-8") as file:
-            writer = csv.DictWriter(file, fieldnames=FIELDS)
-            writer.writeheader()
-            for s in streamers:
-                writer.writerow(s.model_dump())
-        return updated_streamer
-    return None
-
-
-# Eliminar un streamer
-def delete_streamer(streamer_id: int) -> Optional[StreamerWithID]:
-    streamers = read_all_streamers()
-    remaining = []
-    deleted = None
-    for s in streamers:
-        if s.id == streamer_id:
-            deleted = s
-        else:
-            remaining.append(s)
-
-    if deleted:
-        with open(FILENAME, mode="w", newline="", encoding="utf-8") as file:
-            writer = csv.DictWriter(file, fieldnames=FIELDS)
-            writer.writeheader()
-            for s in remaining:
-                writer.writerow(s.model_dump())
-    return deleted
-
-
-# Buscar streamers por nombre o videojuego
-def search_streamers(name: str = None, game: str = None) -> List[StreamerWithID]:
-    streamers = read_all_streamers()
-
-    if name:
-        streamers = [s for s in streamers if name.lower() in s.name.lower()]
-
-    if game:
-        streamers = [s for s in streamers if game.lower() in s.game.lower()]
-
-    return streamers
+            )
+            session.add(streamer)
+            inserted += 1
+    await session.commit()
+    return inserted
