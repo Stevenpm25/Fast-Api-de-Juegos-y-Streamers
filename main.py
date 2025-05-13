@@ -84,7 +84,9 @@ except Exception as e:
 async def get_session() -> AsyncSession:
     async with async_session() as session:
         yield session
-
+@app.get("/")
+def root():
+    return {"message": "Hello, Streamers and Videogames Impact API"}
 
 # --- Juegos ---
 @app.post("/games/import", tags=["Games"])
