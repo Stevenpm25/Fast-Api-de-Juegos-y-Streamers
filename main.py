@@ -300,7 +300,7 @@ async def on_startup():
         print("Por favor verifica:")
         print("1. Que tu IP esté en la lista de permitidos en Clever Cloud")
         print("2. Que el puerto sea 50013")
-        print("3. Que las credenciales sean correctas")
+        print("3. Que las credenciales sean correctas.")
         raise
 
 @app.on_event("shutdown")
