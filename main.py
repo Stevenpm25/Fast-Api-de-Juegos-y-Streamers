@@ -303,7 +303,10 @@ async def on_startup():
         print("3. Que las credenciales sean correctas")
         raise
 
-
+@app.on_event("shutdown")
+async def shutdown_db_connection():
+    await engine.dispose()  # Cierra todas las conexiones del pool
+    print("✅ Conexiones de la base de datos cerradas")
 # Health Check
 @app.get("/health", tags=["System"])
 async def health_check():
