@@ -1,94 +1,78 @@
-import csv
-from typing import List, Optional
+from typing import Optional, List
+from sqlmodel import select
+from sqlalchemy.ext.asyncio import AsyncSession
 from models_games import Game, GameWithID, UpdatedGame
+import csv
 
-FILENAME_GAMES = "games.csv"
-FIELDS_GAMES = ["id", "date", "game", "hours_watched", "peak_viewers", "peak_channels"]
 
-# Leer todos los videojuegos
-def read_all_games() -> List[GameWithID]:
-    games = []
-    try:
-        with open(FILENAME_GAMES, mode="r", encoding="utf-8") as file:
-            reader = csv.DictReader(file)
-            for row in reader:
-                row["id"] = int(row["id"])
-                row["hours_watched"] = int(row["hours_watched"])
-                row["peak_viewers"] = int(row["peak_viewers"])
-                row["peak_channels"] = int(row["peak_channels"])
-                games.append(GameWithID(**row))
-    except FileNotFoundError:
-        pass
-    return games
+async def read_all_games(session: AsyncSession) -> List[GameWithID]:
+    result = await session.exec(select(Game))
+    return result.all()
 
-# Leer un videojuego por ID
-def read_one_game(game_id: int) -> Optional[GameWithID]:
-    games = read_all_games()
-    return next((g for g in games if g.id == game_id), None)
 
-# Crear nuevo videojuego
-def create_game(game: Game) -> GameWithID:
-    games = read_all_games()
-    new_id = max([g.id for g in games], default=0) + 1
-    new_game = GameWithID(id=new_id, **game.model_dump())
-    games.append(new_game)
+async def read_one_game(session: AsyncSession, game_id: int) -> Optional[GameWithID]:
+    return await session.get(Game, game_id)
 
-    with open(FILENAME_GAMES, mode="w", newline="", encoding="utf-8") as file:
-        writer = csv.DictWriter(file, fieldnames=FIELDS_GAMES)
-        writer.writeheader()
-        for g in games:
-            writer.writerow(g.model_dump())
+
+async def create_game(session: AsyncSession, game: Game) -> GameWithID:
+    new_game = Game(**game.model_dump())
+    session.add(new_game)
+    await session.commit()
+    await session.refresh(new_game)
     return new_game
 
-# Actualizar videojuego por ID
-def update_game(game_id: int, update: UpdatedGame) -> Optional[GameWithID]:
-    games = read_all_games()
-    updated_game = None
 
-    for i, g in enumerate(games):
-        if g.id == game_id:
-            data = g.model_dump()
-            for key, value in update.model_dump(exclude_unset=True).items():
-                data[key] = value
-            updated_game = GameWithID(**data)
-            games[i] = updated_game
-            break
+async def update_game(session: AsyncSession, game_id: int, update: UpdatedGame) -> Optional[GameWithID]:
+    existing = await session.get(Game, game_id)
+    if not existing:
+        return None
 
-    if updated_game:
-        with open(FILENAME_GAMES, mode="w", newline="", encoding="utf-8") as file:
-            writer = csv.DictWriter(file, fieldnames=FIELDS_GAMES)
-            writer.writeheader()
-            for g in games:
-                writer.writerow(g.model_dump())
-    return updated_game
+    for key, value in update.model_dump(exclude_unset=True).items():
+        setattr(existing, key, value)
 
-# Eliminar videojuego por ID
-def delete_game(game_id: int) -> Optional[GameWithID]:
-    games = read_all_games()
-    remaining = []
-    deleted = None
-    for g in games:
-        if g.id == game_id:
-            deleted = g
-        else:
-            remaining.append(g)
+    session.add(existing)
+    await session.commit()
+    await session.refresh(existing)
+    return existing
 
-    if deleted:
-        with open(FILENAME_GAMES, mode="w", newline="", encoding="utf-8") as file:
-            writer = csv.DictWriter(file, fieldnames=FIELDS_GAMES)
-            writer.writeheader()
-            for g in remaining:
-                writer.writerow(g.model_dump())
-    return deleted
 
-# Buscar videojuegos por nombre parcial o año
-def search_games(game_name: Optional[str] = None, year: Optional[str] = None) -> List[GameWithID]:
-    games = read_all_games()
+async def delete_game(session: AsyncSession, game_id: int) -> Optional[GameWithID]:
+    existing = await session.get(Game, game_id)
+    if not existing:
+        return None
+
+    await session.delete(existing)
+    await session.commit()
+    return existing
+
+
+async def search_games(session: AsyncSession, game_name: Optional[str] = None, year: Optional[str] = None) -> List[GameWithID]:
+    query = select(Game)
 
     if game_name:
-        games = [g for g in games if game_name.lower() in g.game.lower()]
+        query = query.where(Game.game.ilike(f"%{game_name}%"))
 
     if year:
-        games = [g for g in games if g.date.startswith(year)]
+        query = query.where(Game.date.startswith(year))
 
-    return games
+    result = await session.exec(query)
+    return result.all()
+
+
+# ✅ Operación para importar todos los videojuegos desde CSV a la base de datos
+async def import_games_from_csv(session: AsyncSession, csv_path: str = "games.csv") -> int:
+    inserted = 0
+    with open(csv_path, mode="r", encoding="utf-8") as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            game = Game(
+                date=row["date"],
+                game=row["game"],
+                hours_watched=int(row["hours_watched"]),
+                peak_viewers=int(row["peak_viewers"]),
+                peak_channels=int(row["peak_channels"]),
+            )
+            session.add(game)
+            inserted += 1
+    await session.commit()
+    return inserted
