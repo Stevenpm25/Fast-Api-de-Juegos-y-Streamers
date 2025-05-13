@@ -67,7 +67,7 @@ try:
         echo=True,
         pool_pre_ping=True,
         pool_size=5,
-        max_overflow=10
+        max_overflow=0
     )
     async_session = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
 
