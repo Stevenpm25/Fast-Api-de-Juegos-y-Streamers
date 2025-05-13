@@ -15,12 +15,13 @@ async def read_one_game(session: AsyncSession, game_id: int) -> Optional[GameWit
     return await session.get(Game, game_id)
 
 
-async def create_game(session: AsyncSession, game: Game) -> GameWithID:
-    new_game = Game(**game.model_dump())
+async def create_game(session: AsyncSession, game: GameCreate) -> Game:
+    new_game = Game(**game.dict())
     session.add(new_game)
     await session.commit()
     await session.refresh(new_game)
     return new_game
+
 
 
 async def update_game(session: AsyncSession, game_id: int, update: UpdatedGame) -> Optional[GameWithID]:

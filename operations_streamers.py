@@ -15,8 +15,8 @@ async def read_one_streamer(session: AsyncSession, streamer_id: int) -> Optional
     return await session.get(Streamer, streamer_id)
 
 
-async def create_streamer(session: AsyncSession, streamer: Streamer) -> StreamerWithID:
-    new_streamer = Streamer(**streamer.model_dump())
+async def create_streamer(session: AsyncSession, streamer: StreamerCreate) -> Streamer:
+    new_streamer = Streamer(**streamer.dict())
     session.add(new_streamer)
     await session.commit()
     await session.refresh(new_streamer)

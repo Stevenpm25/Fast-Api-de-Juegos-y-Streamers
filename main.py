@@ -12,8 +12,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Models
-from models_games import Game, GameWithID, UpdatedGame
-from models_streamers import Streamer, StreamerWithID, UpdatedStreamer
+from models_games import Game, GameWithID, UpdatedGame, GameCreate
+from models_streamers import Streamer, StreamerWithID, UpdatedStreamer, StreamerCreate
 
 # Operations
 from operations_games import (
@@ -146,8 +146,9 @@ async def get_game(game_id: int, session: AsyncSession = Depends(get_session)):
     return game
 
 
+# Crear juego
 @app.post("/games", response_model=GameWithID, tags=["Games"])
-async def create_new_game(game: Game, session: AsyncSession = Depends(get_session)):
+async def create_new_game(game: GameCreate, session: AsyncSession = Depends(get_session)):
     return await create_game(session, game)
 
 
@@ -238,9 +239,11 @@ async def get_streamer(streamer_id: int, session: AsyncSession = Depends(get_ses
     return streamer
 
 
+# Crear streamer
 @app.post("/streamers", response_model=StreamerWithID, tags=["Streamers"])
-async def create_new_streamer(streamer: Streamer, session: AsyncSession = Depends(get_session)):
+async def create_new_streamer(streamer: StreamerCreate, session: AsyncSession = Depends(get_session)):
     return await create_streamer(session, streamer)
+
 
 
 @app.put("/streamers/{streamer_id}", response_model=StreamerWithID, tags=["Streamers"])

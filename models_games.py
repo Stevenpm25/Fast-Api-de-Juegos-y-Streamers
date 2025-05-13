@@ -16,6 +16,17 @@ class Game(GameBase, table=True):
 
 class GameWithID(GameBase):
     id: int
+# models_games.py
+
+# models_games.py
+
+class GameCreate(SQLModel):
+    date: str = Field(..., min_length=4)
+    game: str = Field(..., min_length=1, max_length=100)
+    hours_watched: int = Field(..., ge=0)
+    peak_viewers: int = Field(..., ge=0)
+    peak_channels: int = Field(..., ge=0)
+
 
 
 class UpdatedGame(SQLModel):

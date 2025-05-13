@@ -3,10 +3,20 @@ from sqlmodel import SQLModel, Field
 
 
 class StreamerBase(SQLModel):
-    name: str = Field(..., min_length=2, max_length=50)
-    game: str = Field(..., min_length=2, max_length=50)
+    name: str = Field(..., min_length=2, max_length=100)
+    game: str = Field(..., min_length=2, max_length=100)
     follower_count: int = Field(..., ge=0)
     avg_viewers: int = Field(..., ge=0)
+# models_games.py
+
+# models_streamers.py
+
+class StreamerCreate(SQLModel):
+    name: str = Field(..., min_length=2, max_length=100)
+    game: str = Field(..., min_length=2, max_length=100)
+    follower_count: int = Field(..., ge=0)
+    avg_viewers: int = Field(..., ge=0)
+
 
 
 class Streamer(StreamerBase, table=True):
@@ -18,7 +28,8 @@ class StreamerWithID(StreamerBase):
 
 
 class UpdatedStreamer(SQLModel):
-    name: Optional[str] = Field(default=None, min_length=2, max_length=50)
-    game: Optional[str] = Field(default=None, min_length=2, max_length=50)
+    name: Optional[str] = Field(default=None, min_length=2, max_length=100)
+    game: Optional[str] = Field(default=None, min_length=2, max_length=100)
     follower_count: Optional[int] = Field(default=None, ge=0)
     avg_viewers: Optional[int] = Field(default=None, ge=0)
+
