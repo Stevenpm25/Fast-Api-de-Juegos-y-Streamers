@@ -1,15 +1,16 @@
-from fastapi import FastAPI, Depends, Request, HTTPException, Query, UploadFile, File, Form
+from fastapi import FastAPI, Depends, Request, HTTPException, Query, UploadFile, File, Form, Body
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from sqlmodel import SQLModel
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy import text
-from typing import Optional, List
+from typing import Optional, List, Dict
 import os
 import csv
 import io
 import datetime
+import random
 from dotenv import load_dotenv
 from starlette.responses import HTMLResponse
 
@@ -23,7 +24,7 @@ from models_streamers import Streamer, StreamerWithID, UpdatedStreamer, Streamer
 # Operations
 from operations_games import (
     read_all_games, read_one_game, create_game, update_game, delete_game,
-    search_games
+    search_games, partial_update_game
 )
 from operations_streamers import (
     read_all_streamers, read_one_streamer, create_streamer, update_streamer,
@@ -209,7 +210,7 @@ async def add_game_submit(
             peak_viewers=peak_viewers,
             peak_channels=peak_channels
         )
-        
+
         created_game = await create_game(session, new_game)
         if created_game:
             return RedirectResponse(
@@ -323,15 +324,15 @@ async def update_existing_game(
             raise HTTPException(status_code=404, detail="Juego no encontrado")
 
         update_data = update.model_dump(exclude_unset=True)
-        
+
         # Actualizar solo los campos proporcionados
         for key, value in update_data.items():
             setattr(game, key, value)
-        
+
         session.add(game)
         await session.commit()
         await session.refresh(game)
-        
+
         return game
     except Exception as e:
         await session.rollback()
@@ -339,6 +340,38 @@ async def update_existing_game(
             status_code=500,
             detail=f"Error al actualizar el juego: {str(e)}"
         )
+@app.patch("/api/games/partial-update/{game_id}", response_model=GameWithID, tags=["Games"])
+async def patch_partial_game(
+    game_id: int,
+    game: Optional[str] = Query(None, description="Nuevo nombre del juego"),
+    date: Optional[str] = Query(None, description="Nueva fecha en formato AAAA-MM-DD"),
+    hours_watched: Optional[int] = Query(None, description="Nuevas horas vistas"),
+    peak_viewers: Optional[int] = Query(None, description="Nuevo pico de espectadores"),
+    peak_channels: Optional[int] = Query(None, description="Nuevo pico de canales"),
+    session: AsyncSession = Depends(get_session)
+):
+    updates = {}
+
+    if game is not None:
+        updates["game"] = game
+    if date is not None:
+        updates["date"] = date
+    if hours_watched is not None:
+        updates["hours_watched"] = hours_watched
+    if peak_viewers is not None:
+        updates["peak_viewers"] = peak_viewers
+    if peak_channels is not None:
+        updates["peak_channels"] = peak_channels
+
+    if not updates:
+        raise HTTPException(status_code=400, detail="No se proporcionaron datos para actualizar")
+
+    updated = await partial_update_game(session, game_id, updates)
+    if not updated:
+        raise HTTPException(status_code=404, detail="Juego no encontrado")
+
+    return updated
+
 
 @app.delete("/api/games/{game_id}", response_model=GameWithID, tags=["Games"])
 async def delete_existing_game(game_id: int, session: AsyncSession = Depends(get_session)):
@@ -354,6 +387,24 @@ async def delete_existing_game(game_id: int, session: AsyncSession = Depends(get
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@app.get("/api/games/deleted", tags=["Games"])
+async def get_deleted_games():
+    eliminados_path = "eliminados.csv"
+    if not os.path.exists(eliminados_path):
+        return []
+
+    deleted_games = []
+    with open(eliminados_path, mode="r", encoding="utf-8") as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            # Convertir los campos numéricos (que vienen como string del CSV)
+            row["id"] = int(row["id"])
+            row["hours_watched"] = int(row["hours_watched"])
+            row["peak_viewers"] = int(row["peak_viewers"])
+            row["peak_channels"] = int(row["peak_channels"])
+            deleted_games.append(row)
+
+    return deleted_games
 
 @app.get("/api/games/{game_id}", response_model=GameWithID, tags=["Games"])
 async def get_game(game_id: int, session: AsyncSession = Depends(get_session)):
@@ -405,6 +456,45 @@ async def import_streamers(file: UploadFile = File(...), session: AsyncSession =
     except Exception as e:
         await session.rollback()
         raise HTTPException(status_code=400, detail=str(e))
+
+@app.post("/api/games/recover/{game_id}", tags=["Games"])
+async def recover_deleted_game(game_id: int, session: AsyncSession = Depends(get_session)):
+    eliminados_path = "eliminados.csv"
+    if not os.path.exists(eliminados_path):
+        raise HTTPException(status_code=404, detail="No hay eliminados para recuperar")
+
+    recovered = None
+    rows = []
+    with open(eliminados_path, mode="r", encoding="utf-8") as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            if int(row["id"]) == game_id:
+                recovered = row
+            else:
+                rows.append(row)
+
+    if not recovered:
+        raise HTTPException(status_code=404, detail="Juego no encontrado en eliminados")
+
+    # Insertar de nuevo en la base de datos
+    new_game = Game(
+        id=int(recovered["id"]),
+        date=recovered["date"],
+        game=recovered["game"],
+        hours_watched=int(recovered["hours_watched"]),
+        peak_viewers=int(recovered["peak_viewers"]),
+        peak_channels=int(recovered["peak_channels"]),
+    )
+    session.add(new_game)
+    await session.commit()
+
+    # Actualizar el archivo eliminados.csv removiendo el recuperado
+    with open(eliminados_path, mode="w", newline='', encoding="utf-8") as file:
+        writer = csv.DictWriter(file, fieldnames=["id", "date", "game", "hours_watched", "peak_viewers", "peak_channels"])
+        writer.writeheader()
+        writer.writerows(rows)
+
+    return {"message": f"Juego con ID {game_id} recuperado correctamente"}
 
 @app.get("/api/streamers", response_model=List[StreamerWithID], tags=["Streamers"])
 async def get_all_streamers(session: AsyncSession = Depends(get_session)):
@@ -471,6 +561,77 @@ async def shutdown_db_connection():
     await engine.dispose()
     print("✅ Conexiones de la base de datos cerradas")
 
+# Rutas para AI Chat
+@app.get("/ai-chat", response_class=HTMLResponse, tags=["AI"])
+async def ai_chat_page(request: Request):
+    try:
+        return templates.TemplateResponse(
+            "ai_chat.html",
+            {
+                "request": request,
+                "current_year": datetime.datetime.now().year
+            }
+        )
+    except Exception as e:
+        print(f"Error al renderizar la plantilla de AI Chat: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"No se pudo cargar la página de AI Chat: {str(e)}"
+        )
+
+@app.post("/api/ai-chat", response_model=Dict[str, str], tags=["AI"])
+async def ai_chat_api(message: Dict[str, str] = Body(...)):
+    try:
+        user_message = message.get("message", "").lower()
+
+        # Respuestas predefinidas para preguntas comunes de código
+        code_responses = {
+            "python": "```python\n# Ejemplo de código Python\ndef saludar(nombre):\n    return f'¡Hola, {nombre}!'\n\n# Uso de la función\nprint(saludar('Usuario'))\n```",
+            "javascript": "```javascript\n// Ejemplo de código JavaScript\nfunction saludar(nombre) {\n    return `¡Hola, ${nombre}!`;\n}\n\n// Uso de la función\nconsole.log(saludar('Usuario'));\n```",
+            "html": "```html\n<!-- Ejemplo de código HTML -->\n<!DOCTYPE html>\n<html>\n<head>\n    <title>Mi Página</title>\n</head>\n<body>\n    <h1>¡Hola, Mundo!</h1>\n    <p>Esta es una página HTML de ejemplo.</p>\n</body>\n</html>\n```",
+            "css": "```css\n/* Ejemplo de código CSS */\nbody {\n    font-family: Arial, sans-serif;\n    background-color: #f0f0f0;\n    color: #333;\n}\n\nh1 {\n    color: #0066cc;\n    text-align: center;\n}\n```",
+            "java": "```java\n// Ejemplo de código Java\npublic class Saludo {\n    public static void main(String[] args) {\n        System.out.println(\"¡Hola, Mundo!\");\n    }\n}\n```",
+            "c#": "```csharp\n// Ejemplo de código C#\nusing System;\n\nclass Program {\n    static void Main() {\n        Console.WriteLine(\"¡Hola, Mundo!\");\n    }\n}\n```",
+            "fastapi": "```python\n# Ejemplo de código FastAPI\nfrom fastapi import FastAPI\n\napp = FastAPI()\n\n@app.get(\"/\")\nasync def root():\n    return {\"message\": \"¡Hola, Mundo!\"}\n\n@app.get(\"/items/{item_id}\")\nasync def read_item(item_id: int):\n    return {\"item_id\": item_id}\n```",
+            "sql": "```sql\n-- Ejemplo de código SQL\nCREATE TABLE usuarios (\n    id INT PRIMARY KEY,\n    nombre VARCHAR(100),\n    email VARCHAR(100),\n    fecha_registro DATE\n);\n\nINSERT INTO usuarios (id, nombre, email, fecha_registro)\nVALUES (1, 'Juan Pérez', 'juan@ejemplo.com', '2023-01-15');\n\nSELECT * FROM usuarios WHERE id = 1;\n```"
+        }
+
+        # Respuestas generales
+        general_responses = [
+            "Puedo ayudarte a generar código en varios lenguajes. ¿En qué lenguaje estás interesado?",
+            "Para generar código, especifica el lenguaje y lo que quieres hacer. Por ejemplo: 'Muéstrame código en Python para leer un archivo'.",
+            "¿Necesitas ayuda con algún lenguaje de programación específico?",
+            "Estoy aquí para ayudarte con ejemplos de código. ¿Qué tipo de funcionalidad necesitas implementar?"
+        ]
+
+        # Buscar coincidencias en las preguntas de código
+        for key, response in code_responses.items():
+            if key in user_message:
+                return {"response": f"Aquí tienes un ejemplo de código en {key.capitalize()}:\n\n{response}"}
+
+        # Respuestas para preguntas específicas
+        if "hola" in user_message or "saludos" in user_message:
+            return {"response": "¡Hola! Soy tu asistente de código. ¿En qué puedo ayudarte hoy?"}
+        elif "gracias" in user_message:
+            return {"response": "¡De nada! Estoy aquí para ayudarte. ¿Hay algo más en lo que pueda asistirte?"}
+        elif "ayuda" in user_message:
+            return {"response": "Puedo ayudarte a generar código en varios lenguajes como Python, JavaScript, HTML, CSS, Java, C#, FastAPI y SQL. Solo pregúntame por el lenguaje que necesitas."}
+        elif "generar" in user_message and "código" in user_message:
+            return {"response": "Para generar código, por favor especifica el lenguaje de programación y la funcionalidad que necesitas. Por ejemplo: 'Genera código en Python para una calculadora simple'."}
+        elif "función" in user_message or "funcion" in user_message:
+            return {"response": "```python\n# Ejemplo de una función en Python\ndef calcular_area(base, altura):\n    \"\"\"Calcula el área de un rectángulo\"\"\"\n    return base * altura\n\n# Uso de la función\narea = calcular_area(5, 3)\nprint(f'El área es: {area}')\n```"}
+        elif "clase" in user_message:
+            return {"response": "```python\n# Ejemplo de una clase en Python\nclass Persona:\n    def __init__(self, nombre, edad):\n        self.nombre = nombre\n        self.edad = edad\n    \n    def saludar(self):\n        return f'Hola, mi nombre es {self.nombre} y tengo {self.edad} años.'\n\n# Crear una instancia de la clase\npersona = Persona('Ana', 25)\nprint(persona.saludar())\n```"}
+        elif "api" in user_message or "rest" in user_message:
+            return {"response": "```python\n# Ejemplo de una API REST con FastAPI\nfrom fastapi import FastAPI, HTTPException\nfrom pydantic import BaseModel\n\napp = FastAPI()\n\nclass Item(BaseModel):\n    name: str\n    price: float\n\nitems = []\n\n@app.post('/items/')\nasync def create_item(item: Item):\n    items.append(item)\n    return item\n\n@app.get('/items/')\nasync def read_items():\n    return items\n```"}
+
+        # Si no hay coincidencias específicas, devolver una respuesta general aleatoria
+        return {"response": random.choice(general_responses)}
+
+    except Exception as e:
+        print(f"Error en AI Chat API: {str(e)}")
+        return {"response": "Lo siento, ha ocurrido un error al procesar tu solicitud."}
+
 # Endpoints de salud
 @app.get("/health", tags=["System"])
 async def health_check():
@@ -486,4 +647,3 @@ async def db_check(session: AsyncSession = Depends(get_session)):
             status_code=500,
             detail=f"Database connection failed: {str(e)}"
         )
-

@@ -98,7 +98,7 @@
                 padding: 20px 10px;
                 justify-content: flex-start;
             }
-            
+
             .nav-button {
                 flex: 0 0 auto;
             }
@@ -153,6 +153,14 @@
         <span>
             ℹ️ Acerca de
             <img src="/static/image/info.png" alt="Info">
+        </span>
+    </button>
+
+    <button class="rpgui-button nav-button"
+            onclick="playBowSound(); setTimeout(() => window.location.href='/ai-chat', 2000)">
+        <span>
+            🤖 AI Chat
+            <img src="/static/image/ai-chat.png" alt="AI Chat" onerror="this.src='/static/image/minecraft_image.png'">
         </span>
     </button>
 </div>

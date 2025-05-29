@@ -2,6 +2,7 @@ from typing import Optional, List
 from sqlmodel import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from models_games import Game, GameWithID, UpdatedGame,GameCreate, Game
+import os
 import csv
 
 
@@ -43,10 +44,16 @@ async def delete_game(session: AsyncSession, game_id: int) -> Optional[GameWithI
     if not existing:
         return None
 
+    # Convertimos a objeto plano
+    plain_game = GameWithID.model_validate(existing)
+
+    # Guardamos en CSV SIN await
+    store_deleted_game(plain_game)
+
+    # Eliminamos de la base
     await session.delete(existing)
     await session.commit()
-    return existing
-
+    return plain_game
 
 async def search_games(session: AsyncSession, game_name: str = None) -> List[GameWithID]:
     try:
@@ -84,3 +91,34 @@ async def import_games_from_csv(session: AsyncSession, csv_path: str = "games.cs
             inserted += 1
     await session.commit()
     return inserted
+def store_deleted_game(deleted_game: GameWithID):
+    eliminados_path = "eliminados.csv"
+    file_exists = os.path.isfile(eliminados_path)
+
+    with open(eliminados_path, mode="a", newline='', encoding="utf-8") as file:
+        writer = csv.writer(file)
+        if not file_exists:
+            # Escribir cabeceras si el archivo no existe
+            writer.writerow(["id", "date", "game", "hours_watched", "peak_viewers", "peak_channels"])
+
+        writer.writerow([
+            deleted_game.id,
+            deleted_game.date,
+            deleted_game.game,
+            deleted_game.hours_watched,
+            deleted_game.peak_viewers,
+            deleted_game.peak_channels
+        ])
+async def partial_update_game(session: AsyncSession, game_id: int, update_data: dict) -> Optional[GameWithID]:
+    existing = await session.get(Game, game_id)
+    if not existing:
+        return None
+
+    for key, value in update_data.items():
+        if hasattr(existing, key):
+            setattr(existing, key, value)
+
+    session.add(existing)
+    await session.commit()
+    await session.refresh(existing)
+    return existing

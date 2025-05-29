@@ -113,6 +113,66 @@ h2, h3 {
     .form-buttons .rpgui-button {
         width: 100%;
     }
+<style>
+    /* ... [todos tus estilos existentes] ... */
+
+    @media (max-width: 768px) {
+        .page-layout {
+            grid-template-columns: 1fr;
+            height: auto;
+            overflow: visible;
+        }
+
+        .forms-container {
+            height: auto;
+            overflow: visible;
+        }
+
+        .form-group {
+            grid-template-columns: 1fr;
+        }
+
+        .form-buttons {
+            flex-direction: column;
+        }
+
+        .form-buttons .rpgui-button {
+            width: 100%;
+        }
+    } /* <-- ¡Aquí se cierra el media query! */
+
+    /* NUEVOS ESTILOS PARA LA TABLA (fuera del media query) */
+    .table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .table-wrapper table {
+        width: 100%;
+        min-width: unset;
+        table-layout: auto;
+    }
+
+    .table-wrapper td, .table-wrapper th {
+        word-break: break-word;
+        padding: 8px 12px;
+        max-width: 200px;
+    }
+
+    /* Ajuste adicional para el contenedor principal */
+    .page-layout {
+        grid-template-columns: 250px minmax(0, 1fr);
+    }
+
+    .forms-container {
+        overflow-x: hidden;
+    }}
+</style>
 }
 </style>
 
@@ -365,6 +425,32 @@ h2, h3 {
         </div>
     </div>
 </div>
+
+<!-- Formulario de Importación de CSV -->
+<div id="importForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+    <h3>📥 Importar Juegos desde CSV</h3>
+    <form onsubmit="importGames(event)">
+        <div class="form-group">
+            <label class="rpgui-label">📁 Archivo CSV:</label>
+            <input type="file"
+                   id="importFile"
+                   class="rpgui-input"
+                   accept=".csv"
+                   required>
+            <p style="font-size: 0.8em; margin-top: 0.5em; color: #aaa;">
+                El archivo CSV debe contener las columnas: date, game, hours_watched, peak_viewers, peak_channels
+            </p>
+        </div>
+        <div class="form-buttons">
+            <button type="submit" class="rpgui-button">
+                <span>📥 Importar</span>
+            </button>
+            <button type="button" class="rpgui-button" onclick="hideAllForms()">
+                <span>❌ Cancelar</span>
+            </button>
+        </div>
+    </form>
+</div>
 <script>
 async function buscarPorNombre(event) {
     event.preventDefault();
@@ -547,7 +633,12 @@ function showSearchByName() {
     hideAllForms();
     document.getElementById('searchByNameForm').style.display = 'block';
 }
-
+function showImportForm() {
+    hideAllForms();
+    document.getElementById('importForm').style.display = 'block';
+    // Limpiar el campo de archivo al mostrar el formulario
+    document.getElementById('importFile').value = '';
+}
 async function buscarPorNombre(event) {
     event.preventDefault();
     const nombre = document.getElementById("buscarGameName").value;
