@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Agregar un Streamer</h2>
+<form method="post" action="/add/streamer">
+    <!-- Nombre del Streamer -->
+    <label>Nombre: 
+        <input type="text" name="name" placeholder="Ejemplo: Ninja" minlength="2" maxlength="100" required>
+    </label> 
+    <br>
+
+    <!-- Juego Principal -->
+    <label>Juego Principal: 
+        <input type="text" name="game" placeholder="Ejemplo: Fortnite" minlength="2" maxlength="100" required>
+    </label> 
+    <br>
+
+    <!-- Cantidad de Seguidores -->
+    <label>Cantidad de Seguidores: 
+        <input type="number" name="follower_count" placeholder="Ejemplo: 2000000" min="0" required>
+    </label> 
+    <br>
+
+    <!-- Promedio de Espectadores -->
+    <label>Espectadores Promedio: 
+        <input type="number" name="avg_viewers" placeholder="Ejemplo: 15000" min="0" required>
+    </label> 
+    <br>
+
+    <!-- Botón de envío -->
+    <button type="submit" class="rpgui-button">Agregar Streamer</button>
+
+</form>
+{% endblock %}

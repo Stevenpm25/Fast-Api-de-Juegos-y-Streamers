@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block title %}Inicio - Análisis de Streamers y Videojuegos{% endblock %}
+
+{% block content %}
+<style>
+  .home-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: -10px;
+  }
+
+  .buttons-section {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1800px;
+    padding: 0 20px;
+    box-sizing: border-box;
+    margin: 0 auto;
+    gap: 15px;
+  }
+
+  .home-button {
+    flex: 1;
+    padding: 15px 30px !important;
+    text-align: center;
+    font-size: 1.1em !important;
+  }
+
+  .home-button span {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .emoji {
+    font-size: 1.2em;
+  }
+
+  .home-button:hover {
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 1400px) {
+    .buttons-section {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+    }
+  }
+</style>
+
+<div class="home-container">
+  <section class="buttons-section">
+    <button class="rpgui-button home-button" onclick="window.location.href='/streamers'">
+      <span>
+        <span class="emoji">🎥</span>
+        ¡Descubre los Streamers!
+      </span>
+    </button>
+
+    <button class="rpgui-button home-button" onclick="window.location.href='/games'">
+      <span>
+        <span class="emoji">🕹️</span>
+        ¡Explora los Juegos!
+      </span>
+    </button>
+
+    <button class="rpgui-button home-button" onclick="document.getElementById('mas-info').scrollIntoView({behavior: 'smooth', block: 'center'})">
+      <span>
+        <span class="emoji">🤔</span>
+        ¿Quieres Saber Más?
+      </span>
+    </button>
+
+    <button class="rpgui-button home-button" onclick="window.open('https://stevenpena.com', '_blank')">
+      <span>
+        <span class="emoji">👋</span>
+        Conoce al Creador
+      </span>
+    </button>
+  </section>
+
+  {% include 'info_section.html' %}
+</div>
+{% endblock %}

@@ -1,0 +1,417 @@
+{% extends 'base.html' %}
+{% block title %}CRUD de Juegos{% endblock %}
+
+{% block content %}
+<style>
+.page-layout {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 1em;
+    padding: 1em;
+    height: calc(100vh - 100px);
+    overflow: hidden;
+}
+
+.buttons-container {
+    height: 100%;
+    overflow-y: auto;
+}
+
+.crud-buttons {
+    position: sticky;
+    top: 0;
+}
+
+.button-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8em;
+}
+
+.button-row .rpgui-button {
+    width: 100%;
+    padding: 0.5em !important;
+    min-height: unset !important;
+}
+
+.forms-container {
+    height: 100%;
+    overflow-y: auto;
+    padding-right: 1em;
+}
+
+.operation-form {
+    margin-bottom: 1em;
+    padding: 1em;
+}
+
+.form-group {
+    margin-bottom: 0.8em;
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.form-group label {
+    font-size: 0.9em;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.4em;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.8em;
+    margin-top: 1em;
+}
+
+.form-buttons .rpgui-button {
+    padding: 0.5em 1em !important;
+    min-height: unset !important;
+}
+
+h2, h3 {
+    text-align: center;
+    margin-bottom: 0.8em;
+    font-size: 1.1em;
+}
+
+.message {
+    padding: 0.8em;
+    margin-bottom: 1em;
+    border-radius: 4px;
+}
+
+.success { background-color: rgba(0, 255, 0, 0.1); color: #00ff00; }
+.error { background-color: rgba(255, 0, 0, 0.1); color: #ff0000; }
+
+@media (max-width: 768px) {
+    .page-layout {
+        grid-template-columns: 1fr;
+        height: auto;
+        overflow: visible;
+    }
+
+    .forms-container {
+        height: auto;
+        overflow: visible;
+    }
+
+    .form-group {
+        grid-template-columns: 1fr;
+    }
+
+    .form-buttons {
+        flex-direction: column;
+    }
+
+    .form-buttons .rpgui-button {
+        width: 100%;
+    }
+}
+</style>
+
+<div class="page-layout">
+    <!-- Columna izquierda: Botones -->
+    <div class="buttons-container">
+        <div class="crud-buttons rpgui-container framed-golden">
+            <h2>🎮 Opciones</h2>
+            <div class="button-row">
+                <button class="rpgui-button" onclick="showCreateForm()">
+                    <span>➕ Crear</span>
+                </button>
+                <button class="rpgui-button" onclick="showDeleteForm()">
+                    <span>🗑️ Eliminar</span>
+                </button>
+                <button class="rpgui-button" onclick="showUpdateForm()">
+                    <span>✏️ Actualizar</span>
+                </button>
+                <button class="rpgui-button" onclick="location.href='/games'">
+                    <span>📋 Listar</span>
+                </button>
+                <button class="rpgui-button" onclick="showSearchById()">
+                    <span>🔍 Buscar ID</span>
+                </button>
+                <button class="rpgui-button" onclick="showSearchByName()">
+                    <span>🔎 Buscar Nombre</span>
+                </button>
+                <button class="rpgui-button" onclick="showImportForm()">
+                    <span>📥 Importar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Columna derecha: Formularios -->
+    <div class="forms-container">
+        {% if success_msg %}
+        <div class="message success">{{ success_msg }}</div>
+        {% endif %}
+        {% if error_msg %}
+        <div class="message error">{{ error_msg }}</div>
+        {% endif %}
+
+        <!-- Formularios aquí -->
+        <!-- Ejemplo del formulario de creación (los demás seguirían el mismo patrón) -->
+        <div id="createForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+            <h3>➕ Crear Nuevo Juego</h3>
+            <form onsubmit="createGame(event)">
+                <div class="form-group">
+                    <label class="rpgui-label">🎲 Nombre:</label>
+                    <input type="text" id="createGameName" class="rpgui-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">📅 Fecha:</label>
+                    <input type="text" 
+                           id="createGameDate" 
+                           class="rpgui-input" 
+                           placeholder="AAAA-MM-DD" 
+                           pattern="\d{4}-\d{2}-\d{2}"
+                           title="Usa el formato AAAA-MM-DD (ejemplo: 2024-01-01)"
+                           oninput="formatearFecha(this)"
+                           onblur="validarFecha(this)"
+                           required>
+                    <span id="fechaError" style="color: #ff6b6b; display: none; font-size: 0.8em; margin-top: 0.3em;">
+                        Por favor, ingresa una fecha válida en formato AAAA-MM-DD
+                    </span>
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">⌛ Horas:</label>
+                    <input type="number" id="createGameHours" class="rpgui-input" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">👥 Espectadores:</label>
+                    <input type="number" id="createGamePeakViewers" class="rpgui-input" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">📺 Canales:</label>
+                    <input type="number" id="createGamePeakChannels" class="rpgui-input" min="0" required>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="rpgui-button">💾 Guardar</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Los demás formularios seguirían el mismo patrón -->
+        <!-- ... -->
+    </div>
+</div>
+
+<!-- El script se mantiene igual -->
+<script>
+function formatearFecha(input) {
+    // Eliminar cualquier carácter que no sea número
+    let valor = input.value.replace(/\D/g, '');
+    
+    // Si tenemos 8 o más dígitos, formateamos como AAAA-MM-DD
+    if (valor.length >= 8) {
+        valor = valor.slice(0, 8); // Limitamos a 8 dígitos
+        valor = valor.slice(0, 4) + '-' + valor.slice(4, 6) + '-' + valor.slice(6);
+    }
+    // Si tenemos 6 dígitos, añadimos el primer guion
+    else if (valor.length >= 6) {
+        valor = valor.slice(0, 4) + '-' + valor.slice(4, 6) + '-' + valor.slice(6);
+    }
+    // Si tenemos 4 dígitos, añadimos el primer guion
+    else if (valor.length >= 4) {
+        valor = valor.slice(0, 4) + '-' + valor.slice(4);
+    }
+    
+    input.value = valor;
+}
+
+function validarFecha(input) {
+    const fechaError = document.getElementById('fechaError');
+    const valor = input.value;
+    const regex = /^(\d{4})-(\d{2})-(\d{2})$/;
+    
+    if (!regex.test(valor)) {
+        fechaError.textContent = 'Formato inválido. Usa AAAA-MM-DD';
+        fechaError.style.display = 'block';
+        input.setCustomValidity('Formato inválido');
+        return false;
+    }
+    
+    const [, año, mes, dia] = valor.match(regex);
+    const añoNum = parseInt(año);
+    const mesNum = parseInt(mes);
+    const diaNum = parseInt(dia);
+    
+    // Validar rango de fechas
+    if (añoNum < 2000 || añoNum > 2025) {
+        fechaError.textContent = 'El año debe estar entre 2000 y 2025';
+        fechaError.style.display = 'block';
+        input.setCustomValidity('Año fuera de rango');
+        return false;
+    }
+    
+    if (mesNum < 1 || mesNum > 12) {
+        fechaError.textContent = 'El mes debe estar entre 01 y 12';
+        fechaError.style.display = 'block';
+        input.setCustomValidity('Mes inválido');
+        return false;
+    }
+    
+    // Validar días según el mes
+    const diasEnMes = new Date(añoNum, mesNum, 0).getDate();
+    if (diaNum < 1 || diaNum > diasEnMes) {
+        fechaError.textContent = `El día debe estar entre 01 y ${diasEnMes} para el mes seleccionado`;
+        fechaError.style.display = 'block';
+        input.setCustomValidity('Día inválido');
+        return false;
+    }
+    
+    fechaError.style.display = 'none';
+    input.setCustomValidity('');
+    return true;
+}
+
+// Añadir validación antes de enviar el formulario
+document.querySelector('form').addEventListener('submit', function(event) {
+    const fechaInput = document.getElementById('createGameDate');
+    if (!validarFecha(fechaInput)) {
+        event.preventDefault();
+    }
+});
+
+// Mantén el mismo JavaScript que antes
+function hideAllForms() {
+    document.querySelectorAll('.operation-form').forEach(form => {
+        form.style.display = 'none';
+    });
+}
+
+function showForm(formId) {
+    hideAllForms();
+    document.getElementById(formId).style.display = 'block';
+}
+
+function showCreateForm() {
+    showForm('createForm');
+}
+
+function showSearchById() {
+    showForm('searchByIdForm');
+}
+
+function showSearchByName() {
+    showForm('searchByNameForm');
+}
+
+function showUpdateForm() {
+    showForm('updateForm');
+}
+
+function showDeleteForm() {
+    showForm('deleteForm');
+}
+
+function showImportForm() {
+    showForm('importForm');
+}
+
+async function createGame(event) {
+    event.preventDefault();
+    const gameData = {
+        game: document.getElementById('createGameName').value,
+        date: document.getElementById('createGameDate').value,
+        hours_watched: parseInt(document.getElementById('createGameHours').value),
+        peak_viewers: parseInt(document.getElementById('createGamePeakViewers').value),
+        peak_channels: parseInt(document.getElementById('createGamePeakChannels').value)
+    };
+
+    try {
+        const response = await fetch('/api/games/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(gameData)
+        });
+
+        if (response.ok) {
+            alert('¡Juego creado correctamente!');
+            location.reload();
+        } else {
+            const error = await response.json();
+            alert('Error al crear el juego: ' + error.detail);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al crear el juego');
+    }
+}
+
+async function searchById(event) {
+    event.preventDefault();
+    const id = document.getElementById('searchGameId').value;
+    location.href = `/games/${id}`;
+}
+
+async function searchByName(event) {
+    event.preventDefault();
+    const name = document.getElementById('searchGameName').value;
+    location.href = `/games?game_name=${encodeURIComponent(name)}`;
+}
+
+async function updateGame(event) {
+    event.preventDefault();
+    const id = document.getElementById('updateGameId').value;
+    location.href = `/games/${id}`;
+}
+
+async function deleteGame(event) {
+    event.preventDefault();
+    const id = document.getElementById('deleteGameId').value;
+    
+    if (confirm('¿Estás seguro de que deseas eliminar este juego?')) {
+        try {
+            const response = await fetch(`/api/games/${id}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                alert('Juego eliminado correctamente');
+                location.reload();
+            } else {
+                const error = await response.json();
+                alert('Error al eliminar el juego: ' + error.detail);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error al eliminar el juego');
+        }
+    }
+}
+
+async function importGames(event) {
+    event.preventDefault();
+    const formData = new FormData();
+    const fileInput = document.getElementById('importFile');
+    formData.append('file', fileInput.files[0]);
+
+    try {
+        const response = await fetch('/games/import', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (response.ok) {
+            alert('Juegos importados correctamente');
+            location.reload();
+        } else {
+            const error = await response.json();
+            alert('Error al importar los juegos: ' + error.detail);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al importar los juegos');
+    }
+}
+</script>
+{% endblock %}

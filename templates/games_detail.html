@@ -1,0 +1,244 @@
+{% extends 'base.html' %}
+{% block title %}Detalles del Juego{% endblock %}
+
+{% block content %}
+<div class="rpgui-container framed">
+    <div class="game-detail rpgui-container framed-golden">
+        <h2>🎮 {{ game.game }}</h2>
+        
+        <div class="game-info">
+            <div class="info-section">
+                <h3 class="rpgui-label">📊 Estadísticas</h3>
+                <div class="stat-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">📅 Fecha</span>
+                        <span class="stat-value">{{ game.date }}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">⌛ Horas Vistas</span>
+                        <span class="stat-value">{{ "{:,}".format(game.hours_watched) }}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">👥 Pico de Espectadores</span>
+                        <span class="stat-value">{{ "{:,}".format(game.peak_viewers) }}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">📺 Pico de Canales</span>
+                        <span class="stat-value">{{ "{:,}".format(game.peak_channels) }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="rpgui-button" onclick="showEditForm()" type="button">
+                <span>✏️ Editar</span>
+            </button>
+            <button class="rpgui-button" onclick="confirmDelete()" type="button">
+                <span>🗑️ Eliminar</span>
+            </button>
+            <a href="/games" class="rpgui-button" onclick="playBowSound()">
+                <span>↩️ Volver</span>
+            </a>
+        </div>
+
+        <!-- Formulario de Edición (oculto por defecto) -->
+        <div id="editForm" class="edit-form" style="display: none;">
+            <h3>✏️ Editar Juego</h3>
+            <form id="gameEditForm" onsubmit="submitEdit(event)">
+                <div class="form-group">
+                    <label class="rpgui-label">🎲 Nombre del Juego:</label>
+                    <input type="text" name="game" class="rpgui-input" value="{{ game.game }}" required>
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">📅 Fecha:</label>
+                    <input type="text" name="date" class="rpgui-input" value="{{ game.date }}" 
+                           pattern="\d{4}-\d{2}" title="Formato: AAAA-MM" required>
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">⌛ Horas Vistas:</label>
+                    <input type="number" name="hours_watched" class="rpgui-input" 
+                           value="{{ game.hours_watched }}" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">👥 Pico de Espectadores:</label>
+                    <input type="number" name="peak_viewers" class="rpgui-input" 
+                           value="{{ game.peak_viewers }}" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">📺 Pico de Canales:</label>
+                    <input type="number" name="peak_channels" class="rpgui-input" 
+                           value="{{ game.peak_channels }}" min="0" required>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="rpgui-button">
+                        <span>💾 Guardar</span>
+                    </button>
+                    <button type="button" class="rpgui-button" onclick="hideEditForm()">
+                        <span>❌ Cancelar</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+.game-detail {
+    padding: 2em;
+    max-width: 800px;
+    margin: 2em auto;
+}
+
+.game-detail h2 {
+    text-align: center;
+    color: #e2b007;
+    margin-bottom: 1em;
+}
+
+.game-info {
+    margin: 2em 0;
+}
+
+.info-section {
+    margin-bottom: 2em;
+}
+
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5em;
+    margin-top: 1em;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    padding: 1em;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+}
+
+.stat-label {
+    font-size: 0.9em;
+    color: #a8a8a8;
+}
+
+.stat-value {
+    font-size: 1.2em;
+    color: #e2b007;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1em;
+    margin-top: 2em;
+}
+
+.edit-form {
+    margin-top: 2em;
+    padding-top: 2em;
+    border-top: 2px solid rgba(226, 176, 7, 0.3);
+}
+
+.form-group {
+    margin-bottom: 1em;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5em;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.5em;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1em;
+    margin-top: 2em;
+}
+
+@media (max-width: 768px) {
+    .stat-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .action-buttons .rpgui-button {
+        width: 100%;
+    }
+}
+</style>
+
+<script>
+function showEditForm() {
+    document.getElementById('editForm').style.display = 'block';
+    playBowSound();
+}
+
+function hideEditForm() {
+    document.getElementById('editForm').style.display = 'none';
+    playBowSound();
+}
+
+async function submitEdit(event) {
+    event.preventDefault();
+    const form = event.target;
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+    
+    try {
+        const response = await fetch(`/api/games/{{ game.id }}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                game: data.game,
+                date: data.date,
+                hours_watched: parseInt(data.hours_watched),
+                peak_viewers: parseInt(data.peak_viewers),
+                peak_channels: parseInt(data.peak_channels)
+            })
+        });
+        
+        if (response.ok) {
+            const result = await response.json();
+            location.reload();
+        } else {
+            const error = await response.json();
+            alert('Error al actualizar el juego: ' + error.detail);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al actualizar el juego: ' + error.message);
+    }
+}
+
+function confirmDelete() {
+    if (confirm('¿Estás seguro de que deseas eliminar este juego?')) {
+        fetch(`/api/games/{{ game.id }}`, {
+            method: 'DELETE'
+        }).then(response => {
+            if (response.ok) {
+                window.location.href = '/games';
+            } else {
+                alert('Error al eliminar el juego');
+            }
+        }).catch(error => {
+            console.error('Error:', error);
+            alert('Error al eliminar el juego');
+        });
+    }
+}
+</script>
+{% endblock %}

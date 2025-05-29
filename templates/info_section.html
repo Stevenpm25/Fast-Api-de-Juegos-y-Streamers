@@ -1,0 +1,181 @@
+<style>
+  .info-section {
+    width: 85%;
+    max-width: 1400px;
+    padding: 30px;
+    margin: 40px auto;
+    position: relative;
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.75);
+    border-radius: 20px;
+    box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
+    animation: glow 3s infinite alternate;
+    transition: all 0.3s ease;
+  }
+
+  @keyframes glow {
+    from {
+      box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
+    }
+    to {
+      box-shadow: 0 0 50px rgba(0, 255, 0, 0.6), 0 0 80px rgba(0, 255, 255, 0.3);
+    }
+  }
+
+  .info-section h2 {
+    color: #00ff00;
+    margin-bottom: 25px;
+    text-align: center;
+    text-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
+    font-size: 2.5em;
+    letter-spacing: 3px;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  .info-section p {
+    color: #90EE90;
+    line-height: 2;
+    margin-bottom: 25px;
+    text-align: justify;
+    text-shadow: 0 0 8px rgba(0, 255, 0, 0.4);
+    font-size: 1.2em;
+    padding: 0 20px;
+  }
+
+  .info-section ul {
+    margin: 30px 0;
+    padding: 20px 40px;
+    list-style-type: none;
+    background: rgba(0, 255, 0, 0.05);
+    border-radius: 15px;
+    border: 1px solid rgba(0, 255, 0, 0.2);
+  }
+
+  .info-section li {
+    color: #98FB98;
+    margin-bottom: 20px;
+    position: relative;
+    padding-left: 40px;
+    font-size: 1.3em;
+    display: flex;
+    align-items: center;
+    text-shadow: 0 0 8px rgba(0, 255, 0, 0.4);
+    transition: transform 0.3s ease;
+  }
+
+  .info-section li:hover {
+    transform: translateX(10px);
+  }
+
+  .info-section li:before {
+    content: "⭐";
+    position: absolute;
+    left: 0;
+    font-size: 1.4em;
+    animation: rotate 3s infinite linear;
+  }
+
+  @keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .fancy-border {
+    border: 4px solid transparent;
+    border-image: linear-gradient(45deg, #00ff00, #00ffff, #90EE90) 1;
+    animation: borderGlow 4s infinite alternate;
+  }
+
+  @keyframes borderGlow {
+    from {
+      filter: drop-shadow(0 0 10px rgba(0, 255, 0, 0.7));
+    }
+    to {
+      filter: drop-shadow(0 0 25px rgba(0, 255, 0, 1));
+    }
+  }
+
+  .highlight-text {
+    background: linear-gradient(45deg, #00ff00, #00ffff);
+    -webkit-background-clip: text;
+    color: transparent;
+    font-weight: bold;
+  }
+
+  @keyframes highlight {
+    0% {
+      box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
+      transform: scale(1);
+    }
+    50% {
+      box-shadow: 0 0 80px rgba(0, 255, 255, 0.8), 0 0 100px rgba(0, 255, 0, 0.6);
+      transform: scale(1.01);
+    }
+    100% {
+      box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
+      transform: scale(1);
+    }
+  }
+
+  .highlight-animation {
+    animation: highlight 1.5s ease-in-out;
+  }
+</style>
+
+<div class="info-section rpgui-container framed-golden fancy-border" id="mas-info">
+  <h2>🌟 Explora el Mundo del Streaming 🎮</h2>
+  
+  <p>
+    ¡Bienvenido a <span class="highlight-text">StreamAnalytics Pro</span>! 🚀 Tu portal definitivo para adentrarte
+    en el fascinante universo del streaming y los videojuegos. Descubre el futuro del entretenimiento digital
+    con nuestra plataforma de análisis avanzado.
+  </p>
+
+  <p>
+    ✨ Sumérgete en un océano de datos y descubre:
+  </p>
+
+  <ul>
+    <li>📊 Análisis en Tiempo Real de los Streamers Más Exitosos</li>
+    <li>🎯 Tendencias Revolucionarias en el Mundo Gaming</li>
+    <li>💫 Secretos Detrás del Éxito de los Top Streamers</li>
+    <li>🌈 Patrones de Crecimiento y Engagement</li>
+    <li>🔮 Predicciones de Tendencias Futuras</li>
+  </ul>
+
+  <p>
+    🎯 Nuestro sistema de análisis utiliza <span class="highlight-text">inteligencia artificial avanzada</span> 
+    para procesar millones de datos en tiempo real, brindándote insights únicos y valiosos sobre el ecosistema
+    del streaming. ¡Descubre qué hace que los grandes streamers sean verdaderamente exitosos!
+  </p>
+
+  <p>
+    🚀 ¿Listo para comenzar tu viaje? Explora nuestra base de datos completa de streamers y juegos.
+    ¡Cada clic te acerca más a comprender la magia detrás del streaming! ✨
+  </p>
+</div>
+
+<script>
+  function handleHighlight() {
+    const infoSection = document.getElementById('mas-info');
+    infoSection.classList.remove('highlight-animation');
+    void infoSection.offsetWidth;
+    infoSection.classList.add('highlight-animation');
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && entry.target.id === 'mas-info') {
+        handleHighlight();
+      }
+    });
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const infoSection = document.getElementById('mas-info');
+    if (infoSection) {
+      observer.observe(infoSection);
+    }
+  });
+</script>

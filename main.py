@@ -1,4 +1,7 @@
-from fastapi import FastAPI, Depends, HTTPException, Query, UploadFile, File
+from fastapi import FastAPI, Depends, Request, HTTPException, Query, UploadFile, File, Form
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from sqlmodel import SQLModel
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy import text
@@ -6,13 +9,15 @@ from typing import Optional, List
 import os
 import csv
 import io
+import datetime
 from dotenv import load_dotenv
+from starlette.responses import HTMLResponse
 
 # Cargar variables de entorno
 load_dotenv()
 
 # Models
-from models_games import Game, GameWithID, UpdatedGame, GameCreate
+from models_games import Game, GameWithID, UpdatedGame, GameCreate, Game
 from models_streamers import Streamer, StreamerWithID, UpdatedStreamer, StreamerCreate
 
 # Operations
@@ -38,6 +43,9 @@ app = FastAPI(
     }]
 )
 
+# Configuración de archivos estáticos y templates
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="templates")
 
 # Configuración de la base de datos
 def get_database_url():
@@ -55,7 +63,6 @@ def get_database_url():
         f"50013/"  # Puerto fijo 50013
         f"{os.getenv('POSTGRESQL_ADDON_DB')}"
     )
-
 
 try:
     DATABASE_URL = get_database_url()
@@ -79,20 +86,157 @@ except Exception as e:
     print("3. Que el puerto sea 50013")
     raise
 
-@app.get("/")
-def root():
-    return {"message": "Hello, Streamers and Videogames Impact API"}
 # Dependency
 async def get_session() -> AsyncSession:
     async with async_session() as session:
         yield session
 
+# Rutas de la interfaz web
+@app.get("/", response_class=HTMLResponse)
+async def read_home(request: Request):
+    try:
+        return templates.TemplateResponse(
+            "home.html",
+            {
+                "request": request,
+                "current_year": datetime.datetime.now().year
+            }
+        )
+    except Exception as e:
+        print(f"Error al renderizar la plantilla: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"No se pudo cargar la página home: {str(e)}"
+        )
 
-# --- Juegos ---
+# Rutas para Games (Web)
+@app.get("/games", response_class=HTMLResponse)
+async def games_page(
+    request: Request,
+    game_name: Optional[str] = None,
+    year: Optional[str] = None,
+    success_msg: Optional[str] = None,
+    error_msg: Optional[str] = None,
+    session: AsyncSession = Depends(get_session)
+):
+    try:
+        games = await search_games(session, game_name, year) if game_name or year else await read_all_games(session)
+        return templates.TemplateResponse(
+            "games_list_info.html",
+            {
+                "request": request,
+                "games": games,
+                "game_name": game_name,
+                "year": year,
+                "success_msg": success_msg,
+                "error_msg": error_msg,
+                "current_year": datetime.datetime.now().year
+            }
+        )
+    except Exception as e:
+        return templates.TemplateResponse(
+            "games_list_info.html",
+            {
+                "request": request,
+                "games": [],
+                "error_msg": f"Error al cargar los juegos: {str(e)}",
+                "current_year": datetime.datetime.now().year
+            }
+        )
+
+@app.get("/games/{game_id}", response_class=HTMLResponse)
+async def game_detail_page(
+    request: Request,
+    game_id: int,
+    session: AsyncSession = Depends(get_session)
+):
+    try:
+        game = await read_one_game(session, game_id)
+        if not game:
+            raise HTTPException(status_code=404, detail="Juego no encontrado")
+
+        return templates.TemplateResponse(
+            "game_detail.html",
+            {
+                "request": request,
+                "game": game,
+                "current_year": datetime.datetime.now().year
+            }
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/add/game", response_class=HTMLResponse)
+async def add_game_page(request: Request):
+    return templates.TemplateResponse(
+        "add_game_form.html",
+        {
+            "request": request,
+            "current_year": datetime.datetime.now().year
+        }
+    )
+
+@app.post("/add/game")
+async def add_game_submit(
+    request: Request,
+    game: str = Form(...),
+    date: str = Form(...),
+    hours_watched: int = Form(...),
+    peak_viewers: int = Form(...),
+    peak_channels: int = Form(...),
+    session: AsyncSession = Depends(get_session)
+):
+    try:
+        # Validar el formato de la fecha
+        import re
+        if not date or not re.match(r'^\d{4}-\d{2}$', date):
+            return RedirectResponse(
+                url="/games?error_msg=Formato de fecha inválido. Use AAAA-MM",
+                status_code=303
+            )
+
+        # Validar valores numéricos
+        if hours_watched < 0 or peak_viewers < 0 or peak_channels < 0:
+            return RedirectResponse(
+                url="/games?error_msg=Los valores numéricos deben ser positivos",
+                status_code=303
+            )
+
+        new_game = GameCreate(
+            game=game,
+            date=date,
+            hours_watched=hours_watched,
+            peak_viewers=peak_viewers,
+            peak_channels=peak_channels
+        )
+        
+        created_game = await create_game(session, new_game)
+        if created_game:
+            return RedirectResponse(
+                url="/games?success_msg=¡Juego agregado correctamente!",
+                status_code=303
+            )
+        else:
+            return RedirectResponse(
+                url="/games?error_msg=Error al crear el juego",
+                status_code=303
+            )
+    except ValueError as ve:
+        return RedirectResponse(
+            url=f"/games?error_msg=Error de validación: {str(ve)}",
+            status_code=303
+        )
+    except Exception as e:
+        print(f"Error al crear juego: {str(e)}")
+        return RedirectResponse(
+            url=f"/games?error_msg=Error al crear el juego: {str(e)}",
+            status_code=303
+        )
+
+# API endpoints para Games
 @app.post("/games/import", tags=["Games"])
 async def import_games(file: UploadFile = File(...), session: AsyncSession = Depends(get_session)):
     try:
-        # Verificar tipo de archivo
         if not file.filename.endswith('.csv'):
             raise HTTPException(status_code=400, detail="Solo se aceptan archivos CSV")
 
@@ -100,7 +244,6 @@ async def import_games(file: UploadFile = File(...), session: AsyncSession = Dep
         text = contents.decode('utf-8')
         reader = csv.DictReader(io.StringIO(text))
 
-        # Verificar columnas requeridas
         required_columns = {"date", "game", "hours_watched", "peak_viewers", "peak_channels"}
         if not required_columns.issubset(reader.fieldnames):
             raise HTTPException(
@@ -109,7 +252,7 @@ async def import_games(file: UploadFile = File(...), session: AsyncSession = Dep
             )
 
         inserted = 0
-        games = []  # Almacenar temporalmente los juegos
+        games = []
         for row in reader:
             try:
                 game = Game(
@@ -127,7 +270,6 @@ async def import_games(file: UploadFile = File(...), session: AsyncSession = Dep
                     detail=f"Error en fila {inserted + 1}: {str(e)}"
                 )
 
-        # Agregar todos los juegos de una vez
         session.add_all(games)
         await session.commit()
 
@@ -135,63 +277,76 @@ async def import_games(file: UploadFile = File(...), session: AsyncSession = Dep
     except Exception as e:
         await session.rollback()
         raise HTTPException(status_code=400, detail=str(e))
-@app.get("/games", response_model=List[GameWithID], tags=["Games"])
+
+@app.get("/api/games", response_model=List[GameWithID], tags=["Games"])
 async def get_all_games(session: AsyncSession = Depends(get_session)):
     return await read_all_games(session)
 
-
-@app.get("/games/{game_id}", response_model=GameWithID, tags=["Games"])
+@app.get("/api/games/{game_id}", response_model=GameWithID, tags=["Games"])
 async def get_game(game_id: int, session: AsyncSession = Depends(get_session)):
     game = await read_one_game(session, game_id)
     if not game:
         raise HTTPException(status_code=404, detail="Game not found")
     return game
 
+@app.post("/api/games/", response_model=GameWithID, tags=["Games"])
+async def create_new_game(game: GameCreate, session: AsyncSession = Depends(get_session)):
+    return await create_game(session, game)
 
-# Crear juego
-@app.post("/games/", response_model=GameWithID, tags=["Games"])
-async def create_game(game: GameCreate, session: AsyncSession = Depends(get_session)):
-    new_game = Game(**game.dict())
-    session.add(new_game)
-    await session.commit()
-    await session.refresh(new_game)
-    return new_game
+@app.put("/api/games/{game_id}", response_model=GameWithID, tags=["Games"])
+async def update_existing_game(
+    game_id: int,
+    update: UpdatedGame,
+    session: AsyncSession = Depends(get_session)
+):
+    try:
+        game = await read_one_game(session, game_id)
+        if not game:
+            raise HTTPException(status_code=404, detail="Juego no encontrado")
 
+        update_data = update.model_dump(exclude_unset=True)
+        
+        # Actualizar solo los campos proporcionados
+        for key, value in update_data.items():
+            setattr(game, key, value)
+        
+        session.add(game)
+        await session.commit()
+        await session.refresh(game)
+        
+        return game
+    except Exception as e:
+        await session.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error al actualizar el juego: {str(e)}"
+        )
 
-
-@app.put("/games/{game_id}", response_model=GameWithID, tags=["Games"])
-async def update_existing_game(game_id: int, update: UpdatedGame, session: AsyncSession = Depends(get_session)):
-    updated = await update_game(session, game_id, update)
-    if not updated:
-        raise HTTPException(status_code=404, detail="Game not found")
-    return updated
-
-
-@app.delete("/games/{game_id}", response_model=GameWithID, tags=["Games"])
+@app.delete("/api/games/{game_id}", response_model=GameWithID, tags=["Games"])
 async def delete_existing_game(game_id: int, session: AsyncSession = Depends(get_session)):
-    deleted = await delete_game(session, game_id)
-    if not deleted:
-        raise HTTPException(status_code=404, detail="Game not found")
-    return deleted
+    try:
+        deleted = await delete_game(session, game_id)
+        if not deleted:
+            raise HTTPException(status_code=404, detail="Juego no encontrado")
+        return JSONResponse(
+            status_code=200,
+            content={"message": "¡Juego eliminado correctamente!"}
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
-
-@app.get("/games/search", response_model=List[GameWithID], tags=["Games"])
+@app.get("/api/games/search", response_model=List[GameWithID], tags=["Games"])
 async def search_game(
-        game_name: Optional[str] = Query(None),
-        year: Optional[str] = Query(None),
-        session: AsyncSession = Depends(get_session)
+    game_name: Optional[str] = Query(None),
+    year: Optional[str] = Query(None),
+    session: AsyncSession = Depends(get_session)
 ):
     return await search_games(session, game_name, year)
 
-
-
-
-
-# --- Streamers ---
+# API endpoints para Streamers
 @app.post("/streamers/import", tags=["Streamers"])
 async def import_streamers(file: UploadFile = File(...), session: AsyncSession = Depends(get_session)):
     try:
-        # Verificar tipo de archivo
         if not file.filename.endswith('.csv'):
             raise HTTPException(status_code=400, detail="Solo se aceptan archivos CSV")
 
@@ -199,7 +354,6 @@ async def import_streamers(file: UploadFile = File(...), session: AsyncSession =
         text = contents.decode('utf-8')
         reader = csv.DictReader(io.StringIO(text))
 
-        # Verificar columnas requeridas
         required_columns = {"name", "game", "follower_count", "avg_viewers"}
         if not required_columns.issubset(reader.fieldnames):
             raise HTTPException(
@@ -208,7 +362,7 @@ async def import_streamers(file: UploadFile = File(...), session: AsyncSession =
             )
 
         inserted = 0
-        streamers = []  # Almacenar temporalmente los streamers
+        streamers = []
         for row in reader:
             try:
                 streamer = Streamer(
@@ -225,7 +379,6 @@ async def import_streamers(file: UploadFile = File(...), session: AsyncSession =
                     detail=f"Error en fila {inserted + 1}: {str(e)}"
                 )
 
-        # Agregar todos los streamers de una vez
         session.add_all(streamers)
         await session.commit()
 
@@ -233,65 +386,56 @@ async def import_streamers(file: UploadFile = File(...), session: AsyncSession =
     except Exception as e:
         await session.rollback()
         raise HTTPException(status_code=400, detail=str(e))
-@app.get("/streamers", response_model=List[StreamerWithID], tags=["Streamers"])
+
+@app.get("/api/streamers", response_model=List[StreamerWithID], tags=["Streamers"])
 async def get_all_streamers(session: AsyncSession = Depends(get_session)):
     return await read_all_streamers(session)
 
-
-@app.get("/streamers/{streamer_id}", response_model=StreamerWithID, tags=["Streamers"])
+@app.get("/api/streamers/{streamer_id}", response_model=StreamerWithID, tags=["Streamers"])
 async def get_streamer(streamer_id: int, session: AsyncSession = Depends(get_session)):
     streamer = await read_one_streamer(session, streamer_id)
     if not streamer:
         raise HTTPException(status_code=404, detail="Streamer not found")
     return streamer
 
-
-# Crear streamer
-@app.post("/streamers", response_model=StreamerWithID, tags=["Streamers"])
+@app.post("/api/streamers", response_model=StreamerWithID, tags=["Streamers"])
 async def create_new_streamer(streamer: StreamerCreate, session: AsyncSession = Depends(get_session)):
     return await create_streamer(session, streamer)
 
-
-
-@app.put("/streamers/{streamer_id}", response_model=StreamerWithID, tags=["Streamers"])
-async def update_existing_streamer(streamer_id: int, update: UpdatedStreamer,
-                                   session: AsyncSession = Depends(get_session)):
+@app.put("/api/streamers/{streamer_id}", response_model=StreamerWithID, tags=["Streamers"])
+async def update_existing_streamer(
+    streamer_id: int,
+    update: UpdatedStreamer,
+    session: AsyncSession = Depends(get_session)
+):
     updated = await update_streamer(session, streamer_id, update)
     if not updated:
         raise HTTPException(status_code=404, detail="Streamer not found")
     return updated
 
-
-@app.delete("/streamers/{streamer_id}", response_model=StreamerWithID, tags=["Streamers"])
+@app.delete("/api/streamers/{streamer_id}", response_model=StreamerWithID, tags=["Streamers"])
 async def delete_existing_streamer(streamer_id: int, session: AsyncSession = Depends(get_session)):
     deleted = await delete_streamer(session, streamer_id)
     if not deleted:
         raise HTTPException(status_code=404, detail="Streamer not found")
     return deleted
 
-
-@app.get("/streamers/search", response_model=List[StreamerWithID], tags=["Streamers"])
+@app.get("/api/streamers/search", response_model=List[StreamerWithID], tags=["Streamers"])
 async def search_streamer(
-        name: Optional[str] = Query(None),
-        game: Optional[str] = Query(None),
-        session: AsyncSession = Depends(get_session)
+    name: Optional[str] = Query(None),
+    game: Optional[str] = Query(None),
+    session: AsyncSession = Depends(get_session)
 ):
     return await search_streamers(session, name, game)
 
-
-
-
-
-# Inicialización de la base de datos
+# Eventos de inicio y cierre
 @app.on_event("startup")
 async def on_startup():
     try:
-        # Verificación de conexión usando text() de SQLAlchemy
         async with engine.begin() as conn:
             await conn.execute(text("SELECT 1"))
         print("✅ Conexión a la base de datos exitosa")
 
-        # Creación de tablas
         async with engine.begin() as conn:
             await conn.run_sync(SQLModel.metadata.create_all)
         print("✅ Tablas verificadas/creadas correctamente")
@@ -305,15 +449,14 @@ async def on_startup():
 
 @app.on_event("shutdown")
 async def shutdown_db_connection():
-    await engine.dispose()  # Cierra todas las conexiones del pool
+    await engine.dispose()
     print("✅ Conexiones de la base de datos cerradas")
-# Health Check
+
+# Endpoints de salud
 @app.get("/health", tags=["System"])
 async def health_check():
     return {"status": "OK", "message": "API is running"}
 
-
-# Database Check
 @app.get("/db-check", tags=["System"])
 async def db_check(session: AsyncSession = Depends(get_session)):
     try:
@@ -322,6 +465,5 @@ async def db_check(session: AsyncSession = Depends(get_session)):
     except Exception as e:
         raise HTTPException(
             status_code=500,
-            detail=f"Databas"
-                   f"e connection failed: {str(e)}"
+            detail=f"Database connection failed: {str(e)}"
         )

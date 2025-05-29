@@ -1,0 +1,111 @@
+{% exten{% extends 'base.html' %}
+{% block title %}Agregar Juego{% endblock %}
+
+{% block content %}
+<div class="rpgui-container framed">
+    <h2>🎮 Agregar un Nuevo Juego</h2>
+
+    <form method="post" action="/add/game" class="rpgui-container framed-golden">
+        <div class="form-group">
+            <label class="rpgui-label">🎲 Nombre del Juego:</label>
+            <input type="text"
+                   name="game"
+                   class="rpgui-input"
+                   placeholder="Ej: League of Legends"
+                   minlength="1"
+                   maxlength="100"
+                   required>
+        </div>
+
+        <div class="form-group">
+            <label class="rpgui-label">📅 Fecha del Registro:</label>
+            <input type="text"
+                   name="date"
+                   class="rpgui-input"
+                   placeholder="AAAA-MM"
+                   pattern="\d{4}-\d{2}"
+                   title="Formato: AAAA-MM (ejemplo: 2024-01)"
+                   required>
+        </div>
+
+        <div class="form-group">
+            <label class="rpgui-label">⌛ Horas Vistas:</label>
+            <input type="number"
+                   name="hours_watched"
+                   class="rpgui-input"
+                   placeholder="Ej: 1000000"
+                   min="0"
+                   required>
+        </div>
+
+        <div class="form-group">
+            <label class="rpgui-label">👥 Pico de Espectadores:</label>
+            <input type="number"
+                   name="peak_viewers"
+                   class="rpgui-input"
+                   placeholder="Ej: 15000"
+                   min="0"
+                   required>
+        </div>
+
+        <div class="form-group">
+            <label class="rpgui-label">📺 Pico de Canales:</label>
+            <input type="number"
+                   name="peak_channels"
+                   class="rpgui-input"
+                   placeholder="Ej: 300"
+                   min="0"
+                   required>
+        </div>
+
+        <div class="button-group">
+            <button type="submit" class="rpgui-button">
+                <span>🎮 Agregar Juego</span>
+            </button>
+            <a href="/games" class="rpgui-button" onclick="playBowSound()">
+                <span>↩️ Volver</span>
+            </a>
+        </div>
+    </form>
+</div>
+
+<style>
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 1.1em;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+}
+
+.button-group {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+    justify-content: center;
+}
+
+.rpgui-container.framed {
+    max-width: 800px;
+    margin: 2em auto;
+    padding: 2em;
+}
+
+.rpgui-container.framed-golden {
+    padding: 2em;
+    margin-top: 1em;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 1em;
+}
+</style>
+{% endblock %}

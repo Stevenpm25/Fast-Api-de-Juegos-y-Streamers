@@ -1,0 +1,61 @@
+<footer style="margin-top: 2em; text-align: center;">
+    <style>
+        .footer-text {
+            font-size: 1.2em;
+            text-shadow: 
+                0 0 3px #fff,
+                0 0 6px #fff,
+                0 0 9px #FFD700,
+                0 0 12px #FFD700;
+            color: #FFFFFF;
+            letter-spacing: 1px;
+            font-weight: bold;
+            animation: glow 2s ease-in-out infinite alternate;
+            padding: 8px;
+            position: relative;
+        }
+
+        .footer-text::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #FFD700, #FFA500, #FFD700);
+            z-index: -1;
+            filter: blur(8px);
+            opacity: 0.6;
+            border-radius: 8px;
+        }
+
+        @keyframes glow {
+            from {
+                filter: brightness(1);
+                text-shadow: 
+                    0 0 3px #fff,
+                    0 0 6px #fff,
+                    0 0 9px #FFD700;
+            }
+            to {
+                filter: brightness(1.2);
+                text-shadow: 
+                    0 0 6px #fff,
+                    0 0 12px #fff,
+                    0 0 18px #FFD700;
+            }
+        }
+
+        hr {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #FFD700, transparent);
+            margin: 15px 0;
+        }
+    </style>
+    <hr>
+    <div class="footer-text">
+        <p>Proyecto educativo "Streamers y Videojuegos" — Hecho con ❤️ usando FastAPI + HTML.</p>
+        <p>Desarrollado por: Steven Peña — {{ current_year }}</p>
+    </div>
+</footer>

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalle del Streamer{% endblock %}
+
+{% block content %}
+<div class="detail-container">
+  <h2 class="detail-title">Detalles del Streamer</h2>
+  <div class="detail-data">
+    <p><strong>Nombre:</strong> <span class="detail-info">{{ streamer.name }}</span></p>
+    <p><strong>Juego:</strong> <span class="detail-info">{{ streamer.game }}</span></p>
+    <p><strong>Seguidores:</strong> <span class="detail-info">{{ streamer.follower_count }}</span></p>
+    <p><strong>Espectadores promedio:</strong> <span class="detail-info">{{ streamer.avg_viewers }}</span></p>
+  </div>
+  <div class="detail-actions">
+    <a href="/streamers" class="btn-back">← Volver a la lista de streamers</a>
+  </div>
+</div>
+{% endblock %}

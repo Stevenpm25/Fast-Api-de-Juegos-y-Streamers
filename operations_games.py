@@ -57,8 +57,8 @@ async def search_games(session: AsyncSession, game_name: Optional[str] = None, y
     if year:
         query = query.where(Game.date.startswith(year))
 
-    result = await session.exec(query)
-    return result.all()
+    result = await session.execute(query)  # Aquí está el cambio de exec a execute
+    return result.scalars().all()  # También agregamos scalars() para obtener los resultados correctamente
 
 
 # ✅ Operación para importar todos los videojuegos desde CSV a la base de datos

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %} Streamers - Info {% endblock %}
+{% block content %}
+
+<div class="info-container">
+  <h3 class="info-title">Lista de Streamers</h3>
+  <div class="info-actions">
+    <a class="btn-back" href="/">← Regresar</a>
+    <a class="btn-add" href="/add/streamer">Adicionar Streamer</a>
+  </div>
+
+  <table class="info-table">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Juego</th>
+        <th>Seguidores</th>
+        <th>Espectadores Promedio</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for streamer in streamers %}
+      <tr>
+        <td>{{ streamer.name }}</td>
+        <td>{{ streamer.game }}</td>
+        <td>{{ streamer.follower_count }}</td>
+        <td>{{ streamer.avg_viewers }}</td>
+        <td>
+          <a class="btn-view" href="/streamers/{{ streamer.id }}">Ver Detalle</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
