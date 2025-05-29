@@ -217,7 +217,211 @@ h2, h3 {
                 </div>
             </form>
         </div>
-        <!-- Los demás formularios seguirían el mismo patrón -->
+<!-- Formulario de Búsqueda por ID -->
+<div id="searchByIdForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+    <h3>🔍 Buscar Juego por ID</h3>
+    <form onsubmit="buscarPorId(event)">
+        <div class="form-group">
+            <label class="rpgui-label">🎲 ID del Juego:</label>
+            <input type="number"
+                   id="buscarGameId"
+                   class="rpgui-input"
+                   min="1"
+                   required>
+        </div>
+        <div class="form-buttons">
+            <button type="submit" class="rpgui-button">
+                <span>🔍 Buscar</span>
+            </button>
+            <button type="button" class="rpgui-button" onclick="hideAllForms()">
+                <span>❌ Cancelar</span>
+            </button>
+        </div>
+    </form>
+
+    <!-- Contenedor para mostrar el resultado -->
+    <div id="searchIdResult" style="display: none; margin-top: 20px;">
+        <h3>📋 Resultado:</h3>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Fecha</th>
+                        <th>Horas Vistas</th>
+                        <th>Pico Espectadores</th>
+                        <th>Pico Canales</th>
+                    </tr>
+                </thead>
+                <tbody id="searchIdResultsBody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- Formulario de Búsqueda por Nombre -->
+<div id="searchByNameForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+    <style>
+        #searchByNameForm {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .table-wrapper {
+            max-height: 120px; /* Altura para 3 filas */
+            overflow-y: auto;
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
+
+        .table-wrapper::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        .table-wrapper::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+
+        .table-wrapper::-webkit-scrollbar-thumb {
+            background-color: #8b7355;
+            border-radius: 10px;
+            border: 2px solid #2c2c2c;
+        }
+
+        .table-wrapper table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-wrapper thead {
+            position: sticky;
+            top: 0;
+            background: #2c2c2c;
+            z-index: 1;
+        }
+
+        .table-wrapper th,
+        .table-wrapper td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid rgba(139, 115, 85, 0.3);
+            height: 40px; /* Altura fija para cada fila */
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-buttons {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+    </style>
+
+    <h3>🔎 Buscar Juego por Nombre</h3>
+    <form onsubmit="buscarPorNombre(event)">
+        <div class="form-group">
+            <label class="rpgui-label">🎲 Nombre del Juego:</label>
+            <input type="text"
+                   id="buscarGameName"
+                   class="rpgui-input"
+                   required
+                   minlength="1"
+                   placeholder="Ingresa al menos un carácter">
+        </div>
+        <div class="form-buttons">
+            <button type="submit" class="rpgui-button">
+                <span>🔎 Buscar</span>
+            </button>
+            <button type="button" class="rpgui-button" onclick="hideAllForms()">
+                <span>❌ Cancelar</span>
+            </button>
+        </div>
+    </form>
+
+    <!-- Contenedor para mostrar los resultados -->
+    <div id="searchNameResult" style="display: none;">
+        <h3>📋 Resultados:</h3>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Fecha</th>
+                        <th>Horas Vistas</th>
+                        <th>Pico Espectadores</th>
+                        <th>Pico Canales</th>
+                    </tr>
+                </thead>
+                <tbody id="searchNameResultsBody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+async function buscarPorNombre(event) {
+    event.preventDefault();
+    const nombre = document.getElementById("buscarGameName").value;
+
+    try {
+        const response = await fetch(`/api/games/search?game_name=${encodeURIComponent(nombre)}`);
+        const tbody = document.getElementById("searchNameResultsBody");
+        tbody.innerHTML = ''; // Limpiar resultados anteriores
+
+        if (response.ok) {
+            const games = await response.json();
+
+            if (games.length > 0) {
+                games.forEach(game => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${game.id}</td>
+                        <td>${game.game}</td>
+                        <td>${game.date}</td>
+                        <td>${game.hours_watched.toLocaleString()}</td>
+                        <td>${game.peak_viewers.toLocaleString()}</td>
+                        <td>${game.peak_channels.toLocaleString()}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } else {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center;">
+                            No se encontraron juegos con el nombre "${nombre}"
+                        </td>
+                    </tr>`;
+            }
+        } else {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="6" style="text-align: center;">
+                        Nombre no encontrado: "${nombre}"
+                    </td>
+                </tr>`;
+        }
+
+        document.getElementById("searchNameResult").style.display = "block";
+    } catch (error) {
+        console.error(error);
+        const tbody = document.getElementById("searchNameResultsBody");
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="6" style="text-align: center;">
+                    Nombre no encontrado: "${nombre}"
+                </td>
+            </tr>`;
+        document.getElementById("searchNameResult").style.display = "block";
+    }
+}
+</script>     <!-- Los demás formularios seguirían el mismo patrón -->
         <!-- ... -->
 <!-- Formulario de Actualización -->
 <div id="updateForm" class="operation-form rpgui-container framed-golden" style="display: none;">
@@ -233,8 +437,8 @@ h2, h3 {
         </div>
 <div class="form-group">
     <label class="rpgui-label">📅 Fecha:</label>
-    <input type="text" id="updateGameDate" class="rpgui-input" 
-           placeholder="AAAA-MM-DD" 
+    <input type="text" id="updateGameDate" class="rpgui-input"
+           placeholder="AAAA-MM-DD"
            pattern="\d{4}-\d{2}-\d{2}"
            title="Usa el formato AAAA-MM-DD (ejemplo: 2024-01-01)"
            oninput="formatearFecha(this)"
@@ -338,7 +542,56 @@ function exportToCSV() {
     font-size: 0.9em;
 }
 </style>
+<script>
+function showSearchByName() {
+    hideAllForms();
+    document.getElementById('searchByNameForm').style.display = 'block';
+}
 
+async function buscarPorNombre(event) {
+    event.preventDefault();
+    const nombre = document.getElementById("buscarGameName").value;
+
+    try {
+        const response = await fetch(`/api/games/search?game_name=${encodeURIComponent(nombre)}`);
+        const tbody = document.getElementById("searchNameResultsBody");
+        tbody.innerHTML = ''; // Limpiar resultados anteriores
+
+        if (response.ok) {
+            const games = await response.json();
+
+            if (games.length > 0) {
+                games.forEach(game => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${game.id}</td>
+                        <td>${game.game}</td>
+                        <td>${game.date}</td>
+                        <td>${game.hours_watched.toLocaleString()}</td>
+                        <td>${game.peak_viewers.toLocaleString()}</td>
+                        <td>${game.peak_channels.toLocaleString()}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } else {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center;">
+                            No se encontraron juegos con el nombre "${nombre}"
+                        </td>
+                    </tr>`;
+            }
+        } else {
+            throw new Error('Error en la búsqueda');
+        }
+
+        document.getElementById("searchNameResult").style.display = "block";
+    } catch (error) {
+        console.error(error);
+        alert("Hubo un error al realizar la búsqueda");
+    }
+}
+</script>
 <script>
 // Función para dar formato a la fecha mientras se escribe
 function formatearFecha(input) {
@@ -459,10 +712,33 @@ document.querySelector('form').addEventListener('submit', function(event) {
     }
 });
 
-// Mantén el mismo JavaScript que antes
+// Añade esta función
+function showGamesList() {
+    hideAllForms();  // Primero ocultamos todos los formularios
+    listGames();     // Luego llamamos a listGames para mostrar la lista
+}
+
+// Modifica la función hideAllForms existente
 function hideAllForms() {
-    document.querySelectorAll('.operation-form').forEach(form => {
-        form.style.display = 'none';
+    const forms = [
+        'createForm',
+        'deleteForm',
+        'updateForm',
+        'searchByIdForm',
+        'searchByNameForm',
+        'importForm',
+        'listForm'  // Añade listForm aquí
+    ];
+
+    forms.forEach(formId => {
+        const form = document.getElementById(formId);
+        if (form) {
+            form.style.display = 'none';
+            // Si es el listForm, también lo removemos del DOM
+            if (formId === 'listForm') {
+                form.remove();
+            }
+        }
     });
 }
 
@@ -562,7 +838,84 @@ async function deleteGame(event) {
         }
     }
 }
+async function buscarPorId(event) {
+    event.preventDefault();
+    const id = document.getElementById("buscarGameId").value;
 
+    try {
+        const response = await fetch(`/api/games/${id}`);
+        const tbody = document.getElementById("searchIdResultsBody");
+        tbody.innerHTML = ''; // Limpiar resultados anteriores
+
+        if (response.ok) {
+            const game = await response.json();
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${game.id}</td>
+                <td>${game.game}</td>
+                <td>${game.date}</td>
+                <td>${game.hours_watched.toLocaleString()}</td>
+                <td>${game.peak_viewers.toLocaleString()}</td>
+                <td>${game.peak_channels.toLocaleString()}</td>
+            `;
+            tbody.appendChild(row);
+        } else {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="6" style="text-align: center;">
+                        No se encontró ningún juego con el ID ${id}
+                    </td>
+                </tr>`;
+        }
+
+        document.getElementById("searchIdResult").style.display = "block";
+    } catch (error) {
+        console.error(error);
+        alert("Hubo un error al realizar la búsqueda");
+    }
+}
+
+function showSearchById() {
+    hideAllForms();
+    // Mostrar el formulario
+    document.getElementById('searchByIdForm').style.display = 'block';
+
+    // Limpiar el campo de entrada
+    document.getElementById('buscarGameId').value = '';
+
+    // Limpiar los resultados previos
+    const tbody = document.getElementById("searchIdResultsBody");
+    if (tbody) {
+        tbody.innerHTML = '';
+    }
+
+    // Ocultar la sección de resultados
+    const searchResult = document.getElementById("searchIdResult");
+    if (searchResult) {
+        searchResult.style.display = 'none';
+    }
+}
+
+function showSearchByName() {
+    hideAllForms();
+
+    // Mostrar el formulario
+    document.getElementById('searchByNameForm').style.display = 'block';
+
+    // Limpiar el campo de búsqueda
+    document.getElementById('buscarGameName').value = '';
+
+    // Ocultar y limpiar los resultados anteriores
+    const searchResult = document.getElementById('searchNameResult');
+    if (searchResult) {
+        searchResult.style.display = 'none';
+    }
+
+    const tbody = document.getElementById('searchNameResultsBody');
+    if (tbody) {
+        tbody.innerHTML = '';
+    }
+}
 async function importGames(event) {
     event.preventDefault();
     const formData = new FormData();
@@ -976,4 +1329,3 @@ tr:hover {
     border: 3px solid rgba(0, 0, 0, 0.3);
 }
 </style>
-

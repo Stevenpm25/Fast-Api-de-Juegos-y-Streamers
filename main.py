@@ -282,12 +282,30 @@ async def import_games(file: UploadFile = File(...), session: AsyncSession = Dep
 async def get_all_games(session: AsyncSession = Depends(get_session)):
     return await read_all_games(session)
 
-@app.get("/api/games/{game_id}", response_model=GameWithID, tags=["Games"])
-async def get_game(game_id: int, session: AsyncSession = Depends(get_session)):
-    game = await read_one_game(session, game_id)
-    if not game:
-        raise HTTPException(status_code=404, detail="Game not found")
-    return game
+@app.get("/api/games/search", response_model=List[GameWithID], tags=["Games"])
+async def search_game(
+        game_name: str = Query(None, description="Nombre del juego a buscar"),
+        session: AsyncSession = Depends(get_session)
+):
+    try:
+        if game_name is None:
+            return []
+
+        games = await search_games(session, game_name)
+        return games
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error en la búsqueda: {str(e)}"
+        )
+@app.get("/buscar-id", response_class=HTMLResponse)
+async def buscar_id_page(request: Request):
+    return templates.TemplateResponse(
+        "buscarporid.html",
+        {
+            "request": request
+        }
+    )
 
 @app.post("/api/games/", response_model=GameWithID, tags=["Games"])
 async def create_new_game(game: GameCreate, session: AsyncSession = Depends(get_session)):
@@ -335,13 +353,14 @@ async def delete_existing_game(game_id: int, session: AsyncSession = Depends(get
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/api/games/search", response_model=List[GameWithID], tags=["Games"])
-async def search_game(
-    game_name: Optional[str] = Query(None),
-    year: Optional[str] = Query(None),
-    session: AsyncSession = Depends(get_session)
-):
-    return await search_games(session, game_name, year)
+
+
+@app.get("/api/games/{game_id}", response_model=GameWithID, tags=["Games"])
+async def get_game(game_id: int, session: AsyncSession = Depends(get_session)):
+    game = await read_one_game(session, game_id)
+    if not game:
+        raise HTTPException(status_code=404, detail="Game not found")
+    return game
 
 # API endpoints para Streamers
 @app.post("/streamers/import", tags=["Streamers"])
@@ -467,3 +486,4 @@ async def db_check(session: AsyncSession = Depends(get_session)):
             status_code=500,
             detail=f"Database connection failed: {str(e)}"
         )
+

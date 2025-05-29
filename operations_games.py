@@ -48,19 +48,25 @@ async def delete_game(session: AsyncSession, game_id: int) -> Optional[GameWithI
     return existing
 
 
-async def search_games(session: AsyncSession, game_name: Optional[str] = None, year: Optional[str] = None) -> List[GameWithID]:
-    query = select(Game)
+async def search_games(session: AsyncSession, game_name: str = None) -> List[GameWithID]:
+    try:
+        query = select(Game)
 
-    if game_name:
-        query = query.where(Game.game.ilike(f"%{game_name}%"))
+        if game_name:
+            # Convertir a minúsculas para búsqueda sin distinción entre mayúsculas y minúsculas
+            # y eliminar espacios al inicio y final
+            search_name = game_name.lower().strip()
 
-    if year:
-        query = query.where(Game.date.startswith(year))
+            # Buscar coincidencias parciales en cualquier parte del nombre
+            query = query.where(Game.game.ilike(f"%{search_name}%"))
 
-    result = await session.execute(query)  # Aquí está el cambio de exec a execute
-    return result.scalars().all()  # También agregamos scalars() para obtener los resultados correctamente
+        result = await session.execute(query)
+        games = result.scalars().all()
+        return list(games)
 
-
+    except Exception as e:
+        print(f"Error en la búsqueda de juegos: {str(e)}")
+        return []
 # ✅ Operación para importar todos los videojuegos desde CSV a la base de datos
 async def import_games_from_csv(session: AsyncSession, csv_path: str = "games.csv") -> int:
     inserted = 0

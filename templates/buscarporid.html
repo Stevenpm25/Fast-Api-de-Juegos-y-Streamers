@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block title %}Buscar Juego por ID{% endblock %}
+
+{% block content %}
+<div class="rpgui-container framed">
+    <h2>🔍 Buscar Juego por ID</h2>
+
+    <form onsubmit="buscarPorId(event)">
+        <div class="form-group">
+            <label class="rpgui-label">🎲 ID del Juego:</label>
+            <input type="number" id="buscarGameId" class="rpgui-input" min="1" required>
+        </div>
+        <div class="form-buttons">
+            <button type="submit" class="rpgui-button">
+                <span>Buscar</span>
+            </button>
+            <a href="/games" class="rpgui-button">
+                <span>↩️ Volver</span>
+            </a>
+        </div>
+    </form>
+
+    <div id="searchResult" style="display: none;">
+        <h3>📋 Resultado:</h3>
+        <p id="resultDetails"></p>
+    </div>
+</div>
+
+<script>
+async function buscarPorId(event) {
+    event.preventDefault();
+    const id = document.getElementById("buscarGameId").value;
+
+    try {
+        const response = await fetch(`/api/games/${id}`);
+        if (response.ok) {
+            const game = await response.json();
+            document.getElementById("searchResult").style.display = "block";
+            document.getElementById("resultDetails").innerText = 
+                `ID: ${game.id}\nNombre: ${game.game}\nFecha: ${game.date}\nHoras vistas: ${game.hours_watched}\nPico espectadores: ${game.peak_viewers}\nPico canales: ${game.peak_channels}`;
+        } else if (response.status === 404) {
+            alert("Juego no encontrado.");
+        } else {
+            throw new Error("Error al buscar el juego.");
+        }
+    } catch (error) {
+        console.error(error);
+        alert("Hubo un problema con la búsqueda.");
+    }
+}
+</script>
+<style>
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-buttons {
+    margin-top: 15px;
+    display: flex;
+    gap: 15px;
+    justify-content: flex-start;
+}
+
+#searchResult {
+    margin-top: 20px;
+}
+</style>
+{% endblock %}
