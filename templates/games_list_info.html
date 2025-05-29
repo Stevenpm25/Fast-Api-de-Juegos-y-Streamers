@@ -9,7 +9,7 @@
     grid-template-columns: 250px 1fr;
     gap: 1em;
     padding: 1em;
-    height: calc(100vh - 100px);
+    height: calc(100vh - 200px);
     overflow: hidden;
 }
 
@@ -302,14 +302,14 @@ function exportToCSV() {
     const table = document.querySelector('table');
     let csv = [];
     const rows = table.querySelectorAll('tr');
-    
+
     for (let i = 0; i < rows.length; i++) {
         let row = [], cols = rows[i].querySelectorAll('td, th');
-        
+
         for (let j = 0; j < cols.length - 1; j++) {
             row.push(cols[j].innerText);
         }
-        
+
         csv.push(row.join(','));
     }
 
@@ -344,7 +344,7 @@ function exportToCSV() {
 function formatearFecha(input) {
     // Eliminar cualquier carácter que no sea número
     let valor = input.value.replace(/\D/g, '');
-    
+
     // Si tenemos 8 o más dígitos, formateamos como AAAA-MM-DD
     if (valor.length >= 8) {
         valor = valor.slice(0, 8); // Limitamos a 8 dígitos
@@ -358,7 +358,7 @@ function formatearFecha(input) {
     else if (valor.length >= 4) {
         valor = valor.slice(0, 4) + '-' + valor.slice(4);
     }
-    
+
     input.value = valor;
 }
 
@@ -368,19 +368,19 @@ function validarFecha(input) {
     const fechaError = document.getElementById(errorSpanId);
     const valor = input.value;
     const regex = /^(\d{4})-(\d{2})-(\d{2})$/;
-    
+
     if (!regex.test(valor)) {
         fechaError.textContent = 'Formato inválido. Usa AAAA-MM-DD';
         fechaError.style.display = 'block';
         input.setCustomValidity('Formato inválido');
         return false;
     }
-    
+
     const [, año, mes, dia] = valor.match(regex);
     const añoNum = parseInt(año);
     const mesNum = parseInt(mes);
     const diaNum = parseInt(dia);
-    
+
     // Validar rango de fechas
     if (añoNum < 2000 || añoNum > 2025) {
         fechaError.textContent = 'El año debe estar entre 2000 y 2025';
@@ -388,14 +388,14 @@ function validarFecha(input) {
         input.setCustomValidity('Año fuera de rango');
         return false;
     }
-    
+
     if (mesNum < 1 || mesNum > 12) {
         fechaError.textContent = 'El mes debe estar entre 01 y 12';
         fechaError.style.display = 'block';
         input.setCustomValidity('Mes inválido');
         return false;
     }
-    
+
     // Validar días según el mes
     const diasEnMes = new Date(añoNum, mesNum, 0).getDate();
     if (diaNum < 1 || diaNum > diasEnMes) {
@@ -404,7 +404,7 @@ function validarFecha(input) {
         input.setCustomValidity('Día inválido');
         return false;
     }
-    
+
     fechaError.style.display = 'none';
     input.setCustomValidity('');
     return true;
@@ -416,11 +416,11 @@ async function updateGame(event) {
     const gameId = document.getElementById('updateGameId').value;
     const gameName = document.getElementById('updateGameName').value;
     const fechaInput = document.getElementById('updateGameDate');
-    
+
     if (!validarFecha(fechaInput)) {
         return;
     }
-    
+
     const gameData = {
         game: gameName,
         date: fechaInput.value,
@@ -527,12 +527,6 @@ async function createGame(event) {
     }
 }
 
-async function searchById(event) {
-    event.preventDefault();
-    const id = document.getElementById('searchGameId').value;
-    location.href = `/games/${id}`;
-}
-
 async function searchByName(event) {
     event.preventDefault();
     const name = document.getElementById('searchGameName').value;
@@ -548,7 +542,7 @@ function showUpdateForm() {
 async function deleteGame(event) {
     event.preventDefault();
     const gameId = document.getElementById('deleteGameId').value;
-    
+
     if (confirm('¿Estás seguro de que deseas eliminar este juego?')) {
         try {
             const response = await fetch(`/api/games/${gameId}`, {
@@ -604,7 +598,7 @@ async function listGames() {
             const games = await response.json();
             // Ocultar todos los formularios
             hideAllForms();
-            
+
             // Crear una tabla dinámica
             let tableHTML = `
                 <div id="listForm" class="operation-form rpgui-container framed-golden">
@@ -622,7 +616,7 @@ async function listGames() {
                                 </tr>
                             </thead>
                             <tbody>`;
-            
+
             games.forEach(game => {
                 tableHTML += `
                     <tr>
@@ -634,13 +628,13 @@ async function listGames() {
                         <td>${game.peak_channels.toLocaleString()}</td>
                     </tr>`;
             });
-            
+
             tableHTML += `
                             </tbody>
                         </table>
                     </div>
                 </div>`;
-            
+
             // Insertar la tabla en el contenedor de formularios
             const formsContainer = document.querySelector('.forms-container');
             const existingList = document.getElementById('listForm');
@@ -648,10 +642,10 @@ async function listGames() {
                 existingList.remove();
             }
             formsContainer.insertAdjacentHTML('beforeend', tableHTML);
-            
+
             // Mostrar la tabla
             document.getElementById('listForm').style.display = 'block';
-            
+
         } else {
             alert('Error al cargar los juegos');
         }
@@ -700,32 +694,30 @@ async function showGamesList() {
                 <div id="listForm" class="operation-form rpgui-container framed-golden">
                     <h3>📋 Lista de Juegos</h3>
                     <div class="table-wrapper">
-                        <div class="table-container">
-                            <table>
-                                <thead>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Fecha</th>
+                                    <th>Horas Vistas</th>
+                                    <th>Pico Espectadores</th>
+                                    <th>Pico Canales</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${games.map(game => `
                                     <tr>
-                                        <th>ID</th>
-                                        <th>Nombre</th>
-                                        <th>Fecha</th>
-                                        <th>Horas Vistas</th>
-                                        <th>Pico Espectadores</th>
-                                        <th>Pico Canales</th>
+                                        <td>${game.id}</td>
+                                        <td>${game.game}</td>
+                                        <td>${game.date}</td>
+                                        <td>${game.hours_watched.toLocaleString()}</td>
+                                        <td>${game.peak_viewers.toLocaleString()}</td>
+                                        <td>${game.peak_channels.toLocaleString()}</td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    ${games.map(game => `
-                                        <tr>
-                                            <td>${game.id}</td>
-                                            <td>${game.game}</td>
-                                            <td>${game.date}</td>
-                                            <td>${game.hours_watched.toLocaleString()}</td>
-                                            <td>${game.peak_viewers.toLocaleString()}</td>
-                                            <td>${game.peak_channels.toLocaleString()}</td>
-                                        </tr>
-                                    `).join('')}
-                                </tbody>
-                            </table>
-                        </div>
+                                `).join('')}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             `;
@@ -985,10 +977,3 @@ tr:hover {
 }
 </style>
 
-<script>
-async function showGamesList() {
-    try {
-        const response = await fetch('/api/games');
-        if (response.ok) {
-            const games = await response.json();
-            hide
