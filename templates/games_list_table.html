@@ -1,0 +1,62 @@
+
+{% extends 'base.html' %}
+{% block title %}Lista de Juegos{% endblock %}
+
+{% block content %}
+<div class="rpgui-container framed-golden">
+    <h2>🎮 Lista de Juegos</h2>
+    
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Fecha</th>
+                    <th>Horas Vistas</th>
+                    <th>Pico Espectadores</th>
+                    <th>Pico Canales</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for game in games %}
+                <tr>
+                    <td>{{ game.id }}</td>
+                    <td>{{ game.game }}</td>
+                    <td>{{ game.date }}</td>
+                    <td>{{ "{:,}".format(game.hours_watched) }}</td>
+                    <td>{{ "{:,}".format(game.peak_viewers) }}</td>
+                    <td>{{ "{:,}".format(game.peak_channels) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+.table-container {
+    overflow-x: auto;
+    margin-top: 1em;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 0.5em;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+th {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+</style>
+{% endblock %}
