@@ -217,6 +217,53 @@ h2, h3 {
         </div>
         <!-- Los demás formularios seguirían el mismo patrón -->
         <!-- ... -->
+<!-- Formulario de Actualización -->
+<div id="updateForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+    <h3>✏️ Actualizar Juego</h3>
+    <form onsubmit="updateGame(event)">
+        <div class="form-group">
+            <label class="rpgui-label">🔢 ID del Juego:</label>
+            <input type="number" id="updateGameId" class="rpgui-input" required min="1">
+        </div>
+        <div class="form-group">
+            <label class="rpgui-label">🎲 Nombre:</label>
+            <input type="text" id="updateGameName" class="rpgui-input" required>
+        </div>
+<div class="form-group">
+    <label class="rpgui-label">📅 Fecha:</label>
+    <input type="text" id="updateGameDate" class="rpgui-input" 
+           placeholder="AAAA-MM-DD" 
+           pattern="\d{4}-\d{2}-\d{2}"
+           title="Usa el formato AAAA-MM-DD (ejemplo: 2024-01-01)"
+           oninput="formatearFecha(this)"
+           onblur="validarFecha(this)"
+           required>
+    <span id="updateFechaError" style="color: #ff6b6b; display: none; font-size: 0.8em; margin-top: 0.3em;">
+        Por favor, ingresa una fecha válida en formato AAAA-MM-DD
+    </span>
+</div>
+        <div class="form-group">
+            <label class="rpgui-label">⌛ Horas Vistas:</label>
+            <input type="number" id="updateGameHours" class="rpgui-input" min="0" required>
+        </div>
+        <div class="form-group">
+            <label class="rpgui-label">👥 Pico de Espectadores:</label>
+            <input type="number" id="updateGamePeakViewers" class="rpgui-input" min="0" required>
+        </div>
+        <div class="form-group">
+            <label class="rpgui-label">📺 Pico de Canales:</label>
+            <input type="number" id="updateGamePeakChannels" class="rpgui-input" min="0" required>
+        </div>
+        <div class="form-buttons">
+            <button type="submit" class="rpgui-button">
+                <span>💾 Guardar</span>
+            </button>
+            <button type="button" class="rpgui-button" onclick="hideAllForms()">
+                <span>❌ Cancelar</span>
+            </button>
+        </div>
+    </form>
+</div>
     </div>
 </div>
 
@@ -291,6 +338,7 @@ function exportToCSV() {
 </style>
 
 <script>
+// Función para dar formato a la fecha mientras se escribe
 function formatearFecha(input) {
     // Eliminar cualquier carácter que no sea número
     let valor = input.value.replace(/\D/g, '');
@@ -312,8 +360,10 @@ function formatearFecha(input) {
     input.value = valor;
 }
 
+// Función para validar la fecha
 function validarFecha(input) {
-    const fechaError = document.getElementById('fechaError');
+    const errorSpanId = input.id === 'updateGameDate' ? 'updateFechaError' : 'fechaError';
+    const fechaError = document.getElementById(errorSpanId);
     const valor = input.value;
     const regex = /^(\d{4})-(\d{2})-(\d{2})$/;
     
@@ -356,6 +406,47 @@ function validarFecha(input) {
     fechaError.style.display = 'none';
     input.setCustomValidity('');
     return true;
+}
+
+// Modificar la función updateGame para incluir la validación
+async function updateGame(event) {
+    event.preventDefault();
+    const gameId = document.getElementById('updateGameId').value;
+    const gameName = document.getElementById('updateGameName').value;
+    const fechaInput = document.getElementById('updateGameDate');
+    
+    if (!validarFecha(fechaInput)) {
+        return;
+    }
+    
+    const gameData = {
+        game: gameName,
+        date: fechaInput.value,
+        hours_watched: parseInt(document.getElementById('updateGameHours').value),
+        peak_viewers: parseInt(document.getElementById('updateGamePeakViewers').value),
+        peak_channels: parseInt(document.getElementById('updateGamePeakChannels').value)
+    };
+
+    try {
+        const response = await fetch(`/api/games/${gameId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(gameData)
+        });
+
+        if (response.ok) {
+            alert(`¡El juego "${gameName}" con ID ${gameId} ha sido actualizado correctamente!`);
+            location.reload();
+        } else {
+            const error = await response.json();
+            alert('Error al actualizar el juego: ' + error.detail);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al actualizar el juego');
+    }
 }
 
 // Añadir validación antes de enviar el formulario
@@ -446,10 +537,10 @@ async function searchByName(event) {
     location.href = `/games?game_name=${encodeURIComponent(name)}`;
 }
 
-async function updateGame(event) {
-    event.preventDefault();
-    const id = document.getElementById('updateGameId').value;
-    location.href = `/games/${id}`;
+// Función para mostrar el formulario de actualización
+function showUpdateForm() {
+    hideAllForms();
+    document.getElementById('updateForm').style.display = 'block';
 }
 
 async function deleteGame(event) {
