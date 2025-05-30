@@ -1,18 +1,283 @@
 {% extends 'base.html' %}
-
-{% block title %}Detalle del Streamer{% endblock %}
+{% block title %}Detalles del Streamer{% endblock %}
 
 {% block content %}
-<div class="detail-container">
-  <h2 class="detail-title">Detalles del Streamer</h2>
-  <div class="detail-data">
-    <p><strong>Nombre:</strong> <span class="detail-info">{{ streamer.name }}</span></p>
-    <p><strong>Juego:</strong> <span class="detail-info">{{ streamer.game }}</span></p>
-    <p><strong>Seguidores:</strong> <span class="detail-info">{{ streamer.follower_count }}</span></p>
-    <p><strong>Espectadores promedio:</strong> <span class="detail-info">{{ streamer.avg_viewers }}</span></p>
-  </div>
-  <div class="detail-actions">
-    <a href="/streamers" class="btn-back">← Volver a la lista de streamers</a>
-  </div>
+<div class="rpgui-container framed">
+    <div class="streamer-detail rpgui-container framed-golden">
+        <h2>🎮 {{ streamer.name }}</h2>
+
+        <div class="streamer-info">
+            <div class="info-section">
+                <h3 class="rpgui-label">📊 Estadísticas del Streamer</h3>
+                <div class="stat-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">🎮 Juego Principal</span>
+                        <span class="stat-value">{{ streamer.game }}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">👥 Seguidores</span>
+                        <span class="stat-value">{{ "{:,}".format(streamer.follower_count) }}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">👀 Espectadores Promedio</span>
+                        <span class="stat-value">{{ "{:,}".format(streamer.avg_viewers) }}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">📈 Índice de Popularidad</span>
+                        <span class="stat-value">
+                            {% set popularity = (streamer.follower_count / 10000) + (streamer.avg_viewers * 10) %}
+                            {% if popularity > 1000 %}⭐️⭐️⭐️⭐️⭐️
+                            {% elif popularity > 500 %}⭐️⭐️⭐️⭐️
+                            {% elif popularity > 200 %}⭐️⭐️⭐️
+                            {% elif popularity > 100 %}⭐️⭐️
+                            {% else %}⭐️
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="rpgui-button" onclick="showEditForm()" type="button">
+                <span>✏️ Editar</span>
+            </button>
+            <button class="rpgui-button" onclick="confirmDelete()" type="button">
+                <span>🗑️ Eliminar</span>
+            </button>
+            <a href="/" class="rpgui-button" onclick="playBowSound()">
+                <span>↩️ Volver al Inicio</span>
+            </a>
+        </div>
+
+        <!-- Formulario de Edición (oculto por defecto) -->
+        <div id="editForm" class="edit-form" style="display: none;">
+            <h3>✏️ Editar Streamer</h3>
+            <form id="streamerEditForm" onsubmit="submitEdit(event)">
+                <div class="form-group">
+                    <label class="rpgui-label">👤 Nombre del Streamer:</label>
+                    <input type="text"
+                           name="name"
+                           class="rpgui-input"
+                           value="{{ streamer.name }}"
+                           minlength="2"
+                           maxlength="100"
+                           required>
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">🎮 Juego Principal:</label>
+                    <input type="text"
+                           name="game"
+                           class="rpgui-input"
+                           value="{{ streamer.game }}"
+                           minlength="2"
+                           maxlength="100"
+                           required>
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">👥 Seguidores:</label>
+                    <input type="number"
+                           name="follower_count"
+                           class="rpgui-input"
+                           value="{{ streamer.follower_count }}"
+                           min="0"
+                           required>
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">👀 Espectadores Promedio:</label>
+                    <input type="number"
+                           name="avg_viewers"
+                           class="rpgui-input"
+                           value="{{ streamer.avg_viewers }}"
+                           min="0"
+                           required>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="rpgui-button">
+                        <span>💾 Guardar</span>
+                    </button>
+                    <button type="button" class="rpgui-button" onclick="hideEditForm()">
+                        <span>❌ Cancelar</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
+
+<style>
+.streamer-detail {
+    padding: 2em;
+    max-width: 800px;
+    margin: 2em auto;
+}
+
+.streamer-detail h2 {
+    text-align: center;
+    color: #e2b007;
+    margin-bottom: 1em;
+}
+
+.streamer-info {
+    margin: 2em 0;
+}
+
+.info-section {
+    margin-bottom: 2em;
+}
+
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5em;
+    margin-top: 1em;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    padding: 1em;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    text-align: center;
+}
+
+.stat-label {
+    font-size: 0.9em;
+    color: #a8a8a8;
+}
+
+.stat-value {
+    font-size: 1.2em;
+    color: #e2b007;
+    font-weight: bold;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1em;
+    margin-top: 2em;
+}
+
+.edit-form {
+    margin-top: 2em;
+    padding-top: 2em;
+    border-top: 2px solid rgba(226, 176, 7, 0.3);
+}
+
+.edit-form h3 {
+    text-align: center;
+    margin-bottom: 1.5em;
+    color: #e2b007;
+}
+
+.form-group {
+    margin-bottom: 1.5em;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5em;
+    font-size: 1.1em;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.8em;
+    font-size: 1em;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1em;
+    margin-top: 2em;
+}
+
+@media (max-width: 768px) {
+    .stat-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .action-buttons .rpgui-button {
+        width: 100%;
+    }
+
+    .form-buttons {
+        flex-direction: column;
+    }
+
+    .form-buttons .rpgui-button {
+        width: 100%;
+    }
+}
+</style>
+
+<script>
+function showEditForm() {
+    document.getElementById('editForm').style.display = 'block';
+    playBowSound();
+}
+
+function hideEditForm() {
+    document.getElementById('editForm').style.display = 'none';
+    playBowSound();
+}
+
+async function submitEdit(event) {
+    event.preventDefault();
+    const form = event.target;
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+        const response = await fetch(`/api/streamers/{{ streamer.id }}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: data.name,
+                game: data.game,
+                follower_count: parseInt(data.follower_count),
+                avg_viewers: parseInt(data.avg_viewers)
+            })
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            location.reload();
+        } else {
+            const error = await response.json();
+            alert('Error al actualizar el streamer: ' + error.detail);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al actualizar el streamer: ' + error.message);
+    }
+}
+
+function confirmDelete() {
+    if (confirm('¿Estás seguro de que deseas eliminar este streamer?')) {
+        fetch(`/api/streamers/{{ streamer.id }}`, {
+            method: 'DELETE'
+        }).then(response => {
+            if (response.ok) {
+                window.location.href = '/';
+            } else {
+                alert('Error al eliminar el streamer');
+            }
+        }).catch(error => {
+            console.error('Error:', error);
+            alert('Error al eliminar el streamer');
+        });
+    }
+}
+</script>
 {% endblock %}

@@ -1,34 +1,102 @@
 {% extends 'base.html' %}
 
+{% block title %}Agregar Streamer{% endblock %}
+
 {% block content %}
-<h2>Agregar un Streamer</h2>
-<form method="post" action="/add/streamer">
-    <!-- Nombre del Streamer -->
-    <label>Nombre: 
-        <input type="text" name="name" placeholder="Ejemplo: Ninja" minlength="2" maxlength="100" required>
-    </label> 
-    <br>
+<div class="rpgui-container framed">
+    <h2>🎮 Agregar un Nuevo Streamer</h2>
 
-    <!-- Juego Principal -->
-    <label>Juego Principal: 
-        <input type="text" name="game" placeholder="Ejemplo: Fortnite" minlength="2" maxlength="100" required>
-    </label> 
-    <br>
+    <form method="post" action="/add/streamer" class="rpgui-container framed-golden">
+        <div class="form-group">
+            <label class="rpgui-label">👤 Nombre del Streamer:</label>
+            <input type="text"
+                   name="name"
+                   class="rpgui-input"
+                   placeholder="Ej: Ninja"
+                   minlength="2"
+                   maxlength="100"
+                   required>
+        </div>
 
-    <!-- Cantidad de Seguidores -->
-    <label>Cantidad de Seguidores: 
-        <input type="number" name="follower_count" placeholder="Ejemplo: 2000000" min="0" required>
-    </label> 
-    <br>
+        <div class="form-group">
+            <label class="rpgui-label">🎮 Juego Principal:</label>
+            <input type="text"
+                   name="game"
+                   class="rpgui-input"
+                   placeholder="Ej: Fortnite"
+                   minlength="2"
+                   maxlength="100"
+                   required>
+        </div>
 
-    <!-- Promedio de Espectadores -->
-    <label>Espectadores Promedio: 
-        <input type="number" name="avg_viewers" placeholder="Ejemplo: 15000" min="0" required>
-    </label> 
-    <br>
+        <div class="form-group">
+            <label class="rpgui-label">👥 Seguidores:</label>
+            <input type="number"
+                   name="follower_count"
+                   class="rpgui-input"
+                   placeholder="Ej: 2000000"
+                   min="0"
+                   required>
+        </div>
 
-    <!-- Botón de envío -->
-    <button type="submit" class="rpgui-button">Agregar Streamer</button>
+        <div class="form-group">
+            <label class="rpgui-label">👀 Espectadores Promedio:</label>
+            <input type="number"
+                   name="avg_viewers"
+                   class="rpgui-input"
+                   placeholder="Ej: 15000"
+                   min="0"
+                   required>
+        </div>
 
-</form>
+        <div class="button-group">
+            <button type="submit" class="rpgui-button">
+                <span>➕ Agregar Streamer</span>
+            </button>
+            <a href="/" class="rpgui-button" onclick="playBowSound()">
+                <span>↩️ Volver al Inicio</span>
+            </a>
+        </div>
+    </form>
+</div>
+
+<style>
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 1.1em;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 8px;
+    }
+
+    .button-group {
+        display: flex;
+        gap: 15px;
+        margin-top: 25px;
+        justify-content: center;
+    }
+
+    .rpgui-container.framed {
+        max-width: 800px;
+        margin: 2em auto;
+        padding: 2em;
+    }
+
+    .rpgui-container.framed-golden {
+        padding: 2em;
+        margin-top: 1em;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 1em;
+    }
+</style>
 {% endblock %}

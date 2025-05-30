@@ -144,6 +144,40 @@ async def games_page(
                 "current_year": datetime.datetime.now().year
             }
         )
+# Rutas para Streamers (Web)
+@app.get("/streamers", response_class=HTMLResponse)
+async def streamers_page(
+    request: Request,
+    name: Optional[str] = None,
+    game: Optional[str] = None,
+    success_msg: Optional[str] = None,
+    error_msg: Optional[str] = None,
+    session: AsyncSession = Depends(get_session)
+):
+    try:
+        streamers = await search_streamers(session, name, game) if name or game else await read_all_streamers(session)
+        return templates.TemplateResponse(
+            "streamer_list_info.html",
+            {
+                "request": request,
+                "streamers": streamers,
+                "name": name,
+                "game": game,
+                "success_msg": success_msg,
+                "error_msg": error_msg,
+                "current_year": datetime.datetime.now().year
+            }
+        )
+    except Exception as e:
+        return templates.TemplateResponse(
+            "streamer_list_info.html",
+            {
+                "request": request,
+                "streamers": [],
+                "error_msg": f"Error al cargar los streamers: {str(e)}",
+                "current_year": datetime.datetime.now().year
+            }
+        )
 
 @app.get("/games/{game_id}", response_class=HTMLResponse)
 async def game_detail_page(

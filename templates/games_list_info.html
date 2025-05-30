@@ -115,55 +115,39 @@ h2, h3 {
 }
 </style>
 
-<div class="page-layout">
-    <!-- Columna izquierda: Botones -->
-    <div class="buttons-container">
-        <div class="crud-buttons rpgui-container framed-golden">
-            <h2>🎮 Opciones</h2>
-            <div class="button-row">
-                <button class="rpgui-button" onclick="showCreateForm()">
-                    <span>➕ Crear</span>
-                </button>
-                <button class="rpgui-button" onclick="showDeleteForm()">
-                    <span>🗑️ Eliminar</span>
-                </button>
-                <button class="rpgui-button" onclick="showUpdateForm()">
-                    <span>✏️ Actualizar</span>
-                </button>
-                <button class="rpgui-button" onclick="showSearchById()">
-                    <span>🔍 Buscar ID</span>
-                </button>
-                <button class="rpgui-button" onclick="showSearchByName()">
-                    <span>🔎 Buscar Nombre</span>
-                </button>
-                <button class="rpgui-button" onclick="showImportForm()">
-                    <span>📥 Importar</span>
-                </button>
-                <button class="rpgui-button" onclick="showDeletedGames()">
-                     <span>🗑️👀 Mostrar Eliminados</span>
-                </button>
-                <button class="rpgui-button" onclick="showPartialUpdateForm()">
-                    <span>🔧 Actualización Parcial</span>
-                </button>
-                <button class="rpgui-button" onclick="showRestoreForm()">
-                     <span>♻️ Recuperar Eliminado</span>
-                </button>
-                <!-- Reemplaza el botón actual de listar con este -->
-                <button class="rpgui-button" onclick="showGamesList()">
-                    <span>📋 Listar</span>
-                </button>
-            </div>
-        </div>
-    </div>
+<div class="page-layout" style="display: flex; gap: 2em; align-items: flex-start;">
+  <!-- Columna izquierda: Botones -->
+  <div class="buttons-container">
+    <div class="crud-buttons rpgui-container framed-golden">
+      <h2>🎮 Opciones</h2>
+      <div class="button-row">
+        <button class="rpgui-button" onclick="showCreateForm()"><span>➕ Crear</span></button>
+        <button class="rpgui-button" onclick="showDeleteForm()"><span>🗑️ Eliminar</span></button>
+        <button class="rpgui-button" onclick="showUpdateForm()"><span>✏️ Actualizar</span></button>
+        <button class="rpgui-button" onclick="showSearchById()"><span>🔍 Buscar ID</span></button>
+        <button class="rpgui-button" onclick="showSearchByName()"><span>🔎 Buscar Nombre</span></button>
+        <button class="rpgui-button" onclick="showImportForm()"><span>📥 Importar</span></button>
+        <button class="rpgui-button" onclick="showDeletedGames()"><span>🗑️👀 Mostrar Eliminados</span></button>
+        <button class="rpgui-button" onclick="showPartialUpdateForm()"><span>🔧 Actualización Parcial</span></button>
+        <button class="rpgui-button" onclick="showRestoreForm()"><span>♻️ Recuperar Eliminado</span></button>
+        <button class="rpgui-button" onclick="showGamesList()"><span>📋 Listar</span></button>
 
-    <!-- Columna derecha: Formularios -->
+      </div>
+    </div>
+  </div>
+
+   <!-- Columna derecha: Formularios y sección de info -->
+ <!-- Columna derecha: Formularios e Información -->
+  <div style="display: flex; flex-direction: column; gap: 2em; flex: 1;">
     <div class="forms-container">
-        {% if success_msg %}
-        <div class="message success">{{ success_msg }}</div>
-        {% endif %}
-        {% if error_msg %}
-        <div class="message error">{{ error_msg }}</div>
-        {% endif %}
+
+      {% if success_msg %}
+      <div class="message success">{{ success_msg }}</div>
+      {% endif %}
+      {% if error_msg %}
+      <div class="message error">{{ error_msg }}</div>
+      {% endif %}
+
 
         <!-- Formularios aquí -->
         <!-- Ejemplo del formulario de creación (los demás seguirían el mismo patrón) -->
@@ -442,6 +426,13 @@ h2, h3 {
             </form>
         </div>
     </div>
+
+</div>
+
+
+<div class="forms-container">
+
+  {% include 'info_games.html' %}
 </div>
 
 <script>
@@ -708,7 +699,7 @@ function hideAllForms() {
         'importForm',
         'listForm',
         'deletedGamesForm',
-        'partialUpdateForm',  // Añade est
+        'partialUpdateForm',
         'restoreForm'
     ];
 
@@ -716,13 +707,19 @@ function hideAllForms() {
         const form = document.getElementById(formId);
         if (form) {
             form.style.display = 'none';
-            // Si es un formulario de lista, lo removemos del DOM
             if (formId === 'listForm' || formId === 'deletedGamesForm') {
                 form.remove();
             }
         }
     });
+
+    // Ocultar sección de información
+    const infoSection = document.getElementById('info-crud-wrapper');
+    if (infoSection) {
+        infoSection.style.display = 'none';
+    }
 }
+
 function showForm(formId) {
     hideAllForms();
     document.getElementById(formId).style.display = 'block';
@@ -1019,6 +1016,17 @@ async function listGames() {
         console.error('Error:', error);
         alert('Error al cargar los juegos');
     }
+// Función que resalta y baja hacia la info del CRUD si se quiere
+function showInfoGames() {
+  hideAllForms();
+  const infoSection = document.getElementById('info-crud');
+  if (infoSection) {
+    infoSection.scrollIntoView({ behavior: 'smooth' });
+    infoSection.classList.remove('highlight-animation');
+    void infoSection.offsetWidth;
+    infoSection.classList.add('highlight-animation');
+  }
+}
 }
 </script>
 

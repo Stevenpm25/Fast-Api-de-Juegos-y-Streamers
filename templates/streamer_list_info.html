@@ -1,38 +1,911 @@
 {% extends 'base.html' %}
-{% block title %} Streamers - Info {% endblock %}
-{% block content %}
+{% block title %}CRUD de Streamers{% endblock %}
 
-<div class="info-container">
-  <h3 class="info-title">Lista de Streamers</h3>
-  <div class="info-actions">
-    <a class="btn-back" href="/">← Regresar</a>
-    <a class="btn-add" href="/add/streamer">Adicionar Streamer</a>
+{% block content %}
+<style>
+.page-layout {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 1em;
+    padding: 1em;
+    height: calc(100vh - 200px);
+    overflow: hidden;
+}
+
+.buttons-container {
+    height: 100%;
+    overflow-y: auto;
+}
+
+.crud-buttons {
+    position: sticky;
+    top: 0;
+}
+
+.button-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8em;
+}
+
+.button-row .rpgui-button {
+    width: 100%;
+    padding: 0.5em !important;
+    min-height: unset !important;
+}
+
+.forms-container {
+    height: 100%;
+    overflow-y: auto;
+    padding-right: 1em;
+}
+
+.operation-form {
+    margin-bottom: 1em;
+    padding: 1em;
+}
+
+.form-group {
+    margin-bottom: 0.8em;
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.form-group label {
+    font-size: 0.9em;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.4em;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.8em;
+    margin-top: 1em;
+}
+
+.form-buttons .rpgui-button {
+    padding: 0.5em 1em !important;
+    min-height: unset !important;
+}
+
+h2, h3 {
+    text-align: center;
+    margin-bottom: 0.8em;
+    font-size: 1.1em;
+}
+
+.message {
+    padding: 0.8em;
+    margin-bottom: 1em;
+    border-radius: 4px;
+}
+
+.success { background-color: rgba(0, 255, 0, 0.1); color: #00ff00; }
+.error { background-color: rgba(255, 0, 0, 0.1); color: #ff0000; }
+
+@media (max-width: 768px) {
+    .page-layout {
+        grid-template-columns: 1fr;
+        height: auto;
+        overflow: visible;
+    }
+
+    .forms-container {
+        height: auto;
+        overflow: visible;
+    }
+
+    .form-group {
+        grid-template-columns: 1fr;
+    }
+
+    .form-buttons {
+        flex-direction: column;
+    }
+
+    .form-buttons .rpgui-button {
+        width: 100%;
+    }
+}
+</style>
+
+<div class="page-layout" style="display: flex; gap: 2em; align-items: flex-start;">
+  <!-- Columna izquierda: Botones -->
+  <div class="buttons-container">
+    <div class="crud-buttons rpgui-container framed-golden">
+      <h2>👤 Opciones</h2>
+      <div class="button-row">
+        <button class="rpgui-button" onclick="showCreateForm()"><span>➕ Crear</span></button>
+        <button class="rpgui-button" onclick="showDeleteForm()"><span>🗑️ Eliminar</span></button>
+        <button class="rpgui-button" onclick="showUpdateForm()"><span>✏️ Actualizar</span></button>
+        <button class="rpgui-button" onclick="showSearchById()"><span>🔍 Buscar ID</span></button>
+        <button class="rpgui-button" onclick="showSearchByName()"><span>🔎 Buscar Nombre</span></button>
+        <button class="rpgui-button" onclick="showImportForm()"><span>📥 Importar</span></button>
+        <button class="rpgui-button" onclick="showDeletedStreamers()"><span>🗑️👀 Mostrar Eliminados</span></button>
+        <button class="rpgui-button" onclick="showPartialUpdateForm()"><span>🔧 Actualización Parcial</span></button>
+        <button class="rpgui-button" onclick="showRestoreForm()"><span>♻️ Recuperar Eliminado</span></button>
+        <button class="rpgui-button" onclick="showStreamersList()"><span>📋 Listar</span></button>
+      </div>
+    </div>
   </div>
 
-  <table class="info-table">
-    <thead>
-      <tr>
-        <th>Nombre</th>
-        <th>Juego</th>
-        <th>Seguidores</th>
-        <th>Espectadores Promedio</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for streamer in streamers %}
-      <tr>
-        <td>{{ streamer.name }}</td>
-        <td>{{ streamer.game }}</td>
-        <td>{{ streamer.follower_count }}</td>
-        <td>{{ streamer.avg_viewers }}</td>
-        <td>
-          <a class="btn-view" href="/streamers/{{ streamer.id }}">Ver Detalle</a>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <!-- Columna derecha: Formularios -->
+  <div style="display: flex; flex-direction: column; gap: 2em; flex: 1;">
+    <div class="forms-container">
+
+      {% if success_msg %}
+      <div class="message success">{{ success_msg }}</div>
+      {% endif %}
+      {% if error_msg %}
+      <div class="message error">{{ error_msg }}</div>
+      {% endif %}
+
+        <!-- Formulario de creación -->
+        <div id="createForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+            <h3>➕ Crear Nuevo Streamer</h3>
+            <form onsubmit="createStreamer(event)">
+                <div class="form-group">
+                    <label class="rpgui-label">👤 Nombre:</label>
+                    <input type="text" id="createStreamerName" class="rpgui-input" required minlength="2" maxlength="100">
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">🎮 Juego:</label>
+                    <input type="text" id="createStreamerGame" class="rpgui-input" required minlength="2" maxlength="100">
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">👥 Seguidores:</label>
+                    <input type="number" id="createStreamerFollowers" class="rpgui-input" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">👀 Espectadores Promedio:</label>
+                    <input type="number" id="createStreamerAvgViewers" class="rpgui-input" min="0" required>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="rpgui-button">💾 Guardar</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Formulario de Eliminación -->
+        <div id="deleteForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+            <h3>🗑️ Eliminar Streamer</h3>
+            <form onsubmit="deleteStreamer(event)">
+                <div class="form-group">
+                    <label class="rpgui-label">🔢 ID del Streamer:</label>
+                    <input type="number" id="deleteStreamerId" class="rpgui-input" required min="1">
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="rpgui-button">
+                        <span>🗑️ Eliminar</span>
+                    </button>
+                    <button type="button" class="rpgui-button" onclick="hideAllForms()">
+                        <span>❌ Cancelar</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Formulario de Recuperación -->
+        <div id="restoreForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+            <h3>♻️ Recuperar Streamer Eliminado</h3>
+            <form onsubmit="restoreStreamer(event)">
+                <div class="form-group">
+                    <label class="rpgui-label">🔢 ID del Streamer:</label>
+                    <input type="number" id="restoreStreamerId" class="rpgui-input" required min="1">
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="rpgui-button">
+                        <span>♻️ Recuperar</span>
+                    </button>
+                    <button type="button" class="rpgui-button" onclick="hideAllForms()">
+                        <span>❌ Cancelar</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Formulario de Búsqueda por ID -->
+        <div id="searchByIdForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+            <h3>🔍 Buscar Streamer por ID</h3>
+            <form onsubmit="buscarPorId(event)">
+                <div class="form-group">
+                    <label class="rpgui-label">🔢 ID del Streamer:</label>
+                    <input type="number" id="buscarStreamerId" class="rpgui-input" min="1" required>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="rpgui-button">
+                        <span>🔍 Buscar</span>
+                    </button>
+                    <button type="button" class="rpgui-button" onclick="hideAllForms()">
+                        <span>❌ Cancelar</span>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Contenedor para mostrar el resultado -->
+            <div id="searchIdResult" style="display: none; margin-top: 20px;">
+                <h3>📋 Resultado:</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Juego</th>
+                                <th>Seguidores</th>
+                                <th>Espectadores Promedio</th>
+                            </tr>
+                        </thead>
+                        <tbody id="searchIdResultsBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulario de Búsqueda por Nombre -->
+        <div id="searchByNameForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+            <h3>🔎 Buscar Streamer por Nombre</h3>
+            <form onsubmit="buscarPorNombre(event)">
+                <div class="form-group">
+                    <label class="rpgui-label">👤 Nombre del Streamer:</label>
+                    <input type="text" id="buscarStreamerName" class="rpgui-input" required minlength="1" placeholder="Ingresa al menos un carácter">
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="rpgui-button">
+                        <span>🔎 Buscar</span>
+                    </button>
+                    <button type="button" class="rpgui-button" onclick="hideAllForms()">
+                        <span>❌ Cancelar</span>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Contenedor para mostrar los resultados -->
+            <div id="searchNameResult" style="display: none;">
+                <h3>📋 Resultados:</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Juego</th>
+                                <th>Seguidores</th>
+                                <th>Espectadores Promedio</th>
+                            </tr>
+                        </thead>
+                        <tbody id="searchNameResultsBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulario de Importación de CSV -->
+        <div id="importForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+            <h3>📥 Importar Streamers desde CSV</h3>
+            <form onsubmit="importStreamers(event)">
+                <div class="form-group">
+                    <label class="rpgui-label">📁 Archivo CSV:</label>
+                    <input type="file" id="importFile" class="rpgui-input" accept=".csv" required>
+                    <p style="font-size: 0.8em; margin-top: 0.5em; color: #aaa;">
+                        El archivo CSV debe contener las columnas: name, game, follower_count, avg_viewers
+                    </p>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="rpgui-button">
+                        <span>📥 Importar</span>
+                    </button>
+                    <button type="button" class="rpgui-button" onclick="hideAllForms()">
+                        <span>❌ Cancelar</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Formulario de Actualización Parcial -->
+        <div id="partialUpdateForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+            <h3>✏️🔧 Actualización Parcial</h3>
+            <form onsubmit="partialUpdateStreamer(event)">
+                <div class="form-group">
+                    <label class="rpgui-label">🔢 ID del Streamer:</label>
+                    <input type="number" id="partialUpdateStreamerId" class="rpgui-input" required min="1">
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">📌 Campo a actualizar:</label>
+                    <select id="partialUpdateField" class="rpgui-input" required>
+                        <option value="">Selecciona un campo</option>
+                        <option value="name">Nombre</option>
+                        <option value="game">Juego</option>
+                        <option value="follower_count">Seguidores</option>
+                        <option value="avg_viewers">Espectadores Promedio</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">🆕 Nuevo valor:</label>
+                    <input type="text" id="partialUpdateValue" class="rpgui-input" required>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="rpgui-button">
+                        <span>💾 Guardar</span>
+                    </button>
+                    <button type="button" class="rpgui-button" onclick="hideAllForms()">
+                        <span>❌ Cancelar</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Formulario de Actualización -->
+        <div id="updateForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+            <h3>✏️ Actualizar Streamer</h3>
+            <form onsubmit="updateStreamer(event)">
+                <div class="form-group">
+                    <label class="rpgui-label">🔢 ID del Streamer:</label>
+                    <input type="number" id="updateStreamerId" class="rpgui-input" required min="1">
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">👤 Nombre:</label>
+                    <input type="text" id="updateStreamerName" class="rpgui-input" required minlength="2" maxlength="100">
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">🎮 Juego:</label>
+                    <input type="text" id="updateStreamerGame" class="rpgui-input" required minlength="2" maxlength="100">
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">👥 Seguidores:</label>
+                    <input type="number" id="updateStreamerFollowers" class="rpgui-input" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">👀 Espectadores Promedio:</label>
+                    <input type="number" id="updateStreamerAvgViewers" class="rpgui-input" min="0" required>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="rpgui-button">
+                        <span>💾 Guardar</span>
+                    </button>
+                    <button type="button" class="rpgui-button" onclick="hideAllForms()">
+                        <span>❌ Cancelar</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+  </div>
 </div>
 
+<!-- Scripts -->
+<script>
+// Funciones para mostrar/ocultar formularios
+function showForm(formId) {
+    hideAllForms();
+    document.getElementById(formId).style.display = 'block';
+}
+
+function hideAllForms() {
+    const forms = [
+        'createForm',
+        'deleteForm',
+        'updateForm',
+        'searchByIdForm',
+        'searchByNameForm',
+        'importForm',
+        'listForm',
+        'deletedStreamersForm',
+        'partialUpdateForm',
+        'restoreForm'
+    ];
+
+    forms.forEach(formId => {
+        const form = document.getElementById(formId);
+        if (form) form.style.display = 'none';
+    });
+}
+
+function showCreateForm() { showForm('createForm'); }
+function showDeleteForm() { showForm('deleteForm'); }
+function showUpdateForm() { showForm('updateForm'); }
+function showSearchById() {
+    hideAllForms();
+    document.getElementById('searchByIdForm').style.display = 'block';
+    document.getElementById('buscarStreamerId').value = '';
+    document.getElementById('searchIdResultsBody').innerHTML = '';
+    document.getElementById('searchIdResult').style.display = 'none';
+}
+function showSearchByName() {
+    hideAllForms();
+    document.getElementById('searchByNameForm').style.display = 'block';
+    document.getElementById('buscarStreamerName').value = '';
+    document.getElementById('searchNameResultsBody').innerHTML = '';
+    document.getElementById('searchNameResult').style.display = 'none';
+}
+function showImportForm() { showForm('importForm'); }
+function showPartialUpdateForm() { showForm('partialUpdateForm'); }
+function showRestoreForm() { showForm('restoreForm'); }
+
+// Crear streamer
+async function createStreamer(event) {
+    event.preventDefault();
+    const streamerData = {
+        name: document.getElementById('createStreamerName').value,
+        game: document.getElementById('createStreamerGame').value,
+        follower_count: parseInt(document.getElementById('createStreamerFollowers').value),
+        avg_viewers: parseInt(document.getElementById('createStreamerAvgViewers').value)
+    };
+
+    try {
+        const response = await fetch('/api/streamers', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(streamerData)
+        });
+
+        if (response.ok) {
+            alert('¡Streamer creado correctamente!');
+            location.reload();
+        } else {
+            const error = await response.json();
+            alert('Error al crear el streamer: ' + error.detail);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al crear el streamer');
+    }
+}
+
+// Actualizar streamer
+async function updateStreamer(event) {
+    event.preventDefault();
+    const streamerId = document.getElementById('updateStreamerId').value;
+    const streamerData = {
+        name: document.getElementById('updateStreamerName').value,
+        game: document.getElementById('updateStreamerGame').value,
+        follower_count: parseInt(document.getElementById('updateStreamerFollowers').value),
+        avg_viewers: parseInt(document.getElementById('updateStreamerAvgViewers').value)
+    };
+
+    try {
+        const response = await fetch(`/api/streamers/${streamerId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(streamerData)
+        });
+
+        if (response.ok) {
+            alert(`¡Streamer "${streamerData.name}" con ID ${streamerId} actualizado correctamente!`);
+            location.reload();
+        } else {
+            const error = await response.json();
+            alert('Error al actualizar el streamer: ' + error.detail);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al actualizar el streamer');
+    }
+}
+
+// Eliminar streamer
+async function deleteStreamer(event) {
+    event.preventDefault();
+    const streamerId = document.getElementById('deleteStreamerId').value;
+
+    if (confirm('¿Estás seguro de que deseas eliminar este streamer?')) {
+        try {
+            const response = await fetch(`/api/streamers/${streamerId}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                alert('¡Streamer eliminado correctamente!');
+                location.reload();
+            } else {
+                const error = await response.json();
+                alert('Error al eliminar el streamer: ' + error.detail);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error al eliminar el streamer');
+        }
+    }
+}
+
+// Recuperar streamer
+async function restoreStreamer(event) {
+    event.preventDefault();
+    const streamerId = document.getElementById('restoreStreamerId').value;
+
+    if (confirm('¿Estás seguro de que deseas recuperar este streamer eliminado?')) {
+        try {
+            const response = await fetch(`/api/streamers/recover/${streamerId}`, {
+                method: 'POST'
+            });
+
+            if (response.ok) {
+                alert('¡Streamer recuperado correctamente!');
+                location.reload();
+            } else {
+                const error = await response.json();
+                alert('Error al recuperar el streamer: ' + error.detail);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error al recuperar el streamer');
+        }
+    }
+}
+
+// Búsqueda por ID
+async function buscarPorId(event) {
+    event.preventDefault();
+    const id = document.getElementById('buscarStreamerId').value;
+
+    try {
+        const response = await fetch(`/api/streamers/${id}`);
+        const tbody = document.getElementById('searchIdResultsBody');
+        tbody.innerHTML = '';
+
+        if (response.ok) {
+            const streamer = await response.json();
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${streamer.id}</td>
+                <td>${streamer.name}</td>
+                <td>${streamer.game}</td>
+                <td>${streamer.follower_count.toLocaleString()}</td>
+                <td>${streamer.avg_viewers.toLocaleString()}</td>
+            `;
+            tbody.appendChild(row);
+        } else {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="5" style="text-align: center;">
+                        No se encontró ningún streamer con el ID ${id}
+                    </td>
+                </tr>`;
+        }
+
+        document.getElementById('searchIdResult').style.display = 'block';
+    } catch (error) {
+        console.error(error);
+        alert('Hubo un error al realizar la búsqueda');
+    }
+}
+
+// Búsqueda por nombre
+async function buscarPorNombre(event) {
+    event.preventDefault();
+    const nombre = document.getElementById('buscarStreamerName').value;
+
+    try {
+        const response = await fetch(`/api/streamers/search?name=${encodeURIComponent(nombre)}`);
+        const tbody = document.getElementById('searchNameResultsBody');
+        tbody.innerHTML = '';
+
+        if (response.ok) {
+            const streamers = await response.json();
+
+            if (streamers.length > 0) {
+                streamers.forEach(streamer => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${streamer.id}</td>
+                        <td>${streamer.name}</td>
+                        <td>${streamer.game}</td>
+                        <td>${streamer.follower_count.toLocaleString()}</td>
+                        <td>${streamer.avg_viewers.toLocaleString()}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } else {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align: center;">
+                            No se encontraron streamers con el nombre "${nombre}"
+                        </td>
+                    </tr>`;
+            }
+        } else {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="5" style="text-align: center;">
+                        Nombre no encontrado: "${nombre}"
+                    </td>
+                </tr>`;
+        }
+
+        document.getElementById('searchNameResult').style.display = 'block';
+    } catch (error) {
+        console.error(error);
+        alert('Hubo un error al realizar la búsqueda');
+    }
+}
+
+// Importar streamers desde CSV
+async function importStreamers(event) {
+    event.preventDefault();
+    const formData = new FormData();
+    const fileInput = document.getElementById('importFile');
+    formData.append('file', fileInput.files[0]);
+
+    try {
+        const response = await fetch('/streamers/import', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (response.ok) {
+            alert('Streamers importados correctamente');
+            location.reload();
+        } else {
+            const error = await response.json();
+            alert('Error al importar los streamers: ' + error.detail);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al importar los streamers');
+    }
+}
+
+// Actualización parcial
+async function partialUpdateStreamer(event) {
+    event.preventDefault();
+    const streamerId = document.getElementById('partialUpdateStreamerId').value;
+    const field = document.getElementById('partialUpdateField').value;
+    let value = document.getElementById('partialUpdateValue').value;
+
+    // Validaciones
+    if (!streamerId || isNaN(streamerId) || streamerId < 1) {
+        alert('ID de streamer inválido');
+        return;
+    }
+
+    if (!field) {
+        alert('Selecciona un campo a actualizar');
+        return;
+    }
+
+    if (!value) {
+        alert('Ingresa un valor para actualizar');
+        return;
+    }
+
+    // Convertir valores numéricos
+    if (field === 'follower_count' || field === 'avg_viewers') {
+        value = parseInt(value);
+        if (isNaN(value) || value < 0) {
+            alert('Ingresa un número válido (mayor o igual a 0)');
+            return;
+        }
+    }
+
+    try {
+        const response = await fetch(`/api/streamers/partial-update/${streamerId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                field: field,
+                value: value
+            })
+        });
+
+        if (response.ok) {
+            alert(`¡Campo ${field} del streamer con ID ${streamerId} actualizado correctamente!`);
+            location.reload();
+        } else {
+            const error = await response.text();
+            alert('Error al actualizar: ' + error);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error de conexión: ' + error.message);
+    }
+}
+
+// Mostrar streamers eliminados
+async function showDeletedStreamers() {
+    try {
+        const response = await fetch('/api/streamers/deleted');
+        if (response.ok) {
+            const deletedStreamers = await response.json();
+            hideAllForms();
+
+            if (deletedStreamers.length === 0) {
+                alert('No hay streamers eliminados para mostrar');
+                return;
+            }
+
+            const tableHTML = `
+                <div id="deletedStreamersForm" class="operation-form rpgui-container framed-golden">
+                    <h3>🗑️👀 Streamers Eliminados</h3>
+                    <div class="table-wrapper rpgui-container framed">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Juego</th>
+                                    <th>Seguidores</th>
+                                    <th>Espectadores Promedio</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${deletedStreamers.map(streamer => `
+                                    <tr>
+                                        <td>${streamer.id}</td>
+                                        <td>${streamer.name}</td>
+                                        <td>${streamer.game}</td>
+                                        <td>${parseInt(streamer.follower_count).toLocaleString()}</td>
+                                        <td>${parseInt(streamer.avg_viewers).toLocaleString()}</td>
+                                        <td>
+                                            <button class="rpgui-button" onclick="recoverStreamer(${streamer.id})">
+                                                <span>♻️ Recuperar</span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+
+            const formsContainer = document.querySelector('.forms-container');
+            const existingList = document.getElementById('deletedStreamersForm');
+            if (existingList) existingList.remove();
+
+            formsContainer.insertAdjacentHTML('beforeend', tableHTML);
+            document.getElementById('deletedStreamersForm').style.display = 'block';
+        } else {
+            alert('Error al cargar los streamers eliminados');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al cargar los streamers eliminados');
+    }
+}
+
+// Recuperar streamer eliminado
+async function recoverStreamer(streamerId) {
+    if (confirm(`¿Recuperar el streamer con ID ${streamerId}?`)) {
+        try {
+            const response = await fetch(`/api/streamers/recover/${streamerId}`, {
+                method: 'POST'
+            });
+
+            if (response.ok) {
+                alert('¡Streamer recuperado correctamente!');
+                location.reload();
+            } else {
+                const error = await response.json();
+                alert('Error al recuperar: ' + error.detail);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error al recuperar el streamer');
+        }
+    }
+}
+
+// Listar todos los streamers
+async function showStreamersList() {
+    try {
+        const response = await fetch('/api/streamers');
+        if (response.ok) {
+            const streamers = await response.json();
+            hideAllForms();
+
+            const tableHTML = `
+                <div id="listForm" class="operation-form rpgui-container framed-golden">
+                    <h3>📋 Lista de Streamers</h3>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Juego</th>
+                                    <th>Seguidores</th>
+                                    <th>Espectadores Promedio</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${streamers.map(streamer => `
+                                    <tr>
+                                        <td>${streamer.id}</td>
+                                        <td>${streamer.name}</td>
+                                        <td>${streamer.game}</td>
+                                        <td>${streamer.follower_count.toLocaleString()}</td>
+                                        <td>${streamer.avg_viewers.toLocaleString()}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+
+            const formsContainer = document.querySelector('.forms-container');
+            const existingList = document.getElementById('listForm');
+            if (existingList) existingList.remove();
+
+            formsContainer.insertAdjacentHTML('beforeend', tableHTML);
+            document.getElementById('listForm').style.display = 'block';
+        } else {
+            alert('Error al cargar los streamers');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al cargar los streamers');
+    }
+}
+</script>
+
+<!-- Estilos adicionales -->
+<style>
+.table-wrapper {
+    max-height: 400px;
+    overflow-y: auto;
+    margin: 1em 0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.table-container {
+    width: 100%;
+}
+
+.table-container table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-container th {
+    position: sticky;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 1;
+    padding: 10px;
+    text-align: left;
+}
+
+.table-container td {
+    padding: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.table-container tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.table-wrapper::-webkit-scrollbar {
+    width: 12px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    border: 3px solid rgba(0, 0, 0, 0.3);
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+</style>
 {% endblock %}

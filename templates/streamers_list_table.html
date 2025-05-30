@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Lista de Streamers{% endblock %}
+
+{% block content %}
+<div class="rpgui-container framed-golden">
+    <h2>📺 Lista de Streamers</h2>
+    
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Juego</th>
+                    <th>Seguidores</th>
+                    <th>Vistas Promedio</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for streamer in streamers %}
+                <tr>
+                    <td>{{ streamer.id }}</td>
+                    <td>{{ streamer.name }}</td>
+                    <td>{{ streamer.game }}</td>
+                    <td>{{ "{:,}".format(streamer.follower_count) }}</td>
+                    <td>{{ "{:,}".format(streamer.avg_viewers) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+.table-container {
+    overflow-x: auto;
+    margin-top: 1em;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 0.5em;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+th {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+</style>
+{% endblock %}
