@@ -8,7 +8,7 @@ class GameBase(SQLModel):
     hours_watched: int = Field(..., ge=0, description="Total de horas vistas")
     peak_viewers: int = Field(..., ge=0, description="Máximo de espectadores simultáneos")
     peak_channels: int = Field(..., ge=0, description="Máximo de canales transmitiendo el juego")
-
+    image_url: Optional[str] = Field(default=None, description="URL de la imagen del juego")
 
 class Game(GameBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -24,7 +24,7 @@ class GameCreate(SQLModel):
     hours_watched: int = Field(..., ge=0)
     peak_viewers: int = Field(..., ge=0)
     peak_channels: int = Field(..., ge=0)
-
+    image_url: Optional[str] = Field(default=None)
 
 
 class UpdatedGame(SQLModel):
@@ -33,4 +33,4 @@ class UpdatedGame(SQLModel):
     hours_watched: Optional[int] = Field(default=None, ge=0)
     peak_viewers: Optional[int] = Field(default=None, ge=0)
     peak_channels: Optional[int] = Field(default=None, ge=0)
-
+    image_url: Optional[str] = Field(default=None)
