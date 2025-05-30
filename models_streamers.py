@@ -23,10 +23,13 @@ class Streamer(StreamerBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
 
 
-class StreamerWithID(StreamerBase):
+class StreamerWithID(SQLModel):
     id: int
-
-
+    name: str
+    game: str
+    follower_count: int  # Nombre exacto como en la DB
+    avg_viewers: int
+    # Eliminar "followers", "total_streams", "peak_viewers" si no son necesarios
 class UpdatedStreamer(SQLModel):
     name: Optional[str] = Field(default=None, min_length=2, max_length=100)
     game: Optional[str] = Field(default=None, min_length=2, max_length=100)

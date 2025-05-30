@@ -1,4 +1,3 @@
-```html
 {% extends 'base.html' %}
 {% block title %}CRUD de Juegos{% endblock %}
 
@@ -113,66 +112,6 @@ h2, h3 {
     .form-buttons .rpgui-button {
         width: 100%;
     }
-<style>
-    /* ... [todos tus estilos existentes] ... */
-
-    @media (max-width: 768px) {
-        .page-layout {
-            grid-template-columns: 1fr;
-            height: auto;
-            overflow: visible;
-        }
-
-        .forms-container {
-            height: auto;
-            overflow: visible;
-        }
-
-        .form-group {
-            grid-template-columns: 1fr;
-        }
-
-        .form-buttons {
-            flex-direction: column;
-        }
-
-        .form-buttons .rpgui-button {
-            width: 100%;
-        }
-    } /* <-- ¡Aquí se cierra el media query! */
-
-    /* NUEVOS ESTILOS PARA LA TABLA (fuera del media query) */
-    .table-wrapper {
-        width: 100%;
-        overflow-x: auto;
-        max-width: 100%;
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .table-wrapper table {
-        width: 100%;
-        min-width: unset;
-        table-layout: auto;
-    }
-
-    .table-wrapper td, .table-wrapper th {
-        word-break: break-word;
-        padding: 8px 12px;
-        max-width: 200px;
-    }
-
-    /* Ajuste adicional para el contenedor principal */
-    .page-layout {
-        grid-template-columns: 250px minmax(0, 1fr);
-    }
-
-    .forms-container {
-        overflow-x: hidden;
-    }}
-</style>
 }
 </style>
 
@@ -200,10 +139,19 @@ h2, h3 {
                 <button class="rpgui-button" onclick="showImportForm()">
                     <span>📥 Importar</span>
                 </button>
+                <button class="rpgui-button" onclick="showDeletedGames()">
+                     <span>🗑️👀 Mostrar Eliminados</span>
+                </button>
+                <button class="rpgui-button" onclick="showPartialUpdateForm()">
+                    <span>🔧 Actualización Parcial</span>
+                </button>
+                <button class="rpgui-button" onclick="showRestoreForm()">
+                     <span>♻️ Recuperar Eliminado</span>
+                </button>
                 <!-- Reemplaza el botón actual de listar con este -->
-<button class="rpgui-button" onclick="showGamesList()">
-    <span>📋 Listar</span>
-</button>
+                <button class="rpgui-button" onclick="showGamesList()">
+                    <span>📋 Listar</span>
+                </button>
             </div>
         </div>
     </div>
@@ -228,10 +176,10 @@ h2, h3 {
                 </div>
                 <div class="form-group">
                     <label class="rpgui-label">📅 Fecha:</label>
-                    <input type="text" 
-                           id="createGameDate" 
-                           class="rpgui-input" 
-                           placeholder="AAAA-MM-DD" 
+                    <input type="text"
+                           id="createGameDate"
+                           class="rpgui-input"
+                           placeholder="AAAA-MM-DD"
                            pattern="\d{4}-\d{2}-\d{2}"
                            title="Usa el formato AAAA-MM-DD (ejemplo: 2024-01-01)"
                            oninput="formatearFecha(this)"
@@ -277,180 +225,225 @@ h2, h3 {
                 </div>
             </form>
         </div>
-<!-- Formulario de Búsqueda por ID -->
-<div id="searchByIdForm" class="operation-form rpgui-container framed-golden" style="display: none;">
-    <h3>🔍 Buscar Juego por ID</h3>
-    <form onsubmit="buscarPorId(event)">
-        <div class="form-group">
-            <label class="rpgui-label">🎲 ID del Juego:</label>
-            <input type="number"
-                   id="buscarGameId"
-                   class="rpgui-input"
-                   min="1"
-                   required>
-        </div>
-        <div class="form-buttons">
-            <button type="submit" class="rpgui-button">
-                <span>🔍 Buscar</span>
-            </button>
-            <button type="button" class="rpgui-button" onclick="hideAllForms()">
-                <span>❌ Cancelar</span>
-            </button>
-        </div>
-    </form>
 
-    <!-- Contenedor para mostrar el resultado -->
-    <div id="searchIdResult" style="display: none; margin-top: 20px;">
-        <h3>📋 Resultado:</h3>
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Fecha</th>
-                        <th>Horas Vistas</th>
-                        <th>Pico Espectadores</th>
-                        <th>Pico Canales</th>
-                    </tr>
-                </thead>
-                <tbody id="searchIdResultsBody">
-                </tbody>
-            </table>
+        <!-- Formulario de Recuperación de Juegos Eliminados -->
+        <div id="restoreForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+            <h3>♻️ Recuperar Juego Eliminado</h3>
+            <form onsubmit="restoreGame(event)">
+                <div class="form-group">
+                    <label class="rpgui-label">🔢 ID del Juego:</label>
+                    <input type="number" id="restoreGameId" class="rpgui-input" required min="1">
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="rpgui-button">
+                        <span>♻️ Recuperar</span>
+                    </button>
+                    <button type="button" class="rpgui-button" onclick="hideAllForms()">
+                        <span>❌ Cancelar</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Formulario de Búsqueda por ID -->
+        <div id="searchByIdForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+            <h3>🔍 Buscar Juego por ID</h3>
+            <form onsubmit="buscarPorId(event)">
+                <div class="form-group">
+                    <label class="rpgui-label">🎲 ID del Juego:</label>
+                    <input type="number"
+                           id="buscarGameId"
+                           class="rpgui-input"
+                           min="1"
+                           required>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="rpgui-button">
+                        <span>🔍 Buscar</span>
+                    </button>
+                    <button type="button" class="rpgui-button" onclick="hideAllForms()">
+                        <span>❌ Cancelar</span>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Contenedor para mostrar el resultado -->
+            <div id="searchIdResult" style="display: none; margin-top: 20px;">
+                <h3>📋 Resultado:</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Fecha</th>
+                                <th>Horas Vistas</th>
+                                <th>Pico Espectadores</th>
+                                <th>Pico Canales</th>
+                            </tr>
+                        </thead>
+                        <tbody id="searchIdResultsBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulario de Búsqueda por Nombre -->
+        <div id="searchByNameForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+            <h3>🔎 Buscar Juego por Nombre</h3>
+            <form onsubmit="buscarPorNombre(event)">
+                <div class="form-group">
+                    <label class="rpgui-label">🎲 Nombre del Juego:</label>
+                    <input type="text"
+                           id="buscarGameName"
+                           class="rpgui-input"
+                           required
+                           minlength="1"
+                           placeholder="Ingresa al menos un carácter">
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="rpgui-button">
+                        <span>🔎 Buscar</span>
+                    </button>
+                    <button type="button" class="rpgui-button" onclick="hideAllForms()">
+                        <span>❌ Cancelar</span>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Contenedor para mostrar los resultados -->
+            <div id="searchNameResult" style="display: none;">
+                <h3>📋 Resultados:</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Fecha</th>
+                                <th>Horas Vistas</th>
+                                <th>Pico Espectadores</th>
+                                <th>Pico Canales</th>
+                            </tr>
+                        </thead>
+                        <tbody id="searchNameResultsBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulario de Importación de CSV -->
+        <div id="importForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+            <h3>📥 Importar Juegos desde CSV</h3>
+            <form onsubmit="importGames(event)">
+                <div class="form-group">
+                    <label class="rpgui-label">📁 Archivo CSV:</label>
+                    <input type="file"
+                           id="importFile"
+                           class="rpgui-input"
+                           accept=".csv"
+                           required>
+                    <p style="font-size: 0.8em; margin-top: 0.5em; color: #aaa;">
+                        El archivo CSV debe contener las columnas: date, game, hours_watched, peak_viewers, peak_channels
+                    </p>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="rpgui-button">
+                        <span>📥 Importar</span>
+                    </button>
+                    <button type="button" class="rpgui-button" onclick="hideAllForms()">
+                        <span>❌ Cancelar</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Formulario de Actualización Parcial -->
+        <div id="partialUpdateForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+            <h3>✏️🔧 Actualización Parcial</h3>
+            <form onsubmit="partialUpdateGame(event)">
+                <div class="form-group">
+                    <label class="rpgui-label">🔢 ID del Juego:</label>
+                    <input type="number" id="partialUpdateGameId" class="rpgui-input" required min="1">
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">📌 Campo a actualizar:</label>
+                    <select id="partialUpdateField" class="rpgui-input" required>
+                        <option value="">Selecciona un campo</option>
+                        <option value="game">Nombre</option>
+                        <option value="date">Fecha</option>
+                        <option value="hours_watched">Horas Vistas</option>
+                        <option value="peak_viewers">Pico Espectadores</option>
+                        <option value="peak_channels">Pico Canales</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">🆕 Nuevo valor:</label>
+                    <input type="text" id="partialUpdateValue" class="rpgui-input" required>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="rpgui-button">
+                        <span>💾 Guardar</span>
+                    </button>
+                    <button type="button" class="rpgui-button" onclick="hideAllForms()">
+                        <span>❌ Cancelar</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Formulario de Actualización -->
+        <div id="updateForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+            <h3>✏️ Actualizar Juego</h3>
+            <form onsubmit="updateGame(event)">
+                <div class="form-group">
+                    <label class="rpgui-label">🔢 ID del Juego:</label>
+                    <input type="number" id="updateGameId" class="rpgui-input" required min="1">
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">🎲 Nombre:</label>
+                    <input type="text" id="updateGameName" class="rpgui-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">📅 Fecha:</label>
+                    <input type="text" id="updateGameDate" class="rpgui-input"
+                           placeholder="AAAA-MM-DD"
+                           pattern="\d{4}-\d{2}-\d{2}"
+                           title="Usa el formato AAAA-MM-DD (ejemplo: 2024-01-01)"
+                           oninput="formatearFecha(this)"
+                           onblur="validarFecha(this)"
+                           required>
+                    <span id="updateFechaError" style="color: #ff6b6b; display: none; font-size: 0.8em; margin-top: 0.3em;">
+                        Por favor, ingresa una fecha válida en formato AAAA-MM-DD
+                    </span>
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">⌛ Horas Vistas:</label>
+                    <input type="number" id="updateGameHours" class="rpgui-input" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">👥 Pico de Espectadores:</label>
+                    <input type="number" id="updateGamePeakViewers" class="rpgui-input" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">📺 Pico de Canales:</label>
+                    <input type="number" id="updateGamePeakChannels" class="rpgui-input" min="0" required>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="rpgui-button">
+                        <span>💾 Guardar</span>
+                    </button>
+                    <button type="button" class="rpgui-button" onclick="hideAllForms()">
+                        <span>❌ Cancelar</span>
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
-<!-- Formulario de Búsqueda por Nombre -->
-<div id="searchByNameForm" class="operation-form rpgui-container framed-golden" style="display: none;">
-    <style>
-        #searchByNameForm {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-        }
 
-        .table-wrapper {
-            max-height: 120px; /* Altura para 3 filas */
-            overflow-y: auto;
-            margin-top: 15px;
-            margin-bottom: 20px;
-        }
-
-        .table-wrapper::-webkit-scrollbar {
-            width: 12px;
-        }
-
-        .table-wrapper::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-        }
-
-        .table-wrapper::-webkit-scrollbar-thumb {
-            background-color: #8b7355;
-            border-radius: 10px;
-            border: 2px solid #2c2c2c;
-        }
-
-        .table-wrapper table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .table-wrapper thead {
-            position: sticky;
-            top: 0;
-            background: #2c2c2c;
-            z-index: 1;
-        }
-
-        .table-wrapper th,
-        .table-wrapper td {
-            padding: 8px;
-            text-align: left;
-            border-bottom: 1px solid rgba(139, 115, 85, 0.3);
-            height: 40px; /* Altura fija para cada fila */
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-buttons {
-            margin-top: 15px;
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-        }
-    </style>
-
-    <h3>🔎 Buscar Juego por Nombre</h3>
-    <form onsubmit="buscarPorNombre(event)">
-        <div class="form-group">
-            <label class="rpgui-label">🎲 Nombre del Juego:</label>
-            <input type="text"
-                   id="buscarGameName"
-                   class="rpgui-input"
-                   required
-                   minlength="1"
-                   placeholder="Ingresa al menos un carácter">
-        </div>
-        <div class="form-buttons">
-            <button type="submit" class="rpgui-button">
-                <span>🔎 Buscar</span>
-            </button>
-            <button type="button" class="rpgui-button" onclick="hideAllForms()">
-                <span>❌ Cancelar</span>
-            </button>
-        </div>
-    </form>
-
-    <!-- Contenedor para mostrar los resultados -->
-    <div id="searchNameResult" style="display: none;">
-        <h3>📋 Resultados:</h3>
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Fecha</th>
-                        <th>Horas Vistas</th>
-                        <th>Pico Espectadores</th>
-                        <th>Pico Canales</th>
-                    </tr>
-                </thead>
-                <tbody id="searchNameResultsBody">
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-<!-- Formulario de Importación de CSV -->
-<div id="importForm" class="operation-form rpgui-container framed-golden" style="display: none;">
-    <h3>📥 Importar Juegos desde CSV</h3>
-    <form onsubmit="importGames(event)">
-        <div class="form-group">
-            <label class="rpgui-label">📁 Archivo CSV:</label>
-            <input type="file"
-                   id="importFile"
-                   class="rpgui-input"
-                   accept=".csv"
-                   required>
-            <p style="font-size: 0.8em; margin-top: 0.5em; color: #aaa;">
-                El archivo CSV debe contener las columnas: date, game, hours_watched, peak_viewers, peak_channels
-            </p>
-        </div>
-        <div class="form-buttons">
-            <button type="submit" class="rpgui-button">
-                <span>📥 Importar</span>
-            </button>
-            <button type="button" class="rpgui-button" onclick="hideAllForms()">
-                <span>❌ Cancelar</span>
-            </button>
-        </div>
-    </form>
-</div>
 <script>
 async function buscarPorNombre(event) {
     event.preventDefault();
@@ -508,111 +501,6 @@ async function buscarPorNombre(event) {
     }
 }
 </script>     <!-- Los demás formularios seguirían el mismo patrón -->
-        <!-- ... -->
-<!-- Formulario de Actualización -->
-<div id="updateForm" class="operation-form rpgui-container framed-golden" style="display: none;">
-    <h3>✏️ Actualizar Juego</h3>
-    <form onsubmit="updateGame(event)">
-        <div class="form-group">
-            <label class="rpgui-label">🔢 ID del Juego:</label>
-            <input type="number" id="updateGameId" class="rpgui-input" required min="1">
-        </div>
-        <div class="form-group">
-            <label class="rpgui-label">🎲 Nombre:</label>
-            <input type="text" id="updateGameName" class="rpgui-input" required>
-        </div>
-<div class="form-group">
-    <label class="rpgui-label">📅 Fecha:</label>
-    <input type="text" id="updateGameDate" class="rpgui-input"
-           placeholder="AAAA-MM-DD"
-           pattern="\d{4}-\d{2}-\d{2}"
-           title="Usa el formato AAAA-MM-DD (ejemplo: 2024-01-01)"
-           oninput="formatearFecha(this)"
-           onblur="validarFecha(this)"
-           required>
-    <span id="updateFechaError" style="color: #ff6b6b; display: none; font-size: 0.8em; margin-top: 0.3em;">
-        Por favor, ingresa una fecha válida en formato AAAA-MM-DD
-    </span>
-</div>
-        <div class="form-group">
-            <label class="rpgui-label">⌛ Horas Vistas:</label>
-            <input type="number" id="updateGameHours" class="rpgui-input" min="0" required>
-        </div>
-        <div class="form-group">
-            <label class="rpgui-label">👥 Pico de Espectadores:</label>
-            <input type="number" id="updateGamePeakViewers" class="rpgui-input" min="0" required>
-        </div>
-        <div class="form-group">
-            <label class="rpgui-label">📺 Pico de Canales:</label>
-            <input type="number" id="updateGamePeakChannels" class="rpgui-input" min="0" required>
-        </div>
-        <div class="form-buttons">
-            <button type="submit" class="rpgui-button">
-                <span>💾 Guardar</span>
-            </button>
-            <button type="button" class="rpgui-button" onclick="hideAllForms()">
-                <span>❌ Cancelar</span>
-            </button>
-        </div>
-    </form>
-</div>
-    </div>
-</div>
-
-<!-- El script se mantiene igual -->
-<script>
-async function confirmDelete(gameId) {
-    if (confirm('¿Estás seguro de que deseas eliminar este juego?')) {
-        try {
-            const response = await fetch(`/api/games/${gameId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            if (response.ok) {
-                location.reload();
-            } else {
-                const error = await response.json();
-                alert('Error al eliminar el juego: ' + error.detail);
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Error al eliminar el juego');
-        }
-    }
-}
-
-function refreshList() {
-    location.reload();
-}
-
-function exportToCSV() {
-    const table = document.querySelector('table');
-    let csv = [];
-    const rows = table.querySelectorAll('tr');
-
-    for (let i = 0; i < rows.length; i++) {
-        let row = [], cols = rows[i].querySelectorAll('td, th');
-
-        for (let j = 0; j < cols.length - 1; j++) {
-            row.push(cols[j].innerText);
-        }
-
-        csv.push(row.join(','));
-    }
-
-    const csvContent = 'data:text/csv;charset=utf-8,' + csv.join('\n');
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', 'games_data.csv');
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-}
-</script>
 
 <style>
 /* Añade estos estilos para los botones en la tabla */
@@ -818,21 +706,23 @@ function hideAllForms() {
         'searchByIdForm',
         'searchByNameForm',
         'importForm',
-        'listForm'  // Añade listForm aquí
+        'listForm',
+        'deletedGamesForm',
+        'partialUpdateForm',  // Añade est
+        'restoreForm'
     ];
 
     forms.forEach(formId => {
         const form = document.getElementById(formId);
         if (form) {
             form.style.display = 'none';
-            // Si es el listForm, también lo removemos del DOM
-            if (formId === 'listForm') {
+            // Si es un formulario de lista, lo removemos del DOM
+            if (formId === 'listForm' || formId === 'deletedGamesForm') {
                 form.remove();
             }
         }
     });
 }
-
 function showForm(formId) {
     hideAllForms();
     document.getElementById(formId).style.display = 'block';
@@ -860,6 +750,13 @@ function showDeleteForm() {
 
 function showImportForm() {
     showForm('importForm');
+}
+function showPartialUpdateForm() {
+    showForm('partialUpdateForm');
+}
+
+function showRestoreForm() {
+    showForm('restoreForm');
 }
 
 async function createGame(event) {
@@ -929,6 +826,31 @@ async function deleteGame(event) {
         }
     }
 }
+
+async function restoreGame(event) {
+    event.preventDefault();
+    const gameId = document.getElementById('restoreGameId').value;
+
+    if (confirm('¿Estás seguro de que deseas recuperar este juego eliminado?')) {
+        try {
+            const response = await fetch(`/api/games/recover/${gameId}`, {
+                method: 'POST'
+            });
+
+            if (response.ok) {
+                alert('¡Juego recuperado correctamente!');
+                location.reload();
+            } else {
+                const error = await response.json();
+                alert('Error al recuperar el juego: ' + error.detail);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error al recuperar el juego');
+        }
+    }
+}
+
 async function buscarPorId(event) {
     event.preventDefault();
     const id = document.getElementById("buscarGameId").value;
@@ -1181,6 +1103,127 @@ async function showGamesList() {
         alert('Error al cargar los juegos');
     }
 }
+
+// Elimina todas las definiciones anteriores de partialUpdateGame
+// y reemplázalas solo con esta versión corregida:
+
+async function partialUpdateGame(event) {
+    event.preventDefault();
+
+    // Obtener valores del formulario
+    const gameId = document.getElementById('partialUpdateGameId').value;
+    const field = document.getElementById('partialUpdateField').value;
+    let value = document.getElementById('partialUpdateValue').value;
+
+    // Validaciones básicas
+    if (!gameId || isNaN(gameId) || gameId < 1) {
+        alert('Por favor ingresa un ID de juego válido (número mayor a 0)');
+        return;
+    }
+
+    if (!field) {
+        alert('Por favor selecciona un campo a actualizar');
+        return;
+    }
+
+    if (!value) {
+        alert('Por favor ingresa un valor para actualizar');
+        return;
+    }
+
+    // Convertir valores numéricos
+    if (field === 'hours_watched' || field === 'peak_viewers' || field === 'peak_channels') {
+        value = parseInt(value);
+        if (isNaN(value) || value < 0) {
+            alert('Por favor ingresa un número válido (mayor o igual a 0)');
+            return;
+        }
+    }
+
+    // Validar fecha (corregido)
+    if (field === 'date') {
+        // Usamos el mismo método de validación que en otros formularios
+        const fechaInput = document.createElement('input');
+        fechaInput.value = value;
+        fechaInput.id = 'tempDateInput';
+
+        if (!validarFecha(fechaInput)) {
+            alert('Por favor ingresa una fecha válida en formato AAAA-MM-DD');
+            return;
+        }
+    }
+
+    // Validar nombre (al menos 2 caracteres)
+    if (field === 'game' && value.length < 2) {
+        alert('El nombre del juego debe tener al menos 2 caracteres');
+        return;
+    }
+
+    try {
+        // Mostrar mensaje de carga
+        const submitBtn = event.target.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<span>⌛ Procesando...</span>';
+        submitBtn.disabled = true;
+
+        // Depuración: mostrar datos que se enviarán
+        console.log("Enviando:", {
+            field: field,
+            value: value
+        });
+
+        const response = await fetch(`/api/games/partial-update/${gameId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                field: field,
+                value: value
+            })
+        });
+
+        // Restaurar botón
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+
+        // Depuración: mostrar respuesta
+        console.log("Respuesta:", response);
+
+        if (response.ok) {
+            alert(`¡Campo ${field} del juego con ID ${gameId} actualizado correctamente!`);
+            // Limpiar el formulario
+            document.getElementById('partialUpdateGameId').value = '';
+            document.getElementById('partialUpdateField').value = '';
+            document.getElementById('partialUpdateValue').value = '';
+            // Recargar la página para ver cambios
+            location.reload();
+        } else {
+            const error = await response.text();
+            alert('Error al actualizar: ' + error);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error de conexión: ' + error.message);
+        // Restaurar botón en caso de error
+        const submitBtn = event.target.querySelector('button[type="submit"]');
+        if (submitBtn) {
+            submitBtn.innerHTML = '<span>💾 Guardar</span>';
+            submitBtn.disabled = false;
+        }
+    }
+}
+
+// Asegúrate de tener solo UNA definición de showPartialUpdateForm:
+function showPartialUpdateForm() {
+    hideAllForms();
+    document.getElementById('partialUpdateForm').style.display = 'block';
+    // Limpiar campos
+    document.getElementById('partialUpdateGameId').value = '';
+    document.getElementById('partialUpdateField').value = '';
+    document.getElementById('partialUpdateValue').value = '';
+}
+
 </script>
 
 <!-- Añade estos estilos específicos -->
@@ -1238,6 +1281,8 @@ async function showGamesList() {
     background-color: rgba(255, 255, 255, 0.3);
 }
 </style>
+<!-- Script para la funcionalidad de recuperar juegos eliminados -->
+<script src="/static/js/restore_game.js"></script>
 {% endblock %}
 <style>
 /* Asegúrate de que estos estilos estén presentes y no sean sobrescritos */
@@ -1288,16 +1333,21 @@ th {
 </style>
 
 <script>
-async function showGamesList() {
+async function showDeletedGames() {
     try {
-        const response = await fetch('/api/games');
+        const response = await fetch('/api/games/deleted');
         if (response.ok) {
-            const games = await response.json();
+            const deletedGames = await response.json();
             hideAllForms();
 
+            if (deletedGames.length === 0) {
+                alert('No hay juegos eliminados para mostrar');
+                return;
+            }
+
             const tableHTML = `
-                <div id="listForm" class="operation-form rpgui-container framed-golden">
-                    <h3>📋 Lista de Juegos</h3>
+                <div id="deletedGamesForm" class="operation-form rpgui-container framed-golden">
+                    <h3>🗑️👀 Juegos Eliminados</h3>
                     <div class="table-wrapper rpgui-container framed">
                         <table>
                             <thead>
@@ -1308,17 +1358,23 @@ async function showGamesList() {
                                     <th>Horas Vistas</th>
                                     <th>Pico Espectadores</th>
                                     <th>Pico Canales</th>
+                                    <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                ${games.map(game => `
+                                ${deletedGames.map(game => `
                                     <tr>
                                         <td>${game.id}</td>
                                         <td>${game.game}</td>
                                         <td>${game.date}</td>
-                                        <td>${game.hours_watched.toLocaleString()}</td>
-                                        <td>${game.peak_viewers.toLocaleString()}</td>
-                                        <td>${game.peak_channels.toLocaleString()}</td>
+                                        <td>${parseInt(game.hours_watched).toLocaleString()}</td>
+                                        <td>${parseInt(game.peak_viewers).toLocaleString()}</td>
+                                        <td>${parseInt(game.peak_channels).toLocaleString()}</td>
+                                        <td>
+                                            <button class="rpgui-button" onclick="recoverGame(${game.id})">
+                                                <span>♻️ Recuperar</span>
+                                            </button>
+                                        </td>
                                     </tr>
                                 `).join('')}
                             </tbody>
@@ -1328,95 +1384,39 @@ async function showGamesList() {
             `;
 
             const formsContainer = document.querySelector('.forms-container');
-            const existingList = document.getElementById('listForm');
+            const existingList = document.getElementById('deletedGamesForm');
             if (existingList) {
                 existingList.remove();
             }
             formsContainer.insertAdjacentHTML('beforeend', tableHTML);
-            document.getElementById('listForm').style.display = 'block';
+            document.getElementById('deletedGamesForm').style.display = 'block';
         } else {
-            alert('Error al cargar los juegos');
+            alert('Error al cargar los juegos eliminados');
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('Error al cargar los juegos');
+        alert('Error al cargar los juegos eliminados');
+    }
+}
+
+async function recoverGame(gameId) {
+    if (confirm(`¿Estás seguro de que deseas recuperar el juego con ID ${gameId}?`)) {
+        try {
+            const response = await fetch(`/api/games/recover/${gameId}`, {
+                method: 'POST'
+            });
+
+            if (response.ok) {
+                alert('¡Juego recuperado correctamente!');
+                location.reload();
+            } else {
+                const error = await response.json();
+                alert('Error al recuperar el juego: ' + error.detail);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error al recuperar el juego');
+        }
     }
 }
 </script>
-<style>
-/* Ajustes para el layout principal */
-.page-layout {
-    display: grid;
-    grid-template-columns: 250px 1fr;
-    gap: 1em;
-    padding: 1em;
-    height: calc(100vh - 170px); /* Ajustado para considerar navbar y footer */
-    max-height: calc(100vh - 170px);
-    overflow: hidden;
-    margin: 0;
-}
-
-.forms-container {
-    height: 100%;
-    overflow-y: auto;
-    padding-right: 1em;
-    max-height: calc(100vh - 170px);
-}
-
-/* Estilos para el contenedor de la tabla */
-#listForm {
-    height: calc(100vh - 200px); /* Altura ajustada */
-    max-height: calc(100vh - 200px);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    margin-bottom: 0;
-}
-
-.table-wrapper {
-    flex: 1;
-    overflow-y: auto;
-    margin-top: 1em;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    position: relative;
-    height: calc(100% - 50px); /* Resta el espacio del título */
-}
-
-/* Estilos para la tabla */
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-th {
-    position: sticky;
-    top: 0;
-    background-color: rgba(0, 0, 0, 0.8);
-    z-index: 1;
-    padding: 0.5em;
-}
-
-td {
-    padding: 0.5em;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-tr:hover {
-    background-color: rgba(255, 255, 255, 0.05);
-}
-
-/* Estilos para el scroll */
-.table-wrapper::-webkit-scrollbar {
-    width: 12px;
-}
-
-.table-wrapper::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.3);
-}
-
-.table-wrapper::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.2);
-    border-radius: 6px;
-    border: 3px solid rgba(0, 0, 0, 0.3);
-}
-</style>

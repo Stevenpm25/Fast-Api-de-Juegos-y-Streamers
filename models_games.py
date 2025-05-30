@@ -16,9 +16,7 @@ class Game(GameBase, table=True):
 
 class GameWithID(GameBase):
     id: int
-# models_games.py
 
-# models_games.py
 
 class GameCreate(SQLModel):
     date: str = Field(..., min_length=4)

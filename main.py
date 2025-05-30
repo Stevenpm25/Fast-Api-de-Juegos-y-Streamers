@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends, Request, HTTPException, Query, UploadFile,
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
-from sqlmodel import SQLModel
+from sqlmodel import SQLModel, select
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy import text
 from typing import Optional, List, Dict
@@ -28,7 +28,7 @@ from operations_games import (
 )
 from operations_streamers import (
     read_all_streamers, read_one_streamer, create_streamer, update_streamer,
-    delete_streamer, search_streamers
+    delete_streamer, search_streamers, partial_update_streamer, store_deleted_streamer
 )
 
 app = FastAPI(
@@ -348,10 +348,12 @@ async def patch_partial_game(
     hours_watched: Optional[int] = Query(None, description="Nuevas horas vistas"),
     peak_viewers: Optional[int] = Query(None, description="Nuevo pico de espectadores"),
     peak_channels: Optional[int] = Query(None, description="Nuevo pico de canales"),
+    data: Optional[dict] = Body(None),
     session: AsyncSession = Depends(get_session)
 ):
     updates = {}
 
+    # Procesar parámetros de consulta (query parameters)
     if game is not None:
         updates["game"] = game
     if date is not None:
@@ -362,6 +364,22 @@ async def patch_partial_game(
         updates["peak_viewers"] = peak_viewers
     if peak_channels is not None:
         updates["peak_channels"] = peak_channels
+
+    # Procesar datos del cuerpo (JSON)
+    if data:
+        field = data.get("field")
+        value = data.get("value")
+        if field and value is not None:
+            # Convertir valores numéricos si es necesario
+            if field in ["hours_watched", "peak_viewers", "peak_channels"]:
+                try:
+                    value = int(value)
+                except (ValueError, TypeError):
+                    raise HTTPException(
+                        status_code=400, 
+                        detail=f"El valor para {field} debe ser un número entero"
+                    )
+            updates[field] = value
 
     if not updates:
         raise HTTPException(status_code=400, detail="No se proporcionaron datos para actualizar")
@@ -456,7 +474,34 @@ async def import_streamers(file: UploadFile = File(...), session: AsyncSession =
     except Exception as e:
         await session.rollback()
         raise HTTPException(status_code=400, detail=str(e))
+@app.get("/api/streamers/search", response_model=List[StreamerWithID], tags=["Streamers"])
+async def search_streamer(
+    name: str = Query(..., description="Nombre del streamer a buscar"),  # Parámetro obligatorio
+    session: AsyncSession = Depends(get_session)
+):
+    try:
+        # Limpieza del nombre de búsqueda
+        search_name = name.lower().strip()
 
+        # Consulta con filtro insensible a mayúsculas/minúsculas
+        query = select(Streamer).where(Streamer.name.ilike(f"%{search_name}%"))
+        result = await session.execute(query)
+        streamers = result.scalars().all()
+
+        if not streamers:
+            raise HTTPException(
+                status_code=404,
+                detail="No se encontraron streamers con ese nombre"
+            )
+
+        return [StreamerWithID.model_validate(s) for s in streamers]
+    except HTTPException:
+        raise  # Re-lanza errores HTTP personalizados
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error en la búsqueda: {str(e)}"
+        )
 @app.post("/api/games/recover/{game_id}", tags=["Games"])
 async def recover_deleted_game(game_id: int, session: AsyncSession = Depends(get_session)):
     eliminados_path = "eliminados.csv"
@@ -500,6 +545,50 @@ async def recover_deleted_game(game_id: int, session: AsyncSession = Depends(get
 async def get_all_streamers(session: AsyncSession = Depends(get_session)):
     return await read_all_streamers(session)
 
+@app.delete("/api/streamers/{streamer_id}", tags=["Streamers"])
+async def delete_existing_streamer(
+    streamer_id: int,
+    session: AsyncSession = Depends(get_session)
+):
+    try:
+        deleted = await delete_streamer(session, streamer_id)
+        if not deleted:
+            raise HTTPException(status_code=404, detail="Streamer no encontrado")
+
+        plain_streamer = StreamerWithID.model_validate(deleted)
+        store_deleted_streamer(plain_streamer)
+
+        return JSONResponse(
+            status_code=200,
+            content={
+                "message": "¡Streamer eliminado correctamente!",
+                "deleted_streamer": plain_streamer.dict()
+            }
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error al eliminar el streamer: {str(e)}"
+        )
+@app.get("/api/streamers/deleted", tags=["Streamers"])
+async def get_deleted_streamers():
+    eliminados_path = "streamerseliminados.csv"
+    if not os.path.exists(eliminados_path):
+        return []
+
+    deleted_streamers = []
+    with open(eliminados_path, mode="r", encoding="utf-8") as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            # Convertir campos numéricos (si es necesario)
+            row["id"] = int(row["id"])
+            row["followers"] = int(row["followers"]) if "followers" in row else 0
+            row["avg_viewers"] = int(row["avg_viewers"]) if "avg_viewers" in row else 0
+            row["total_streams"] = int(row["total_streams"]) if "total_streams" in row else 0
+            row["peak_viewers"] = int(row["peak_viewers"]) if "peak_viewers" in row else 0
+            deleted_streamers.append(row)
+
+    return deleted_streamers
 @app.get("/api/streamers/{streamer_id}", response_model=StreamerWithID, tags=["Streamers"])
 async def get_streamer(streamer_id: int, session: AsyncSession = Depends(get_session)):
     streamer = await read_one_streamer(session, streamer_id)
@@ -510,7 +599,74 @@ async def get_streamer(streamer_id: int, session: AsyncSession = Depends(get_ses
 @app.post("/api/streamers", response_model=StreamerWithID, tags=["Streamers"])
 async def create_new_streamer(streamer: StreamerCreate, session: AsyncSession = Depends(get_session)):
     return await create_streamer(session, streamer)
+@app.post("/api/streamers/recover/{streamer_id}", tags=["Streamers"])
+@app.post("/api/streamers/recover/{streamer_id}", tags=["Streamers"])
+async def recover_deleted_streamer(
+        streamer_id: int,
+        session: AsyncSession = Depends(get_session)
+):
+    try:
+        eliminados_path = "streamerseliminados.csv"
 
+        # Verificar si el archivo existe
+        if not os.path.exists(eliminados_path):
+            raise HTTPException(
+                status_code=404,
+                detail="No hay streamers eliminados para recuperar"
+            )
+
+        # Buscar el streamer en el CSV
+        recovered = None
+        rows = []
+        with open(eliminados_path, mode="r", encoding="utf-8") as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                if int(row["id"]) == streamer_id:
+                    recovered = row
+                else:
+                    rows.append(row)
+
+        if not recovered:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Streamer con ID {streamer_id} no encontrado en eliminados"
+            )
+
+        # Verificar si el streamer ya existe en la base de datos
+        existing = await session.get(Streamer, streamer_id)
+        if existing:
+            raise HTTPException(
+                status_code=400,
+                detail=f"El streamer con ID {streamer_id} ya existe en la base de datos"
+            )
+
+        # Crear nuevo streamer (asegurar tipos de datos)
+        new_streamer = Streamer(
+            id=int(recovered["id"]),
+            name=recovered["name"],
+            game=recovered["game"],
+            follower_count=int(recovered["follower_count"]),
+            avg_viewers=int(recovered["avg_viewers"])
+        )
+
+        session.add(new_streamer)
+        await session.commit()
+
+        # Actualizar el CSV
+        with open(eliminados_path, mode="w", newline='', encoding="utf-8") as file:
+            writer = csv.DictWriter(file, fieldnames=reader.fieldnames)
+            writer.writeheader()
+            writer.writerows(rows)
+
+        return {"message": f"Streamer con ID {streamer_id} recuperado correctamente"}
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error al recuperar el streamer: {str(e)}"
+        )
 @app.put("/api/streamers/{streamer_id}", response_model=StreamerWithID, tags=["Streamers"])
 async def update_existing_streamer(
     streamer_id: int,
@@ -522,21 +678,71 @@ async def update_existing_streamer(
         raise HTTPException(status_code=404, detail="Streamer not found")
     return updated
 
-@app.delete("/api/streamers/{streamer_id}", response_model=StreamerWithID, tags=["Streamers"])
-async def delete_existing_streamer(streamer_id: int, session: AsyncSession = Depends(get_session)):
-    deleted = await delete_streamer(session, streamer_id)
-    if not deleted:
-        raise HTTPException(status_code=404, detail="Streamer not found")
-    return deleted
 
-@app.get("/api/streamers/search", response_model=List[StreamerWithID], tags=["Streamers"])
-async def search_streamer(
-    name: Optional[str] = Query(None),
-    game: Optional[str] = Query(None),
+from fastapi.responses import JSONResponse
+
+
+@app.get("/api/games/search", response_model=List[GameWithID], tags=["Games"])
+async def search_game(
+        game_name: str = Query(None, description="Nombre del juego a buscar"),
+        session: AsyncSession = Depends(get_session)
+):
+    try:
+        if not game_name:
+            raise HTTPException(
+                status_code=400,
+                detail="Debe proporcionar un nombre de juego para buscar"
+            )
+
+        games = await search_games(session, game_name)
+        if not games:
+            raise HTTPException(
+                status_code=404,
+                detail="No se encontraron juegos con ese nombre"
+            )
+
+        return games
+    except HTTPException:
+        raise  # Re-lanza excepciones HTTP personalizadas
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error en la búsqueda: {str(e)}"
+        )
+@app.patch("/api/streamers/partial-update/{streamer_id}", response_model=StreamerWithID, tags=["Streamers"])
+async def patch_partial_streamer(
+    streamer_id: int,
+    name: Optional[str] = Query(None, description="Nuevo nombre del streamer"),
+    game: Optional[str] = Query(None, description="Nuevo juego asociado"),
+    followers: Optional[int] = Query(None, description="Nuevo número de seguidores"),
+    avg_viewers: Optional[int] = Query(None, description="Nuevo promedio de espectadores"),
+    total_streams: Optional[int] = Query(None, description="Nuevo total de streams"),
+    peak_viewers: Optional[int] = Query(None, description="Nuevo pico de espectadores"),
     session: AsyncSession = Depends(get_session)
 ):
-    return await search_streamers(session, name, game)
+    updates = {}
 
+    if name is not None:
+        updates["name"] = name
+    if game is not None:
+        updates["game"] = game
+    if followers is not None:
+        updates["followers"] = followers
+    if avg_viewers is not None:
+        updates["avg_viewers"] = avg_viewers
+    if total_streams is not None:
+        updates["total_streams"] = total_streams
+    if peak_viewers is not None:
+        updates["peak_viewers"] = peak_viewers
+
+    if not updates:
+        raise HTTPException(status_code=400, detail="No se proporcionaron datos para actualizar")
+
+    updated = await partial_update_streamer(session, streamer_id, updates)
+    if not updated:
+        raise HTTPException(status_code=404, detail="Streamer no encontrado")
+
+    return updated
 # Eventos de inicio y cierre
 @app.on_event("startup")
 async def on_startup():
