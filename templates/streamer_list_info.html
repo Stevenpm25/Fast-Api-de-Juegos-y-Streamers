@@ -735,6 +735,7 @@ async function showDeletedStreamers() {
                             <thead>
                                 <tr>
                                     <th>ID</th>
+                                    <th>Imagen</th>
                                     <th>Nombre</th>
                                     <th>Juego</th>
                                     <th>Seguidores</th>
@@ -746,6 +747,12 @@ async function showDeletedStreamers() {
                                 ${deletedStreamers.map(streamer => `
                                     <tr>
                                         <td>${streamer.id}</td>
+                                        <td>
+                                            ${streamer.image_url ? 
+                                                `<img src="${streamer.image_url}" alt="${streamer.name}" style="width: 50px; height: 50px; object-fit: cover;">` :
+                                                '❌ Sin imagen'
+                                            }
+                                        </td>
                                         <td>${streamer.name}</td>
                                         <td>${streamer.game}</td>
                                         <td>${parseInt(streamer.follower_count).toLocaleString()}</td>

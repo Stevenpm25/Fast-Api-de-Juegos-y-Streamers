@@ -15,6 +15,8 @@ import random
 from dotenv import load_dotenv
 from starlette.responses import HTMLResponse
 import jinja2
+from image_operations import upload_game_image
+from streamer_image_operations import upload_streamer_image
 
 # Cargar variables de entorno
 load_dotenv()
@@ -78,8 +80,10 @@ try:
         DATABASE_URL,
         echo=True,
         pool_pre_ping=True,
-        pool_size=5,
-        max_overflow=0
+        pool_size=3,
+        max_overflow=0,
+        pool_recycle=300,
+        pool_timeout=30
     )
     async_session = sessionmaker(
         engine,
@@ -351,37 +355,103 @@ async def buscar_id_page(request: Request):
     )
 
 @app.post("/api/games/", response_model=GameWithID, tags=["Games"])
-async def create_new_game(game: GameCreate, session: AsyncSession = Depends(get_session)):
-    return await create_game(session, game)
+async def create_new_game(
+    game: str = Form(..., description="Nombre del juego"),
+    date: str = Form(..., description="Fecha en formato AAAA-MM"),
+    hours_watched: int = Form(..., description="Total de horas vistas"),
+    peak_viewers: int = Form(..., description="Pico máximo de espectadores"),
+    peak_channels: int = Form(..., description="Pico máximo de canales"),
+    image: Optional[UploadFile] = File(None, description="Imagen del juego (opcional)"),
+    session: AsyncSession = Depends(get_session)
+):
+    """
+    Crear un nuevo juego con imagen opcional.
+    La imagen se subirá a Supabase si se proporciona.
+    """
+    try:
+        # Procesar imagen si se proporcionó
+        image_url = None
+        if image:
+            image_url = await upload_game_image(image)
+
+        game_data = GameCreate(
+            game=game,
+            date=date,
+            hours_watched=hours_watched,
+            peak_viewers=peak_viewers,
+            peak_channels=peak_channels,
+            image_url=image_url
+        )
+        return await create_game(session, game_data)
+    except ValueError as ve:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Error de validación: {str(ve)}"
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error al crear el juego: {str(e)}"
+        )
 
 @app.put("/api/games/{game_id}", response_model=GameWithID, tags=["Games"])
 async def update_existing_game(
     game_id: int,
-    update: UpdatedGame,
+    game: str = Form(..., description="Nombre del juego"),
+    date: str = Form(..., description="Fecha en formato AAAA-MM"),
+    hours_watched: int = Form(..., description="Total de horas vistas"),
+    peak_viewers: int = Form(..., description="Pico máximo de espectadores"),
+    peak_channels: int = Form(..., description="Pico máximo de canales"),
+    image: Optional[UploadFile] = File(None, description="Nueva imagen del juego (opcional)"),
     session: AsyncSession = Depends(get_session)
 ):
+    """
+    Actualizar un juego existente con opción de cambiar la imagen.
+    Si no se proporciona una nueva imagen, se mantiene la existente.
+    """
     try:
-        game = await read_one_game(session, game_id)
-        if not game:
+        # Verificar si el juego existe
+        existing_game = await read_one_game(session, game_id)
+        if not existing_game:
             raise HTTPException(status_code=404, detail="Juego no encontrado")
 
-        update_data = update.model_dump(exclude_unset=True)
+        # Procesar nueva imagen si se proporcionó
+        image_url = existing_game.image_url
+        if image:
+            new_image_url = await upload_game_image(image)
+            if new_image_url:
+                image_url = new_image_url
 
-        # Actualizar solo los campos proporcionados
-        for key, value in update_data.items():
-            setattr(game, key, value)
+        # Crear el objeto de actualización
+        update_data = UpdatedGame(
+            game=game,
+            date=date,
+            hours_watched=hours_watched,
+            peak_viewers=peak_viewers,
+            peak_channels=peak_channels,
+            image_url=image_url
+        )
 
-        session.add(game)
-        await session.commit()
-        await session.refresh(game)
+        # Actualizar el juego
+        updated_game = await update_game(session, game_id, update_data)
+        if not updated_game:
+            raise HTTPException(status_code=500, detail="Error al actualizar el juego")
 
-        return game
+        return updated_game
+
+    except ValueError as ve:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Error de validación: {str(ve)}"
+        )
+    except HTTPException:
+        raise
     except Exception as e:
-        await session.rollback()
         raise HTTPException(
             status_code=500,
             detail=f"Error al actualizar el juego: {str(e)}"
         )
+
 @app.patch("/api/games/partial-update/{game_id}", response_model=GameWithID, tags=["Games"])
 async def patch_partial_game(
     game_id: int,
@@ -418,7 +488,7 @@ async def patch_partial_game(
                     value = int(value)
                 except (ValueError, TypeError):
                     raise HTTPException(
-                        status_code=400, 
+                        status_code=400,
                         detail=f"El valor para {field} debe ser un número entero"
                     )
             updates[field] = value
@@ -457,11 +527,13 @@ async def get_deleted_games():
     with open(eliminados_path, mode="r", encoding="utf-8") as file:
         reader = csv.DictReader(file)
         for row in reader:
-            # Convertir los campos numéricos (que vienen como string del CSV)
+            # Convertir campos numéricos
             row["id"] = int(row["id"])
-            row["hours_watched"] = int(row["hours_watched"])
-            row["peak_viewers"] = int(row["peak_viewers"])
-            row["peak_channels"] = int(row["peak_channels"])
+            row["hours_watched"] = int(row["hours_watched"]) if "hours_watched" in row else 0
+            row["peak_viewers"] = int(row["peak_viewers"]) if "peak_viewers" in row else 0
+            row["peak_channels"] = int(row["peak_channels"]) if "peak_channels" in row else 0
+            # Asegurar que image_url esté presente
+            row["image_url"] = row.get("image_url", "")
             deleted_games.append(row)
 
     return deleted_games
@@ -622,12 +694,12 @@ async def get_deleted_streamers():
     with open(eliminados_path, mode="r", encoding="utf-8") as file:
         reader = csv.DictReader(file)
         for row in reader:
-            # Convertir campos numéricos (si es necesario)
+            # Convertir campos numéricos
             row["id"] = int(row["id"])
-            row["followers"] = int(row["followers"]) if "followers" in row else 0
+            row["follower_count"] = int(row["follower_count"]) if "follower_count" in row else 0
             row["avg_viewers"] = int(row["avg_viewers"]) if "avg_viewers" in row else 0
-            row["total_streams"] = int(row["total_streams"]) if "total_streams" in row else 0
-            row["peak_viewers"] = int(row["peak_viewers"]) if "peak_viewers" in row else 0
+            # Asegurar que image_url esté presente
+            row["image_url"] = row.get("image_url", "")
             deleted_streamers.append(row)
 
     return deleted_streamers
@@ -639,9 +711,101 @@ async def get_streamer(streamer_id: int, session: AsyncSession = Depends(get_ses
     return streamer
 
 @app.post("/api/streamers", response_model=StreamerWithID, tags=["Streamers"])
-async def create_new_streamer(streamer: StreamerCreate, session: AsyncSession = Depends(get_session)):
-    return await create_streamer(session, streamer)
-@app.post("/api/streamers/recover/{streamer_id}", tags=["Streamers"])
+async def create_new_streamer(
+    name: str = Form(..., description="Nombre del streamer"),
+    game: str = Form(..., description="Juego que transmite"),
+    follower_count: int = Form(..., description="Número de seguidores"),
+    avg_viewers: int = Form(..., description="Promedio de espectadores"),
+    image: Optional[UploadFile] = File(None, description="Imagen del streamer (opcional)"),
+    session: AsyncSession = Depends(get_session)
+):
+    """
+    Crear un nuevo streamer con imagen opcional.
+    La imagen se subirá a Supabase si se proporciona.
+    """
+    try:
+        # Procesar imagen si se proporcionó
+        image_url = None
+        if image:
+            image_url = await upload_streamer_image(image)
+
+        print(f"\n=== Datos del streamer ===")
+        print(f"Nombre: {name}")
+        print(f"Juego: {game}")
+        print(f"Seguidores: {follower_count}")
+        print(f"Viewers promedio: {avg_viewers}")
+        print(f"URL de imagen: {image_url}")
+
+        streamer_data = StreamerCreate(
+            name=name,
+            game=game,
+            follower_count=follower_count,
+            avg_viewers=avg_viewers,
+            image_url=image_url
+        )
+
+        # Verificar que la tabla existe
+        try:
+            await session.execute(text("SELECT * FROM streamer LIMIT 1"))
+            print("✅ Tabla streamer existe")
+        except Exception as e:
+            print(f"❌ Error al verificar tabla: {str(e)}")
+            raise ValueError(f"Error con la tabla streamer: {str(e)}")
+
+        new_streamer = await create_streamer(session, streamer_data)
+        return new_streamer
+
+    except ValueError as ve:
+        print(f"❌ Error de validación: {str(ve)}")
+        raise HTTPException(
+            status_code=400,
+            detail=f"Error de validación: {str(ve)}"
+        )
+    except Exception as e:
+        print(f"❌ Error general: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error al crear el streamer: {str(e)}"
+        )
+
+@app.put("/api/streamers/{streamer_id}", response_model=StreamerWithID, tags=["Streamers"])
+async def update_existing_streamer(
+    streamer_id: int,
+    name: Optional[str] = Form(None, description="Nombre del streamer"),
+    game: Optional[str] = Form(None, description="Juego que transmite"),
+    follower_count: Optional[int] = Form(None, description="Número de seguidores"),
+    avg_viewers: Optional[int] = Form(None, description="Promedio de espectadores"),
+    image: Optional[UploadFile] = File(None, description="Nueva imagen del streamer (opcional)"),
+    session: AsyncSession = Depends(get_session)
+):
+    try:
+        # Crear el objeto UpdatedStreamer con los campos que no son None
+        update_data = {}
+        if name is not None:
+            update_data["name"] = name
+        if game is not None:
+            update_data["game"] = game
+        if follower_count is not None:
+            update_data["follower_count"] = follower_count
+        if avg_viewers is not None:
+            update_data["avg_viewers"] = avg_viewers
+
+        # Si hay imagen, subirla
+        if image:
+            image_url = await upload_streamer_image(image)
+            if image_url:
+                update_data["image_url"] = image_url
+
+        update = UpdatedStreamer(**update_data)
+        updated_streamer = await update_streamer(session, streamer_id, update)
+        
+        if not updated_streamer:
+            raise HTTPException(status_code=404, detail="Streamer no encontrado")
+            
+        return updated_streamer
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
 @app.post("/api/streamers/recover/{streamer_id}", tags=["Streamers"])
 async def recover_deleted_streamer(
         streamer_id: int,
@@ -662,6 +826,7 @@ async def recover_deleted_streamer(
         rows = []
         with open(eliminados_path, mode="r", encoding="utf-8") as file:
             reader = csv.DictReader(file)
+            fieldnames = reader.fieldnames  # Guardar los nombres de las columnas
             for row in reader:
                 if int(row["id"]) == streamer_id:
                     recovered = row
@@ -682,13 +847,22 @@ async def recover_deleted_streamer(
                 detail=f"El streamer con ID {streamer_id} ya existe en la base de datos"
             )
 
-        # Crear nuevo streamer (asegurar tipos de datos)
+        # Obtener la URL de la imagen del registro eliminado
+        image_url = recovered.get("image_url", "").strip()
+
+        print(f"\n=== Recuperando streamer ===")
+        print(f"ID: {streamer_id}")
+        print(f"Nombre: {recovered['name']}")
+        print(f"URL de imagen: {image_url}")
+
+        # Crear nuevo streamer con todos los campos, incluyendo la imagen
         new_streamer = Streamer(
             id=int(recovered["id"]),
             name=recovered["name"],
             game=recovered["game"],
             follower_count=int(recovered["follower_count"]),
-            avg_viewers=int(recovered["avg_viewers"])
+            avg_viewers=int(recovered["avg_viewers"]),
+            image_url=image_url
         )
 
         session.add(new_streamer)
@@ -696,11 +870,21 @@ async def recover_deleted_streamer(
 
         # Actualizar el CSV
         with open(eliminados_path, mode="w", newline='', encoding="utf-8") as file:
-            writer = csv.DictWriter(file, fieldnames=reader.fieldnames)
+            writer = csv.DictWriter(file, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerows(rows)
 
-        return {"message": f"Streamer con ID {streamer_id} recuperado correctamente"}
+        return {
+            "message": f"Streamer con ID {streamer_id} recuperado correctamente",
+            "streamer": {
+                "id": new_streamer.id,
+                "name": new_streamer.name,
+                "game": new_streamer.game,
+                "follower_count": new_streamer.follower_count,
+                "avg_viewers": new_streamer.avg_viewers,
+                "image_url": new_streamer.image_url
+            }
+        }
 
     except HTTPException:
         raise
@@ -708,48 +892,6 @@ async def recover_deleted_streamer(
         raise HTTPException(
             status_code=500,
             detail=f"Error al recuperar el streamer: {str(e)}"
-        )
-@app.put("/api/streamers/{streamer_id}", response_model=StreamerWithID, tags=["Streamers"])
-async def update_existing_streamer(
-    streamer_id: int,
-    update: UpdatedStreamer,
-    session: AsyncSession = Depends(get_session)
-):
-    updated = await update_streamer(session, streamer_id, update)
-    if not updated:
-        raise HTTPException(status_code=404, detail="Streamer not found")
-    return updated
-
-
-from fastapi.responses import JSONResponse
-
-
-@app.get("/api/games/search", response_model=List[GameWithID], tags=["Games"])
-async def search_game(
-        game_name: str = Query(None, description="Nombre del juego a buscar"),
-        session: AsyncSession = Depends(get_session)
-):
-    try:
-        if not game_name:
-            raise HTTPException(
-                status_code=400,
-                detail="Debe proporcionar un nombre de juego para buscar"
-            )
-
-        games = await search_games(session, game_name)
-        if not games:
-            raise HTTPException(
-                status_code=404,
-                detail="No se encontraron juegos con ese nombre"
-            )
-
-        return games
-    except HTTPException:
-        raise  # Re-lanza excepciones HTTP personalizadas
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Error en la búsqueda: {str(e)}"
         )
 @app.patch("/api/streamers/partial-update/{streamer_id}", response_model=StreamerWithID, tags=["Streamers"])
 async def patch_partial_streamer(
@@ -785,6 +927,7 @@ async def patch_partial_streamer(
         raise HTTPException(status_code=404, detail="Streamer no encontrado")
 
     return updated
+
 # Eventos de inicio y cierre
 @app.on_event("startup")
 async def on_startup():
