@@ -3,7 +3,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from sqlmodel import SQLModel, select
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy import text
 from typing import Optional, List, Dict
 import os
@@ -13,6 +14,7 @@ import datetime
 import random
 from dotenv import load_dotenv
 from starlette.responses import HTMLResponse
+import jinja2
 
 # Cargar variables de entorno
 load_dotenv()
@@ -46,6 +48,8 @@ app = FastAPI(
 
 # Configuración de archivos estáticos y templates
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Configuración de Jinja2
 templates = Jinja2Templates(directory="templates")
 
 # Configuración de la base de datos
@@ -77,7 +81,11 @@ try:
         pool_size=5,
         max_overflow=0
     )
-    async_session = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
+    async_session = sessionmaker(
+        engine,
+        class_=AsyncSession,
+        expire_on_commit=False
+    )
 
 except Exception as e:
     print(f"❌ Error al configurar la base de datos: {str(e)}")
