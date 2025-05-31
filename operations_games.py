@@ -2,8 +2,10 @@ from typing import Optional, List
 from sqlmodel import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from models_games import Game, GameWithID, UpdatedGame,GameCreate, Game
+from fastapi import UploadFile
 import os
 import csv
+from image_operations import upload_game_image  # Importar aquí para evitar dependencia circular
 
 
 async def read_all_games(session: AsyncSession) -> List[GameWithID]:
@@ -93,27 +95,66 @@ async def import_games_from_csv(session: AsyncSession, csv_path: str = "games.cs
     return inserted
 def store_deleted_game(deleted_game: GameWithID):
     eliminados_path = "eliminados.csv"
-    file_exists = os.path.isfile(eliminados_path)
 
-    with open(eliminados_path, mode="a", newline='', encoding="utf-8") as file:
-        writer = csv.writer(file)
-        if not file_exists:
-            # Escribir cabeceras si el archivo no existe
-            writer.writerow(["id", "date", "game", "hours_watched", "peak_viewers", "peak_channels"])
+    # Leer datos existentes para evitar duplicados
+    existing_ids = set()
+    existing_rows = []
+    fieldnames = ["id", "date", "game", "hours_watched", "peak_viewers", "peak_channels", "image_url"]
 
-        writer.writerow([
-            deleted_game.id,
-            deleted_game.date,
-            deleted_game.game,
-            deleted_game.hours_watched,
-            deleted_game.peak_viewers,
-            deleted_game.peak_channels
-        ])
-async def partial_update_game(session: AsyncSession, game_id: int, update_data: dict) -> Optional[GameWithID]:
+    if os.path.exists(eliminados_path):
+        with open(eliminados_path, mode="r", encoding="utf-8") as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                if row.get("id") and int(row["id"]) != deleted_game.id:
+                    existing_rows.append(row)
+                    existing_ids.add(int(row["id"]))
+
+    # Preparar los datos del juego eliminado
+    game_data = {
+        "id": deleted_game.id,
+        "date": deleted_game.date,
+        "game": deleted_game.game,
+        "hours_watched": deleted_game.hours_watched,
+        "peak_viewers": deleted_game.peak_viewers,
+        "peak_channels": deleted_game.peak_channels,
+        "image_url": deleted_game.image_url if deleted_game.image_url else ""
+    }
+
+    print(f"\n=== Guardando juego eliminado ===")
+    print(f"ID: {game_data['id']}")
+    print(f"Nombre: {game_data['game']}")
+    print(f"URL de imagen: {game_data['image_url']}")
+
+    # Escribir todos los datos al archivo
+    with open(eliminados_path, mode="w", newline='', encoding="utf-8") as file:
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(existing_rows)  # Escribir las filas existentes
+        if deleted_game.id not in existing_ids:
+            writer.writerow(game_data)  # Escribir el nuevo juego eliminado
+async def partial_update_game(
+    session: AsyncSession,
+    game_id: int,
+    update_data: dict,
+    image: Optional[UploadFile] = None
+) -> Optional[GameWithID]:
+    """Actualiza parcialmente un juego, incluyendo la posibilidad de actualizar la imagen"""
+    
     existing = await session.get(Game, game_id)
     if not existing:
         return None
 
+    # Si hay una nueva imagen, subirla
+    if image:
+        try:
+            image_url = await upload_game_image(image)
+            if image_url:
+                update_data["image_url"] = image_url
+        except Exception as e:
+            print(f"Error al subir la imagen: {str(e)}")
+            # Continuar con otras actualizaciones incluso si la imagen falla
+
+    # Actualizar los campos proporcionados
     for key, value in update_data.items():
         if hasattr(existing, key):
             setattr(existing, key, value)

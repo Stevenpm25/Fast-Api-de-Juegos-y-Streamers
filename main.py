@@ -456,11 +456,12 @@ async def update_existing_game(
 async def patch_partial_game(
     game_id: int,
     game: Optional[str] = Query(None, description="Nuevo nombre del juego"),
-    date: Optional[str] = Query(None, description="Nueva fecha en formato AAAA-MM-DD"),
+    date: Optional[str] = Query(None, description="Nueva fecha en formato AAAA-MM"),
     hours_watched: Optional[int] = Query(None, description="Nuevas horas vistas"),
     peak_viewers: Optional[int] = Query(None, description="Nuevo pico de espectadores"),
     peak_channels: Optional[int] = Query(None, description="Nuevo pico de canales"),
     data: Optional[dict] = Body(None),
+    image: Optional[UploadFile] = File(None, description="Nueva imagen del juego"),
     session: AsyncSession = Depends(get_session)
 ):
     updates = {}
@@ -479,29 +480,32 @@ async def patch_partial_game(
 
     # Procesar datos del cuerpo (JSON)
     if data:
-        field = data.get("field")
-        value = data.get("value")
-        if field and value is not None:
-            # Convertir valores numéricos si es necesario
-            if field in ["hours_watched", "peak_viewers", "peak_channels"]:
-                try:
-                    value = int(value)
-                except (ValueError, TypeError):
-                    raise HTTPException(
-                        status_code=400,
-                        detail=f"El valor para {field} debe ser un número entero"
-                    )
-            updates[field] = value
+        for field, value in data.items():
+            if value is not None:
+                # Convertir valores numéricos si es necesario
+                if field in ["hours_watched", "peak_viewers", "peak_channels"]:
+                    try:
+                        value = int(value)
+                    except (ValueError, TypeError):
+                        raise HTTPException(
+                            status_code=400,
+                            detail=f"El valor para {field} debe ser un número entero"
+                        )
+                updates[field] = value
 
-    if not updates:
+    if not updates and not image:
         raise HTTPException(status_code=400, detail="No se proporcionaron datos para actualizar")
 
-    updated = await partial_update_game(session, game_id, updates)
-    if not updated:
-        raise HTTPException(status_code=404, detail="Juego no encontrado")
-
-    return updated
-
+    try:
+        updated = await partial_update_game(session, game_id, updates, image)
+        if not updated:
+            raise HTTPException(status_code=404, detail="Juego no encontrado")
+        return updated
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error al actualizar el juego: {str(e)}"
+        )
 
 @app.delete("/api/games/{game_id}", response_model=GameWithID, tags=["Games"])
 async def delete_existing_game(game_id: int, session: AsyncSession = Depends(get_session)):
@@ -618,42 +622,88 @@ async def search_streamer(
         )
 @app.post("/api/games/recover/{game_id}", tags=["Games"])
 async def recover_deleted_game(game_id: int, session: AsyncSession = Depends(get_session)):
-    eliminados_path = "eliminados.csv"
-    if not os.path.exists(eliminados_path):
-        raise HTTPException(status_code=404, detail="No hay eliminados para recuperar")
+    try:
+        eliminados_path = "eliminados.csv"
+        if not os.path.exists(eliminados_path):
+            raise HTTPException(
+                status_code=404,
+                detail="No hay juegos eliminados para recuperar"
+            )
 
-    recovered = None
-    rows = []
-    with open(eliminados_path, mode="r", encoding="utf-8") as file:
-        reader = csv.DictReader(file)
-        for row in reader:
-            if int(row["id"]) == game_id:
-                recovered = row
-            else:
-                rows.append(row)
+        # Buscar el juego en el CSV
+        recovered = None
+        rows = []
+        with open(eliminados_path, mode="r", encoding="utf-8") as file:
+            reader = csv.DictReader(file)
+            fieldnames = reader.fieldnames  # Guardar los nombres de las columnas
+            for row in reader:
+                if int(row["id"]) == game_id:
+                    recovered = row
+                else:
+                    rows.append(row)
 
-    if not recovered:
-        raise HTTPException(status_code=404, detail="Juego no encontrado en eliminados")
+        if not recovered:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Juego con ID {game_id} no encontrado en eliminados"
+            )
 
-    # Insertar de nuevo en la base de datos
-    new_game = Game(
-        id=int(recovered["id"]),
-        date=recovered["date"],
-        game=recovered["game"],
-        hours_watched=int(recovered["hours_watched"]),
-        peak_viewers=int(recovered["peak_viewers"]),
-        peak_channels=int(recovered["peak_channels"]),
-    )
-    session.add(new_game)
-    await session.commit()
+        # Verificar si el juego ya existe en la base de datos
+        existing = await session.get(Game, game_id)
+        if existing:
+            raise HTTPException(
+                status_code=400,
+                detail=f"El juego con ID {game_id} ya existe en la base de datos"
+            )
 
-    # Actualizar el archivo eliminados.csv removiendo el recuperado
-    with open(eliminados_path, mode="w", newline='', encoding="utf-8") as file:
-        writer = csv.DictWriter(file, fieldnames=["id", "date", "game", "hours_watched", "peak_viewers", "peak_channels"])
-        writer.writeheader()
-        writer.writerows(rows)
+        # Obtener la URL de la imagen del registro eliminado
+        image_url = recovered.get("image_url", "").strip()
 
-    return {"message": f"Juego con ID {game_id} recuperado correctamente"}
+        print(f"\n=== Recuperando juego ===")
+        print(f"ID: {game_id}")
+        print(f"Nombre: {recovered['game']}")
+        print(f"URL de imagen: {image_url}")
+
+        # Crear nuevo juego con todos los campos, incluyendo la imagen
+        new_game = Game(
+            id=int(recovered["id"]),
+            date=recovered["date"],
+            game=recovered["game"],
+            hours_watched=int(recovered["hours_watched"]),
+            peak_viewers=int(recovered["peak_viewers"]),
+            peak_channels=int(recovered["peak_channels"]),
+            image_url=image_url
+        )
+
+        session.add(new_game)
+        await session.commit()
+
+        # Actualizar el CSV
+        with open(eliminados_path, mode="w", newline='', encoding="utf-8") as file:
+            writer = csv.DictWriter(file, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(rows)
+
+        return {
+            "message": f"Juego con ID {game_id} recuperado correctamente",
+            "game": {
+                "id": new_game.id,
+                "date": new_game.date,
+                "game": new_game.game,
+                "hours_watched": new_game.hours_watched,
+                "peak_viewers": new_game.peak_viewers,
+                "peak_channels": new_game.peak_channels,
+                "image_url": new_game.image_url
+            }
+        }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error al recuperar el juego: {str(e)}"
+        )
 
 @app.get("/api/streamers", response_model=List[StreamerWithID], tags=["Streamers"])
 async def get_all_streamers(session: AsyncSession = Depends(get_session)):
@@ -898,35 +948,52 @@ async def patch_partial_streamer(
     streamer_id: int,
     name: Optional[str] = Query(None, description="Nuevo nombre del streamer"),
     game: Optional[str] = Query(None, description="Nuevo juego asociado"),
-    followers: Optional[int] = Query(None, description="Nuevo número de seguidores"),
+    follower_count: Optional[int] = Query(None, description="Nuevo número de seguidores"),
     avg_viewers: Optional[int] = Query(None, description="Nuevo promedio de espectadores"),
-    total_streams: Optional[int] = Query(None, description="Nuevo total de streams"),
-    peak_viewers: Optional[int] = Query(None, description="Nuevo pico de espectadores"),
+    data: Optional[dict] = Body(None),
+    image: Optional[UploadFile] = File(None, description="Nueva imagen del streamer"),
     session: AsyncSession = Depends(get_session)
 ):
     updates = {}
 
+    # Procesar parámetros de consulta (query parameters)
     if name is not None:
         updates["name"] = name
     if game is not None:
         updates["game"] = game
-    if followers is not None:
-        updates["followers"] = followers
+    if follower_count is not None:
+        updates["follower_count"] = follower_count
     if avg_viewers is not None:
         updates["avg_viewers"] = avg_viewers
-    if total_streams is not None:
-        updates["total_streams"] = total_streams
-    if peak_viewers is not None:
-        updates["peak_viewers"] = peak_viewers
 
-    if not updates:
+    # Procesar datos del cuerpo (JSON)
+    if data:
+        for field, value in data.items():
+            if value is not None:
+                # Convertir valores numéricos si es necesario
+                if field in ["follower_count", "avg_viewers"]:
+                    try:
+                        value = int(value)
+                    except (ValueError, TypeError):
+                        raise HTTPException(
+                            status_code=400,
+                            detail=f"El valor para {field} debe ser un número entero"
+                        )
+                updates[field] = value
+
+    if not updates and not image:
         raise HTTPException(status_code=400, detail="No se proporcionaron datos para actualizar")
 
-    updated = await partial_update_streamer(session, streamer_id, updates)
-    if not updated:
-        raise HTTPException(status_code=404, detail="Streamer no encontrado")
-
-    return updated
+    try:
+        updated = await partial_update_streamer(session, streamer_id, updates, image)
+        if not updated:
+            raise HTTPException(status_code=404, detail="Streamer no encontrado")
+        return updated
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error al actualizar el streamer: {str(e)}"
+        )
 
 # Eventos de inicio y cierre
 @app.on_event("startup")

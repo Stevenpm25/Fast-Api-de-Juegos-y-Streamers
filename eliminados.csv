@@ -1,4 +1,4 @@
-id,date,game,hours_watched,peak_viewers,peak_channels
-1,2016-01-01,League of Legends,94377226,530270,2903
-3,2016-01-01,Dota 2,45185893,315083,1100
-1008,2016-06-01,Call of Duty: Black Ops III,11470501,110659,2445
+id,date,game,hours_watched,peak_viewers,peak_channels,image_url
+1,2016-01-01,League of Legends,94377226,530270,2903,
+3,2016-01-01,Dota 2,45185893,315083,1100,
+1008,2016-06-01,Call of Duty: Black Ops III,11470501,110659,2445,

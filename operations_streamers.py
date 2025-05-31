@@ -146,12 +146,27 @@ async def import_streamers_from_csv(session: AsyncSession, csv_path: str = "stre
 async def partial_update_streamer(
     session: AsyncSession,
     streamer_id: int,
-    update_data: dict
+    update_data: dict,
+    image: Optional[UploadFile] = None
 ) -> Optional[StreamerWithID]:
+    """Actualiza parcialmente un streamer, incluyendo la posibilidad de actualizar la imagen"""
+    from streamer_image_operations import upload_streamer_image  # Importar aquí para evitar dependencia circular
+    
     existing = await session.get(Streamer, streamer_id)
     if not existing:
         return None
 
+    # Si hay una nueva imagen, subirla
+    if image:
+        try:
+            image_url = await upload_streamer_image(image)
+            if image_url:
+                update_data["image_url"] = image_url
+        except Exception as e:
+            print(f"Error al subir la imagen: {str(e)}")
+            # Continuar con otras actualizaciones incluso si la imagen falla
+
+    # Actualizar los campos proporcionados
     for key, value in update_data.items():
         if hasattr(existing, key):
             setattr(existing, key, value)
