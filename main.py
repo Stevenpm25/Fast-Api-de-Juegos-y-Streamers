@@ -122,6 +122,23 @@ async def read_home(request: Request):
             detail=f"No se pudo cargar la página home: {str(e)}"
         )
 
+@app.get("/design", response_class=HTMLResponse)
+async def design_page(request: Request):
+    try:
+        return templates.TemplateResponse(
+            "design.html",
+            {
+                "request": request,
+                "current_year": datetime.datetime.now().year
+            }
+        )
+    except Exception as e:
+        print(f"Error al renderizar la plantilla de diseño: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"No se pudo cargar la página de diseño: {str(e)}"
+        )
+
 # Rutas para Games (Web)
 @app.get("/games", response_class=HTMLResponse)
 async def games_page(
@@ -991,76 +1008,8 @@ async def shutdown_db_connection():
     await engine.dispose()
     print("✅ Conexiones de la base de datos cerradas")
 
-# Rutas para AI Chat
-@app.get("/ai-chat", response_class=HTMLResponse, tags=["AI"])
-async def ai_chat_page(request: Request):
-    try:
-        return templates.TemplateResponse(
-            "ai_chat.html",
-            {
-                "request": request,
-                "current_year": datetime.datetime.now().year
-            }
-        )
-    except Exception as e:
-        print(f"Error al renderizar la plantilla de AI Chat: {e}")
-        raise HTTPException(
-            status_code=500,
-            detail=f"No se pudo cargar la página de AI Chat: {str(e)}"
-        )
 
-@app.post("/api/ai-chat", response_model=Dict[str, str], tags=["AI"])
-async def ai_chat_api(message: Dict[str, str] = Body(...)):
-    try:
-        user_message = message.get("message", "").lower()
 
-        # Respuestas predefinidas para preguntas comunes de código
-        code_responses = {
-            "python": "```python\n# Ejemplo de código Python\ndef saludar(nombre):\n    return f'¡Hola, {nombre}!'\n\n# Uso de la función\nprint(saludar('Usuario'))\n```",
-            "javascript": "```javascript\n// Ejemplo de código JavaScript\nfunction saludar(nombre) {\n    return `¡Hola, ${nombre}!`;\n}\n\n// Uso de la función\nconsole.log(saludar('Usuario'));\n```",
-            "html": "```html\n<!-- Ejemplo de código HTML -->\n<!DOCTYPE html>\n<html>\n<head>\n    <title>Mi Página</title>\n</head>\n<body>\n    <h1>¡Hola, Mundo!</h1>\n    <p>Esta es una página HTML de ejemplo.</p>\n</body>\n</html>\n```",
-            "css": "```css\n/* Ejemplo de código CSS */\nbody {\n    font-family: Arial, sans-serif;\n    background-color: #f0f0f0;\n    color: #333;\n}\n\nh1 {\n    color: #0066cc;\n    text-align: center;\n}\n```",
-            "java": "```java\n// Ejemplo de código Java\npublic class Saludo {\n    public static void main(String[] args) {\n        System.out.println(\"¡Hola, Mundo!\");\n    }\n}\n```",
-            "c#": "```csharp\n// Ejemplo de código C#\nusing System;\n\nclass Program {\n    static void Main() {\n        Console.WriteLine(\"¡Hola, Mundo!\");\n    }\n}\n```",
-            "fastapi": "```python\n# Ejemplo de código FastAPI\nfrom fastapi import FastAPI\n\napp = FastAPI()\n\n@app.get(\"/\")\nasync def root():\n    return {\"message\": \"¡Hola, Mundo!\"}\n\n@app.get(\"/items/{item_id}\")\nasync def read_item(item_id: int):\n    return {\"item_id\": item_id}\n```",
-            "sql": "```sql\n-- Ejemplo de código SQL\nCREATE TABLE usuarios (\n    id INT PRIMARY KEY,\n    nombre VARCHAR(100),\n    email VARCHAR(100),\n    fecha_registro DATE\n);\n\nINSERT INTO usuarios (id, nombre, email, fecha_registro)\nVALUES (1, 'Juan Pérez', 'juan@ejemplo.com', '2023-01-15');\n\nSELECT * FROM usuarios WHERE id = 1;\n```"
-        }
-
-        # Respuestas generales
-        general_responses = [
-            "Puedo ayudarte a generar código en varios lenguajes. ¿En qué lenguaje estás interesado?",
-            "Para generar código, especifica el lenguaje y lo que quieres hacer. Por ejemplo: 'Muéstrame código en Python para leer un archivo'.",
-            "¿Necesitas ayuda con algún lenguaje de programación específico?",
-            "Estoy aquí para ayudarte con ejemplos de código. ¿Qué tipo de funcionalidad necesitas implementar?"
-        ]
-
-        # Buscar coincidencias en las preguntas de código
-        for key, response in code_responses.items():
-            if key in user_message:
-                return {"response": f"Aquí tienes un ejemplo de código en {key.capitalize()}:\n\n{response}"}
-
-        # Respuestas para preguntas específicas
-        if "hola" in user_message or "saludos" in user_message:
-            return {"response": "¡Hola! Soy tu asistente de código. ¿En qué puedo ayudarte hoy?"}
-        elif "gracias" in user_message:
-            return {"response": "¡De nada! Estoy aquí para ayudarte. ¿Hay algo más en lo que pueda asistirte?"}
-        elif "ayuda" in user_message:
-            return {"response": "Puedo ayudarte a generar código en varios lenguajes como Python, JavaScript, HTML, CSS, Java, C#, FastAPI y SQL. Solo pregúntame por el lenguaje que necesitas."}
-        elif "generar" in user_message and "código" in user_message:
-            return {"response": "Para generar código, por favor especifica el lenguaje de programación y la funcionalidad que necesitas. Por ejemplo: 'Genera código en Python para una calculadora simple'."}
-        elif "función" in user_message or "funcion" in user_message:
-            return {"response": "```python\n# Ejemplo de una función en Python\ndef calcular_area(base, altura):\n    \"\"\"Calcula el área de un rectángulo\"\"\"\n    return base * altura\n\n# Uso de la función\narea = calcular_area(5, 3)\nprint(f'El área es: {area}')\n```"}
-        elif "clase" in user_message:
-            return {"response": "```python\n# Ejemplo de una clase en Python\nclass Persona:\n    def __init__(self, nombre, edad):\n        self.nombre = nombre\n        self.edad = edad\n    \n    def saludar(self):\n        return f'Hola, mi nombre es {self.nombre} y tengo {self.edad} años.'\n\n# Crear una instancia de la clase\npersona = Persona('Ana', 25)\nprint(persona.saludar())\n```"}
-        elif "api" in user_message or "rest" in user_message:
-            return {"response": "```python\n# Ejemplo de una API REST con FastAPI\nfrom fastapi import FastAPI, HTTPException\nfrom pydantic import BaseModel\n\napp = FastAPI()\n\nclass Item(BaseModel):\n    name: str\n    price: float\n\nitems = []\n\n@app.post('/items/')\nasync def create_item(item: Item):\n    items.append(item)\n    return item\n\n@app.get('/items/')\nasync def read_items():\n    return items\n```"}
-
-        # Si no hay coincidencias específicas, devolver una respuesta general aleatoria
-        return {"response": random.choice(general_responses)}
-
-    except Exception as e:
-        print(f"Error en AI Chat API: {str(e)}")
-        return {"response": "Lo siento, ha ocurrido un error al procesar tu solicitud."}
 
 # Endpoints de salud
 @app.get("/health", tags=["System"])

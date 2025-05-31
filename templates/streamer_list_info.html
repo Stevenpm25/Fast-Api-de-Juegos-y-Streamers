@@ -4,17 +4,30 @@
 {% block content %}
 <style>
 .page-layout {
-    display: grid;
-    grid-template-columns: 250px 1fr;
-    gap: 1em;
-    padding: 1em;
+    display: flex;
+    gap: 2em;
+    align-items: flex-start;
     height: calc(100vh - 100px);
-    overflow: hidden;
+    padding: 20px;
 }
 
 .buttons-container {
-    height: 100%;
-    overflow-y: auto;
+    position: sticky;
+    top: 20px;
+    width: 300px;
+}
+
+.forms-container {
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.info-container {
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 15px;
+    padding: 20px;
 }
 
 .crud-buttons {
@@ -32,12 +45,6 @@
     width: 100%;
     padding: 0.5em !important;
     min-height: unset !important;
-}
-
-.forms-container {
-    height: 100%;
-    overflow-y: auto;
-    padding-right: 1em;
 }
 
 .operation-form {
@@ -165,6 +172,26 @@ h2, h3 {
 .table-wrapper::-webkit-scrollbar-thumb:hover {
     background-color: rgba(255, 255, 255, 0.3);
 }
+
+/* Estilo personalizado para la barra de scroll */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 255, 0, 0.1);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 255, 0, 0.3);
+    border-radius: 10px;
+    border: 2px solid rgba(0, 255, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 255, 0, 0.5);
+}
 </style>
 
 <div class="page-layout" style="display: flex; gap: 2em; align-items: flex-start;">
@@ -187,10 +214,10 @@ h2, h3 {
     </div>
   </div>
 
-  <!-- Columna derecha: Formularios -->
-  <div style="display: flex; flex-direction: column; gap: 2em; flex: 1;">
-    <div class="forms-container">
-
+  <!-- Columna derecha: Formularios y contenido -->
+  <div style="display: flex; flex-direction: column; gap: 2em; flex: 1; max-height: calc(100vh - 100px); overflow: hidden;">
+    <!-- Contenedor de formularios con scroll independiente -->
+    <div class="forms-container" style="flex: 1; overflow-y: auto;">
       {% if success_msg %}
       <div class="message success">{{ success_msg }}</div>
       {% endif %}
@@ -198,257 +225,262 @@ h2, h3 {
       <div class="message error">{{ error_msg }}</div>
       {% endif %}
 
-        <!-- Formulario de creación -->
-        <div id="createForm" class="operation-form rpgui-container framed-golden" style="display: none;">
-            <h3>➕ Crear Nuevo Streamer</h3>
-            <form onsubmit="createStreamer(event)" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label class="rpgui-label">👤 Nombre:</label>
-                    <input type="text" id="createStreamerName" class="rpgui-input" required minlength="2" maxlength="100">
-                </div>
-                <div class="form-group">
-                    <label class="rpgui-label">🎮 Juego:</label>
-                    <input type="text" id="createStreamerGame" class="rpgui-input" required minlength="2" maxlength="100">
-                </div>
-                <div class="form-group">
-                    <label class="rpgui-label">👥 Seguidores:</label>
-                    <input type="number" id="createStreamerFollowers" class="rpgui-input" min="0" required>
-                </div>
-                <div class="form-group">
-                    <label class="rpgui-label">👀 Espectadores Promedio:</label>
-                    <input type="number" id="createStreamerAvgViewers" class="rpgui-input" min="0" required>
-                </div>
-                <div class="form-group">
-                    <label class="rpgui-label">📸 Imagen del Streamer:</label>
-                    <input type="file" id="createStreamerImage" class="rpgui-input" accept="image/*">
-                </div>
-                <div class="form-buttons">
-                    <button type="submit" class="rpgui-button">💾 Guardar</button>
-                </div>
-            </form>
-        </div>
+      <!-- Formulario de creación -->
+      <div id="createForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+          <h3>➕ Crear Nuevo Streamer</h3>
+          <form onsubmit="createStreamer(event)" enctype="multipart/form-data">
+              <div class="form-group">
+                  <label class="rpgui-label">👤 Nombre:</label>
+                  <input type="text" id="createStreamerName" class="rpgui-input" required minlength="2" maxlength="100">
+              </div>
+              <div class="form-group">
+                  <label class="rpgui-label">🎮 Juego:</label>
+                  <input type="text" id="createStreamerGame" class="rpgui-input" required minlength="2" maxlength="100">
+              </div>
+              <div class="form-group">
+                  <label class="rpgui-label">👥 Seguidores:</label>
+                  <input type="number" id="createStreamerFollowers" class="rpgui-input" min="0" required>
+              </div>
+              <div class="form-group">
+                  <label class="rpgui-label">👀 Espectadores Promedio:</label>
+                  <input type="number" id="createStreamerAvgViewers" class="rpgui-input" min="0" required>
+              </div>
+              <div class="form-group">
+                  <label class="rpgui-label">📸 Imagen del Streamer:</label>
+                  <input type="file" id="createStreamerImage" class="rpgui-input" accept="image/*">
+              </div>
+              <div class="form-buttons">
+                  <button type="submit" class="rpgui-button">💾 Guardar</button>
+              </div>
+          </form>
+      </div>
 
-        <!-- Formulario de Eliminación -->
-        <div id="deleteForm" class="operation-form rpgui-container framed-golden" style="display: none;">
-            <h3>🗑️ Eliminar Streamer</h3>
-            <form onsubmit="deleteStreamer(event)">
-                <div class="form-group">
-                    <label class="rpgui-label">🔢 ID del Streamer:</label>
-                    <input type="number" id="deleteStreamerId" class="rpgui-input" required min="1">
-                </div>
-                <div class="form-buttons">
-                    <button type="submit" class="rpgui-button">
-                        <span>🗑️ Eliminar</span>
-                    </button>
-                    <button type="button" class="rpgui-button" onclick="hideAllForms()">
-                        <span>❌ Cancelar</span>
-                    </button>
-                </div>
-            </form>
-        </div>
+      <!-- Formulario de Eliminación -->
+      <div id="deleteForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+          <h3>🗑️ Eliminar Streamer</h3>
+          <form onsubmit="deleteStreamer(event)">
+              <div class="form-group">
+                  <label class="rpgui-label">🔢 ID del Streamer:</label>
+                  <input type="number" id="deleteStreamerId" class="rpgui-input" required min="1">
+              </div>
+              <div class="form-buttons">
+                  <button type="submit" class="rpgui-button">
+                      <span>🗑️ Eliminar</span>
+                  </button>
+                  <button type="button" class="rpgui-button" onclick="hideAllForms()">
+                      <span>❌ Cancelar</span>
+                  </button>
+              </div>
+          </form>
+      </div>
 
-        <!-- Formulario de Recuperación -->
-        <div id="restoreForm" class="operation-form rpgui-container framed-golden" style="display: none;">
-            <h3>♻️ Recuperar Streamer Eliminado</h3>
-            <form onsubmit="restoreStreamer(event)">
-                <div class="form-group">
-                    <label class="rpgui-label">🔢 ID del Streamer:</label>
-                    <input type="number" id="restoreStreamerId" class="rpgui-input" required min="1">
-                </div>
-                <div class="form-buttons">
-                    <button type="submit" class="rpgui-button">
-                        <span>♻️ Recuperar</span>
-                    </button>
-                    <button type="button" class="rpgui-button" onclick="hideAllForms()">
-                        <span>❌ Cancelar</span>
-                    </button>
-                </div>
-            </form>
-        </div>
+      <!-- Formulario de Recuperación -->
+      <div id="restoreForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+          <h3>♻️ Recuperar Streamer Eliminado</h3>
+          <form onsubmit="restoreStreamer(event)">
+              <div class="form-group">
+                  <label class="rpgui-label">🔢 ID del Streamer:</label>
+                  <input type="number" id="restoreStreamerId" class="rpgui-input" required min="1">
+              </div>
+              <div class="form-buttons">
+                  <button type="submit" class="rpgui-button">
+                      <span>♻️ Recuperar</span>
+                  </button>
+                  <button type="button" class="rpgui-button" onclick="hideAllForms()">
+                      <span>❌ Cancelar</span>
+                  </button>
+              </div>
+          </form>
+      </div>
 
-        <!-- Formulario de Búsqueda por ID -->
-        <div id="searchByIdForm" class="operation-form rpgui-container framed-golden" style="display: none;">
-            <h3>🔍 Buscar Streamer por ID</h3>
-            <form onsubmit="buscarPorId(event)">
-                <div class="form-group">
-                    <label class="rpgui-label">🔢 ID del Streamer:</label>
-                    <input type="number" id="buscarStreamerId" class="rpgui-input" min="1" required>
-                </div>
-                <div class="form-buttons">
-                    <button type="submit" class="rpgui-button">
-                        <span>🔍 Buscar</span>
-                    </button>
-                    <button type="button" class="rpgui-button" onclick="hideAllForms()">
-                        <span>❌ Cancelar</span>
-                    </button>
-                </div>
-            </form>
+      <!-- Formulario de Búsqueda por ID -->
+      <div id="searchByIdForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+          <h3>🔍 Buscar Streamer por ID</h3>
+          <form onsubmit="buscarPorId(event)">
+              <div class="form-group">
+                  <label class="rpgui-label">🔢 ID del Streamer:</label>
+                  <input type="number" id="buscarStreamerId" class="rpgui-input" min="1" required>
+              </div>
+              <div class="form-buttons">
+                  <button type="submit" class="rpgui-button">
+                      <span>🔍 Buscar</span>
+                  </button>
+                  <button type="button" class="rpgui-button" onclick="hideAllForms()">
+                      <span>❌ Cancelar</span>
+                  </button>
+              </div>
+          </form>
 
-            <!-- Contenedor para mostrar el resultado -->
-            <div id="searchIdResult" style="display: none; margin-top: 20px;">
-                <h3>📋 Resultado:</h3>
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Imagen</th>
-                                <th>Nombre</th>
-                                <th>Juego</th>
-                                <th>Seguidores</th>
-                                <th>Espectadores Promedio</th>
-                            </tr>
-                        </thead>
-                        <tbody id="searchIdResultsBody">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+          <!-- Contenedor para mostrar el resultado -->
+          <div id="searchIdResult" style="display: none; margin-top: 20px;">
+              <h3>📋 Resultado:</h3>
+              <div class="table-wrapper">
+                  <table>
+                      <thead>
+                          <tr>
+                              <th>ID</th>
+                              <th>Imagen</th>
+                              <th>Nombre</th>
+                              <th>Juego</th>
+                              <th>Seguidores</th>
+                              <th>Espectadores Promedio</th>
+                          </tr>
+                      </thead>
+                      <tbody id="searchIdResultsBody">
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+      </div>
 
-        <!-- Formulario de Búsqueda por Nombre -->
-        <div id="searchByNameForm" class="operation-form rpgui-container framed-golden" style="display: none;">
-            <h3>🔎 Buscar Streamer por Nombre</h3>
-            <form onsubmit="buscarPorNombre(event)">
-                <div class="form-group">
-                    <label class="rpgui-label">👤 Nombre del Streamer:</label>
-                    <input type="text" id="buscarStreamerName" class="rpgui-input" required minlength="1" placeholder="Ingresa al menos un carácter">
-                </div>
-                <div class="form-buttons">
-                    <button type="submit" class="rpgui-button">
-                        <span>🔎 Buscar</span>
-                    </button>
-                    <button type="button" class="rpgui-button" onclick="hideAllForms()">
-                        <span>❌ Cancelar</span>
-                    </button>
-                </div>
-            </form>
+      <!-- Formulario de Búsqueda por Nombre -->
+      <div id="searchByNameForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+          <h3>🔎 Buscar Streamer por Nombre</h3>
+          <form onsubmit="buscarPorNombre(event)">
+              <div class="form-group">
+                  <label class="rpgui-label">👤 Nombre del Streamer:</label>
+                  <input type="text" id="buscarStreamerName" class="rpgui-input" required minlength="1" placeholder="Ingresa al menos un carácter">
+              </div>
+              <div class="form-buttons">
+                  <button type="submit" class="rpgui-button">
+                      <span>🔎 Buscar</span>
+                  </button>
+                  <button type="button" class="rpgui-button" onclick="hideAllForms()">
+                      <span>❌ Cancelar</span>
+                  </button>
+              </div>
+          </form>
 
-            <!-- Contenedor para mostrar los resultados -->
-            <div id="searchNameResult" style="display: none;">
-                <h3>📋 Resultados:</h3>
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Imagen</th>
-                                <th>Nombre</th>
-                                <th>Juego</th>
-                                <th>Seguidores</th>
-                                <th>Espectadores Promedio</th>
-                            </tr>
-                        </thead>
-                        <tbody id="searchNameResultsBody">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+          <!-- Contenedor para mostrar los resultados -->
+          <div id="searchNameResult" style="display: none;">
+              <h3>📋 Resultados:</h3>
+              <div class="table-wrapper">
+                  <table>
+                      <thead>
+                          <tr>
+                              <th>ID</th>
+                              <th>Imagen</th>
+                              <th>Nombre</th>
+                              <th>Juego</th>
+                              <th>Seguidores</th>
+                              <th>Espectadores Promedio</th>
+                          </tr>
+                      </thead>
+                      <tbody id="searchNameResultsBody">
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+      </div>
 
-        <!-- Formulario de Importación de CSV -->
-        <div id="importForm" class="operation-form rpgui-container framed-golden" style="display: none;">
-            <h3>📥 Importar Streamers desde CSV</h3>
-            <form onsubmit="importStreamers(event)">
-                <div class="form-group">
-                    <label class="rpgui-label">📁 Archivo CSV:</label>
-                    <input type="file" id="importFile" class="rpgui-input" accept=".csv" required>
-                    <p style="font-size: 0.8em; margin-top: 0.5em; color: #aaa;">
-                        El archivo CSV debe contener las columnas: name, game, follower_count, avg_viewers
-                    </p>
-                </div>
-                <div class="form-buttons">
-                    <button type="submit" class="rpgui-button">
-                        <span>📥 Importar</span>
-                    </button>
-                    <button type="button" class="rpgui-button" onclick="hideAllForms()">
-                        <span>❌ Cancelar</span>
-                    </button>
-                </div>
-            </form>
-        </div>
+      <!-- Formulario de Importación de CSV -->
+      <div id="importForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+          <h3>📥 Importar Streamers desde CSV</h3>
+          <form onsubmit="importStreamers(event)">
+              <div class="form-group">
+                  <label class="rpgui-label">📁 Archivo CSV:</label>
+                  <input type="file" id="importFile" class="rpgui-input" accept=".csv" required>
+                  <p style="font-size: 0.8em; margin-top: 0.5em; color: #aaa;">
+                      El archivo CSV debe contener las columnas: name, game, follower_count, avg_viewers
+                  </p>
+              </div>
+              <div class="form-buttons">
+                  <button type="submit" class="rpgui-button">
+                      <span>📥 Importar</span>
+                  </button>
+                  <button type="button" class="rpgui-button" onclick="hideAllForms()">
+                      <span>❌ Cancelar</span>
+                  </button>
+              </div>
+          </form>
+      </div>
 
-        <!-- Formulario de Actualización Parcial -->
-        <div id="partialUpdateForm" class="operation-form rpgui-container framed-golden" style="display: none;">
-            <h3>✏️🔧 Actualización Parcial</h3>
-            <form onsubmit="partialUpdateStreamer(event)" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label class="rpgui-label">🔢 ID del Streamer:</label>
-                    <input type="number" id="partialUpdateStreamerId" class="rpgui-input" required min="1">
-                </div>
-                <div class="form-group">
-                    <label class="rpgui-label">👤 Nombre:</label>
-                    <input type="text" id="partialUpdateName" class="rpgui-input" minlength="2" maxlength="100">
-                </div>
-                <div class="form-group">
-                    <label class="rpgui-label">🎮 Juego:</label>
-                    <input type="text" id="partialUpdateGame" class="rpgui-input" minlength="2" maxlength="100">
-                </div>
-                <div class="form-group">
-                    <label class="rpgui-label">👥 Seguidores:</label>
-                    <input type="number" id="partialUpdateFollowers" class="rpgui-input" min="0">
-                </div>
-                <div class="form-group">
-                    <label class="rpgui-label">👀 Espectadores Promedio:</label>
-                    <input type="number" id="partialUpdateAvgViewers" class="rpgui-input" min="0">
-                </div>
-                <div class="form-group">
-                    <label class="rpgui-label">📸 Nueva Imagen:</label>
-                    <input type="file" id="partialUpdateImage" class="rpgui-input" accept="image/*">
-                    <div class="checkbox-wrapper" style="margin-top: 10px; display: none;">
-                        <input type="checkbox" id="sendEmptyImage" class="rpgui-checkbox">
-                        <label for="sendEmptyImage" class="rpgui-label">Marca esta opción si deseas agregar una imagen</label>
-                    </div>
-                </div>
-                <div class="form-buttons">
-                    <button type="submit" class="rpgui-button">
-                        <span>💾 Guardar</span>
-                    </button>
-                    <button type="button" class="rpgui-button" onclick="hideAllForms()">
-                        <span>❌ Cancelar</span>
-                    </button>
-                </div>
-            </form>
-        </div>
+      <!-- Formulario de Actualización Parcial -->
+      <div id="partialUpdateForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+          <h3>✏️🔧 Actualización Parcial</h3>
+          <form onsubmit="partialUpdateStreamer(event)" enctype="multipart/form-data">
+              <div class="form-group">
+                  <label class="rpgui-label">🔢 ID del Streamer:</label>
+                  <input type="number" id="partialUpdateStreamerId" class="rpgui-input" required min="1">
+              </div>
+              <div class="form-group">
+                  <label class="rpgui-label">👤 Nombre:</label>
+                  <input type="text" id="partialUpdateName" class="rpgui-input" minlength="2" maxlength="100">
+              </div>
+              <div class="form-group">
+                  <label class="rpgui-label">🎮 Juego:</label>
+                  <input type="text" id="partialUpdateGame" class="rpgui-input" minlength="2" maxlength="100">
+              </div>
+              <div class="form-group">
+                  <label class="rpgui-label">👥 Seguidores:</label>
+                  <input type="number" id="partialUpdateFollowers" class="rpgui-input" min="0">
+              </div>
+              <div class="form-group">
+                  <label class="rpgui-label">👀 Espectadores Promedio:</label>
+                  <input type="number" id="partialUpdateAvgViewers" class="rpgui-input" min="0">
+              </div>
+              <div class="form-group">
+                  <label class="rpgui-label">📸 Nueva Imagen:</label>
+                  <input type="file" id="partialUpdateImage" class="rpgui-input" accept="image/*">
+                  <div class="checkbox-wrapper" style="margin-top: 10px; display: none;">
+                      <input type="checkbox" id="sendEmptyImage" class="rpgui-checkbox">
+                      <label for="sendEmptyImage" class="rpgui-label">Marca esta opción si deseas agregar una imagen</label>
+                  </div>
+              </div>
+              <div class="form-buttons">
+                  <button type="submit" class="rpgui-button">
+                      <span>💾 Guardar</span>
+                  </button>
+                  <button type="button" class="rpgui-button" onclick="hideAllForms()">
+                      <span>❌ Cancelar</span>
+                  </button>
+              </div>
+          </form>
+      </div>
 
-        <!-- Formulario de Actualización -->
-        <div id="updateForm" class="operation-form rpgui-container framed-golden" style="display: none;">
-            <h3>✏️ Actualizar Streamer</h3>
-            <form onsubmit="updateStreamer(event)" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label class="rpgui-label">🔢 ID del Streamer:</label>
-                    <input type="number" id="updateStreamerId" class="rpgui-input" required min="1">
-                </div>
-                <div class="form-group">
-                    <label class="rpgui-label">👤 Nombre:</label>
-                    <input type="text" id="updateStreamerName" class="rpgui-input" required minlength="2" maxlength="100">
-                </div>
-                <div class="form-group">
-                    <label class="rpgui-label">🎮 Juego:</label>
-                    <input type="text" id="updateStreamerGame" class="rpgui-input" required minlength="2" maxlength="100">
-                </div>
-                <div class="form-group">
-                    <label class="rpgui-label">👥 Seguidores:</label>
-                    <input type="number" id="updateStreamerFollowers" class="rpgui-input" min="0" required>
-                </div>
-                <div class="form-group">
-                    <label class="rpgui-label">👀 Espectadores Promedio:</label>
-                    <input type="number" id="updateStreamerAvgViewers" class="rpgui-input" min="0" required>
-                </div>
-                <div class="form-group">
-                    <label class="rpgui-label">📸 Nueva Imagen:</label>
-                    <input type="file" id="updateStreamerImage" class="rpgui-input" accept="image/*">
-                </div>
-                <div class="form-buttons">
-                    <button type="submit" class="rpgui-button">
-                        <span>💾 Guardar</span>
-                    </button>
-                    <button type="button" class="rpgui-button" onclick="hideAllForms()">
-                        <span>❌ Cancelar</span>
-                    </button>
-                </div>
-            </form>
-        </div>
+      <!-- Formulario de Actualización -->
+      <div id="updateForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+          <h3>✏️ Actualizar Streamer</h3>
+          <form onsubmit="updateStreamer(event)" enctype="multipart/form-data">
+              <div class="form-group">
+                  <label class="rpgui-label">🔢 ID del Streamer:</label>
+                  <input type="number" id="updateStreamerId" class="rpgui-input" required min="1">
+              </div>
+              <div class="form-group">
+                  <label class="rpgui-label">👤 Nombre:</label>
+                  <input type="text" id="updateStreamerName" class="rpgui-input" required minlength="2" maxlength="100">
+              </div>
+              <div class="form-group">
+                  <label class="rpgui-label">🎮 Juego:</label>
+                  <input type="text" id="updateStreamerGame" class="rpgui-input" required minlength="2" maxlength="100">
+              </div>
+              <div class="form-group">
+                  <label class="rpgui-label">👥 Seguidores:</label>
+                  <input type="number" id="updateStreamerFollowers" class="rpgui-input" min="0" required>
+              </div>
+              <div class="form-group">
+                  <label class="rpgui-label">👀 Espectadores Promedio:</label>
+                  <input type="number" id="updateStreamerAvgViewers" class="rpgui-input" min="0" required>
+              </div>
+              <div class="form-group">
+                  <label class="rpgui-label">📸 Nueva Imagen:</label>
+                  <input type="file" id="updateStreamerImage" class="rpgui-input" accept="image/*">
+              </div>
+              <div class="form-buttons">
+                  <button type="submit" class="rpgui-button">
+                      <span>💾 Guardar</span>
+                  </button>
+                  <button type="button" class="rpgui-button" onclick="hideAllForms()">
+                      <span>❌ Cancelar</span>
+                  </button>
+              </div>
+          </form>
+      </div>
+    </div>
+
+    <!-- Contenedor de información con scroll independiente -->
+    <div class="info-container" style="flex: 1; overflow-y: auto;">
+      {% include 'info_streamers.html' %}
     </div>
   </div>
 </div>
@@ -954,59 +986,4 @@ async function showStreamersList() {
     }
 }
 </script>
-
-<!-- Estilos adicionales -->
-<style>
-.table-wrapper {
-    max-height: 400px;
-    overflow-y: auto;
-    margin: 1em 0;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.table-container {
-    width: 100%;
-}
-
-.table-container table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.table-container th {
-    position: sticky;
-    top: 0;
-    background-color: rgba(0, 0, 0, 0.8);
-    z-index: 1;
-    padding: 10px;
-    text-align: left;
-}
-
-.table-container td {
-    padding: 8px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.table-container tr:hover {
-    background-color: rgba(255, 255, 255, 0.05);
-}
-
-.table-wrapper::-webkit-scrollbar {
-    width: 12px;
-}
-
-.table-wrapper::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.3);
-}
-
-.table-wrapper::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.2);
-    border-radius: 6px;
-    border: 3px solid rgba(0, 0, 0, 0.3);
-}
-
-.table-wrapper::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(255, 255, 255, 0.3);
-}
-</style>
 {% endblock %}
