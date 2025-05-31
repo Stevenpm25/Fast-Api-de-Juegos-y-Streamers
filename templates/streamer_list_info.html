@@ -149,7 +149,7 @@ h2, h3 {
         <!-- Formulario de creación -->
         <div id="createForm" class="operation-form rpgui-container framed-golden" style="display: none;">
             <h3>➕ Crear Nuevo Streamer</h3>
-            <form onsubmit="createStreamer(event)">
+            <form onsubmit="createStreamer(event)" enctype="multipart/form-data">
                 <div class="form-group">
                     <label class="rpgui-label">👤 Nombre:</label>
                     <input type="text" id="createStreamerName" class="rpgui-input" required minlength="2" maxlength="100">
@@ -165,6 +165,10 @@ h2, h3 {
                 <div class="form-group">
                     <label class="rpgui-label">👀 Espectadores Promedio:</label>
                     <input type="number" id="createStreamerAvgViewers" class="rpgui-input" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">📸 Imagen del Streamer:</label>
+                    <input type="file" id="createStreamerImage" class="rpgui-input" accept="image/*">
                 </div>
                 <div class="form-buttons">
                     <button type="submit" class="rpgui-button">💾 Guardar</button>
@@ -236,6 +240,7 @@ h2, h3 {
                         <thead>
                             <tr>
                                 <th>ID</th>
+                                <th>Imagen</th>
                                 <th>Nombre</th>
                                 <th>Juego</th>
                                 <th>Seguidores</th>
@@ -275,6 +280,7 @@ h2, h3 {
                         <thead>
                             <tr>
                                 <th>ID</th>
+                                <th>Imagen</th>
                                 <th>Nombre</th>
                                 <th>Juego</th>
                                 <th>Seguidores</th>
@@ -319,18 +325,20 @@ h2, h3 {
                     <input type="number" id="partialUpdateStreamerId" class="rpgui-input" required min="1">
                 </div>
                 <div class="form-group">
-                    <label class="rpgui-label">📌 Campo a actualizar:</label>
-                    <select id="partialUpdateField" class="rpgui-input" required>
-                        <option value="">Selecciona un campo</option>
-                        <option value="name">Nombre</option>
-                        <option value="game">Juego</option>
-                        <option value="follower_count">Seguidores</option>
-                        <option value="avg_viewers">Espectadores Promedio</option>
-                    </select>
+                    <label class="rpgui-label">👤 Nombre:</label>
+                    <input type="text" id="partialUpdateName" class="rpgui-input" minlength="2" maxlength="100">
                 </div>
                 <div class="form-group">
-                    <label class="rpgui-label">🆕 Nuevo valor:</label>
-                    <input type="text" id="partialUpdateValue" class="rpgui-input" required>
+                    <label class="rpgui-label">🎮 Juego:</label>
+                    <input type="text" id="partialUpdateGame" class="rpgui-input" minlength="2" maxlength="100">
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">👥 Seguidores:</label>
+                    <input type="number" id="partialUpdateFollowers" class="rpgui-input" min="0">
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">👀 Espectadores Promedio:</label>
+                    <input type="number" id="partialUpdateAvgViewers" class="rpgui-input" min="0">
                 </div>
                 <div class="form-buttons">
                     <button type="submit" class="rpgui-button">
@@ -346,7 +354,7 @@ h2, h3 {
         <!-- Formulario de Actualización -->
         <div id="updateForm" class="operation-form rpgui-container framed-golden" style="display: none;">
             <h3>✏️ Actualizar Streamer</h3>
-            <form onsubmit="updateStreamer(event)">
+            <form onsubmit="updateStreamer(event)" enctype="multipart/form-data">
                 <div class="form-group">
                     <label class="rpgui-label">🔢 ID del Streamer:</label>
                     <input type="number" id="updateStreamerId" class="rpgui-input" required min="1">
@@ -366,6 +374,10 @@ h2, h3 {
                 <div class="form-group">
                     <label class="rpgui-label">👀 Espectadores Promedio:</label>
                     <input type="number" id="updateStreamerAvgViewers" class="rpgui-input" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">📸 Nueva Imagen:</label>
+                    <input type="file" id="updateStreamerImage" class="rpgui-input" accept="image/*">
                 </div>
                 <div class="form-buttons">
                     <button type="submit" class="rpgui-button">
@@ -433,20 +445,21 @@ function showRestoreForm() { showForm('restoreForm'); }
 // Crear streamer
 async function createStreamer(event) {
     event.preventDefault();
-    const streamerData = {
-        name: document.getElementById('createStreamerName').value,
-        game: document.getElementById('createStreamerGame').value,
-        follower_count: parseInt(document.getElementById('createStreamerFollowers').value),
-        avg_viewers: parseInt(document.getElementById('createStreamerAvgViewers').value)
-    };
+    const formData = new FormData();
+    formData.append('name', document.getElementById('createStreamerName').value);
+    formData.append('game', document.getElementById('createStreamerGame').value);
+    formData.append('follower_count', document.getElementById('createStreamerFollowers').value);
+    formData.append('avg_viewers', document.getElementById('createStreamerAvgViewers').value);
+    
+    const imageInput = document.getElementById('createStreamerImage');
+    if (imageInput.files.length > 0) {
+        formData.append('image', imageInput.files[0]);
+    }
 
     try {
         const response = await fetch('/api/streamers', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(streamerData)
+            body: formData
         });
 
         if (response.ok) {
@@ -466,24 +479,26 @@ async function createStreamer(event) {
 async function updateStreamer(event) {
     event.preventDefault();
     const streamerId = document.getElementById('updateStreamerId').value;
-    const streamerData = {
-        name: document.getElementById('updateStreamerName').value,
-        game: document.getElementById('updateStreamerGame').value,
-        follower_count: parseInt(document.getElementById('updateStreamerFollowers').value),
-        avg_viewers: parseInt(document.getElementById('updateStreamerAvgViewers').value)
-    };
+    const formData = new FormData();
+    
+    formData.append('name', document.getElementById('updateStreamerName').value);
+    formData.append('game', document.getElementById('updateStreamerGame').value);
+    formData.append('follower_count', document.getElementById('updateStreamerFollowers').value);
+    formData.append('avg_viewers', document.getElementById('updateStreamerAvgViewers').value);
+    
+    const imageInput = document.getElementById('updateStreamerImage');
+    if (imageInput.files.length > 0) {
+        formData.append('image', imageInput.files[0]);
+    }
 
     try {
         const response = await fetch(`/api/streamers/${streamerId}`, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(streamerData)
+            body: formData
         });
 
         if (response.ok) {
-            alert(`¡Streamer "${streamerData.name}" con ID ${streamerId} actualizado correctamente!`);
+            alert(`¡Streamer con ID ${streamerId} actualizado correctamente!`);
             location.reload();
         } else {
             const error = await response.json();
@@ -560,6 +575,15 @@ async function buscarPorId(event) {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${streamer.id}</td>
+                <td>
+                    ${streamer.image_url ? 
+                        `<a href="${streamer.image_url}" target="_blank">
+                            <img src="${streamer.image_url}" alt="${streamer.name}" 
+                                 style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
+                        </a>` : 
+                        '❌ Sin imagen'
+                    }
+                </td>
                 <td>${streamer.name}</td>
                 <td>${streamer.game}</td>
                 <td>${streamer.follower_count.toLocaleString()}</td>
@@ -569,7 +593,7 @@ async function buscarPorId(event) {
         } else {
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="5" style="text-align: center;">
+                    <td colspan="6" style="text-align: center;">
                         No se encontró ningún streamer con el ID ${id}
                     </td>
                 </tr>`;
@@ -600,6 +624,15 @@ async function buscarPorNombre(event) {
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td>${streamer.id}</td>
+                        <td>
+                            ${streamer.image_url ? 
+                                `<a href="${streamer.image_url}" target="_blank">
+                                    <img src="${streamer.image_url}" alt="${streamer.name}" 
+                                         style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
+                                </a>` : 
+                                '❌ Sin imagen'
+                            }
+                        </td>
                         <td>${streamer.name}</td>
                         <td>${streamer.game}</td>
                         <td>${streamer.follower_count.toLocaleString()}</td>
@@ -610,7 +643,7 @@ async function buscarPorNombre(event) {
             } else {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="5" style="text-align: center;">
+                        <td colspan="6" style="text-align: center;">
                             No se encontraron streamers con el nombre "${nombre}"
                         </td>
                     </tr>`;
@@ -618,7 +651,7 @@ async function buscarPorNombre(event) {
         } else {
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="5" style="text-align: center;">
+                    <td colspan="6" style="text-align: center;">
                         Nombre no encontrado: "${nombre}"
                     </td>
                 </tr>`;
@@ -661,56 +694,41 @@ async function importStreamers(event) {
 async function partialUpdateStreamer(event) {
     event.preventDefault();
     const streamerId = document.getElementById('partialUpdateStreamerId').value;
-    const field = document.getElementById('partialUpdateField').value;
-    let value = document.getElementById('partialUpdateValue').value;
+    const formData = new FormData();
 
-    // Validaciones
-    if (!streamerId || isNaN(streamerId) || streamerId < 1) {
-        alert('ID de streamer inválido');
+    // Recoger solo los campos que tienen valor
+    const name = document.getElementById('partialUpdateName').value;
+    const game = document.getElementById('partialUpdateGame').value;
+    const followerCount = document.getElementById('partialUpdateFollowers').value;
+    const avgViewers = document.getElementById('partialUpdateAvgViewers').value;
+
+    if (name) formData.append('name', name);
+    if (game) formData.append('game', game);
+    if (followerCount) formData.append('follower_count', followerCount);
+    if (avgViewers) formData.append('avg_viewers', avgViewers);
+
+    // Validar que al menos un campo tenga valor
+    if (!name && !game && !followerCount && !avgViewers) {
+        alert('Debes modificar al menos un campo');
         return;
-    }
-
-    if (!field) {
-        alert('Selecciona un campo a actualizar');
-        return;
-    }
-
-    if (!value) {
-        alert('Ingresa un valor para actualizar');
-        return;
-    }
-
-    // Convertir valores numéricos
-    if (field === 'follower_count' || field === 'avg_viewers') {
-        value = parseInt(value);
-        if (isNaN(value) || value < 0) {
-            alert('Ingresa un número válido (mayor o igual a 0)');
-            return;
-        }
     }
 
     try {
         const response = await fetch(`/api/streamers/partial-update/${streamerId}`, {
             method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                field: field,
-                value: value
-            })
+            body: formData
         });
 
         if (response.ok) {
-            alert(`¡Campo ${field} del streamer con ID ${streamerId} actualizado correctamente!`);
+            alert('¡Streamer actualizado correctamente!');
             location.reload();
         } else {
-            const error = await response.text();
-            alert('Error al actualizar: ' + error);
+            const error = await response.json();
+            alert('Error al actualizar el streamer: ' + error.detail);
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('Error de conexión: ' + error.message);
+        alert('Error al actualizar el streamer');
     }
 }
 
@@ -823,6 +841,7 @@ async function showStreamersList() {
                             <thead>
                                 <tr>
                                     <th>ID</th>
+                                    <th>Imagen</th>
                                     <th>Nombre</th>
                                     <th>Juego</th>
                                     <th>Seguidores</th>
@@ -833,6 +852,15 @@ async function showStreamersList() {
                                 ${streamers.map(streamer => `
                                     <tr>
                                         <td>${streamer.id}</td>
+                                        <td>
+                                            ${streamer.image_url ? 
+                                                `<a href="${streamer.image_url}" target="_blank">
+                                                    <img src="${streamer.image_url}" alt="${streamer.name}" 
+                                                         style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
+                                                </a>` : 
+                                                '❌ Sin imagen'
+                                            }
+                                        </td>
                                         <td>${streamer.name}</td>
                                         <td>${streamer.game}</td>
                                         <td>${streamer.follower_count.toLocaleString()}</td>

@@ -153,37 +153,30 @@ h2, h3 {
         <!-- Ejemplo del formulario de creación (los demás seguirían el mismo patrón) -->
         <div id="createForm" class="operation-form rpgui-container framed-golden" style="display: none;">
             <h3>➕ Crear Nuevo Juego</h3>
-            <form onsubmit="createGame(event)">
+            <form onsubmit="createGame(event)" enctype="multipart/form-data">
                 <div class="form-group">
-                    <label class="rpgui-label">🎲 Nombre:</label>
-                    <input type="text" id="createGameName" class="rpgui-input" required>
+                    <label class="rpgui-label">🎮 Nombre del Juego:</label>
+                    <input type="text" id="createGameName" class="rpgui-input" required minlength="2" maxlength="100">
                 </div>
                 <div class="form-group">
                     <label class="rpgui-label">📅 Fecha:</label>
-                    <input type="text"
-                           id="createGameDate"
-                           class="rpgui-input"
-                           placeholder="AAAA-MM-DD"
-                           pattern="\d{4}-\d{2}-\d{2}"
-                           title="Usa el formato AAAA-MM-DD (ejemplo: 2024-01-01)"
-                           oninput="formatearFecha(this)"
-                           onblur="validarFecha(this)"
-                           required>
-                    <span id="fechaError" style="color: #ff6b6b; display: none; font-size: 0.8em; margin-top: 0.3em;">
-                        Por favor, ingresa una fecha válida en formato AAAA-MM-DD
-                    </span>
+                    <input type="date" id="createGameDate" class="rpgui-input" required>
                 </div>
                 <div class="form-group">
-                    <label class="rpgui-label">⌛ Horas:</label>
-                    <input type="number" id="createGameHours" class="rpgui-input" min="0" required>
+                    <label class="rpgui-label">⏱️ Horas Vistas:</label>
+                    <input type="number" id="createGameHoursWatched" class="rpgui-input" min="0" required>
                 </div>
                 <div class="form-group">
-                    <label class="rpgui-label">👥 Espectadores:</label>
+                    <label class="rpgui-label">👥 Pico de Espectadores:</label>
                     <input type="number" id="createGamePeakViewers" class="rpgui-input" min="0" required>
                 </div>
                 <div class="form-group">
-                    <label class="rpgui-label">📺 Canales:</label>
+                    <label class="rpgui-label">📺 Pico de Canales:</label>
                     <input type="number" id="createGamePeakChannels" class="rpgui-input" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">📸 Imagen del Juego:</label>
+                    <input type="file" id="createGameImage" class="rpgui-input" accept="image/*">
                 </div>
                 <div class="form-buttons">
                     <button type="submit" class="rpgui-button">💾 Guardar</button>
@@ -259,6 +252,7 @@ h2, h3 {
                         <thead>
                             <tr>
                                 <th>ID</th>
+                                <th>Imagen</th>
                                 <th>Nombre</th>
                                 <th>Fecha</th>
                                 <th>Horas Vistas</th>
@@ -304,6 +298,7 @@ h2, h3 {
                         <thead>
                             <tr>
                                 <th>ID</th>
+                                <th>Imagen</th>
                                 <th>Nombre</th>
                                 <th>Fecha</th>
                                 <th>Horas Vistas</th>
@@ -353,19 +348,24 @@ h2, h3 {
                     <input type="number" id="partialUpdateGameId" class="rpgui-input" required min="1">
                 </div>
                 <div class="form-group">
-                    <label class="rpgui-label">📌 Campo a actualizar:</label>
-                    <select id="partialUpdateField" class="rpgui-input" required>
-                        <option value="">Selecciona un campo</option>
-                        <option value="game">Nombre</option>
-                        <option value="date">Fecha</option>
-                        <option value="hours_watched">Horas Vistas</option>
-                        <option value="peak_viewers">Pico Espectadores</option>
-                        <option value="peak_channels">Pico Canales</option>
-                    </select>
+                    <label class="rpgui-label">🎮 Nombre del Juego:</label>
+                    <input type="text" id="partialUpdateName" class="rpgui-input" minlength="2" maxlength="100">
                 </div>
                 <div class="form-group">
-                    <label class="rpgui-label">🆕 Nuevo valor:</label>
-                    <input type="text" id="partialUpdateValue" class="rpgui-input" required>
+                    <label class="rpgui-label">📅 Fecha:</label>
+                    <input type="date" id="partialUpdateDate" class="rpgui-input">
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">⏱️ Horas Vistas:</label>
+                    <input type="number" id="partialUpdateHoursWatched" class="rpgui-input" min="0">
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">👥 Pico de Espectadores:</label>
+                    <input type="number" id="partialUpdatePeakViewers" class="rpgui-input" min="0">
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">📺 Pico de Canales:</label>
+                    <input type="number" id="partialUpdatePeakChannels" class="rpgui-input" min="0">
                 </div>
                 <div class="form-buttons">
                     <button type="submit" class="rpgui-button">
@@ -381,31 +381,22 @@ h2, h3 {
         <!-- Formulario de Actualización -->
         <div id="updateForm" class="operation-form rpgui-container framed-golden" style="display: none;">
             <h3>✏️ Actualizar Juego</h3>
-            <form onsubmit="updateGame(event)">
+            <form onsubmit="updateGame(event)" enctype="multipart/form-data">
                 <div class="form-group">
                     <label class="rpgui-label">🔢 ID del Juego:</label>
                     <input type="number" id="updateGameId" class="rpgui-input" required min="1">
                 </div>
                 <div class="form-group">
-                    <label class="rpgui-label">🎲 Nombre:</label>
-                    <input type="text" id="updateGameName" class="rpgui-input" required>
+                    <label class="rpgui-label">🎮 Nombre del Juego:</label>
+                    <input type="text" id="updateGameName" class="rpgui-input" required minlength="2" maxlength="100">
                 </div>
                 <div class="form-group">
                     <label class="rpgui-label">📅 Fecha:</label>
-                    <input type="text" id="updateGameDate" class="rpgui-input"
-                           placeholder="AAAA-MM-DD"
-                           pattern="\d{4}-\d{2}-\d{2}"
-                           title="Usa el formato AAAA-MM-DD (ejemplo: 2024-01-01)"
-                           oninput="formatearFecha(this)"
-                           onblur="validarFecha(this)"
-                           required>
-                    <span id="updateFechaError" style="color: #ff6b6b; display: none; font-size: 0.8em; margin-top: 0.3em;">
-                        Por favor, ingresa una fecha válida en formato AAAA-MM-DD
-                    </span>
+                    <input type="date" id="updateGameDate" class="rpgui-input" required>
                 </div>
                 <div class="form-group">
-                    <label class="rpgui-label">⌛ Horas Vistas:</label>
-                    <input type="number" id="updateGameHours" class="rpgui-input" min="0" required>
+                    <label class="rpgui-label">⏱️ Horas Vistas:</label>
+                    <input type="number" id="updateGameHoursWatched" class="rpgui-input" min="0" required>
                 </div>
                 <div class="form-group">
                     <label class="rpgui-label">👥 Pico de Espectadores:</label>
@@ -415,13 +406,12 @@ h2, h3 {
                     <label class="rpgui-label">📺 Pico de Canales:</label>
                     <input type="number" id="updateGamePeakChannels" class="rpgui-input" min="0" required>
                 </div>
+                <div class="form-group">
+                    <label class="rpgui-label">📸 Nueva Imagen:</label>
+                    <input type="file" id="updateGameImage" class="rpgui-input" accept="image/*">
+                </div>
                 <div class="form-buttons">
-                    <button type="submit" class="rpgui-button">
-                        <span>💾 Guardar</span>
-                    </button>
-                    <button type="button" class="rpgui-button" onclick="hideAllForms()">
-                        <span>❌ Cancelar</span>
-                    </button>
+                    <button type="submit" class="rpgui-button">💾 Guardar</button>
                 </div>
             </form>
         </div>
@@ -453,6 +443,15 @@ async function buscarPorNombre(event) {
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td>${game.id}</td>
+                        <td>
+                            ${game.image_url ? 
+                                `<a href="${game.image_url}" target="_blank">
+                                    <img src="${game.image_url}" alt="${game.game}" 
+                                         style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
+                                </a>` : 
+                                '❌ Sin imagen'
+                            }
+                        </td>
                         <td>${game.game}</td>
                         <td>${game.date}</td>
                         <td>${game.hours_watched.toLocaleString()}</td>
@@ -464,7 +463,7 @@ async function buscarPorNombre(event) {
             } else {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="6" style="text-align: center;">
+                        <td colspan="7" style="text-align: center;">
                             No se encontraron juegos con el nombre "${nombre}"
                         </td>
                     </tr>`;
@@ -472,7 +471,7 @@ async function buscarPorNombre(event) {
         } else {
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="6" style="text-align: center;">
+                    <td colspan="7" style="text-align: center;">
                         Nombre no encontrado: "${nombre}"
                     </td>
                 </tr>`;
@@ -484,7 +483,7 @@ async function buscarPorNombre(event) {
         const tbody = document.getElementById("searchNameResultsBody");
         tbody.innerHTML = `
             <tr>
-                <td colspan="6" style="text-align: center;">
+                <td colspan="7" style="text-align: center;">
                     Nombre no encontrado: "${nombre}"
                 </td>
             </tr>`;
@@ -535,6 +534,15 @@ async function buscarPorNombre(event) {
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td>${game.id}</td>
+                        <td>
+                            ${game.image_url ? 
+                                `<a href="${game.image_url}" target="_blank">
+                                    <img src="${game.image_url}" alt="${game.game}" 
+                                         style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
+                                </a>` : 
+                                '❌ Sin imagen'
+                            }
+                        </td>
                         <td>${game.game}</td>
                         <td>${game.date}</td>
                         <td>${game.hours_watched.toLocaleString()}</td>
@@ -546,7 +554,7 @@ async function buscarPorNombre(event) {
             } else {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="6" style="text-align: center;">
+                        <td colspan="7" style="text-align: center;">
                             No se encontraron juegos con el nombre "${nombre}"
                         </td>
                     </tr>`;
@@ -637,32 +645,27 @@ function validarFecha(input) {
 async function updateGame(event) {
     event.preventDefault();
     const gameId = document.getElementById('updateGameId').value;
-    const gameName = document.getElementById('updateGameName').value;
-    const fechaInput = document.getElementById('updateGameDate');
-
-    if (!validarFecha(fechaInput)) {
-        return;
+    const formData = new FormData();
+    
+    formData.append('game', document.getElementById('updateGameName').value);
+    formData.append('date', document.getElementById('updateGameDate').value);
+    formData.append('hours_watched', document.getElementById('updateGameHoursWatched').value);
+    formData.append('peak_viewers', document.getElementById('updateGamePeakViewers').value);
+    formData.append('peak_channels', document.getElementById('updateGamePeakChannels').value);
+    
+    const imageInput = document.getElementById('updateGameImage');
+    if (imageInput.files.length > 0) {
+        formData.append('image', imageInput.files[0]);
     }
-
-    const gameData = {
-        game: gameName,
-        date: fechaInput.value,
-        hours_watched: parseInt(document.getElementById('updateGameHours').value),
-        peak_viewers: parseInt(document.getElementById('updateGamePeakViewers').value),
-        peak_channels: parseInt(document.getElementById('updateGamePeakChannels').value)
-    };
 
     try {
         const response = await fetch(`/api/games/${gameId}`, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(gameData)
+            body: formData
         });
 
         if (response.ok) {
-            alert(`¡El juego "${gameName}" con ID ${gameId} ha sido actualizado correctamente!`);
+            alert(`¡Juego con ID ${gameId} actualizado correctamente!`);
             location.reload();
         } else {
             const error = await response.json();
@@ -758,21 +761,23 @@ function showRestoreForm() {
 
 async function createGame(event) {
     event.preventDefault();
-    const gameData = {
-        game: document.getElementById('createGameName').value,
-        date: document.getElementById('createGameDate').value,
-        hours_watched: parseInt(document.getElementById('createGameHours').value),
-        peak_viewers: parseInt(document.getElementById('createGamePeakViewers').value),
-        peak_channels: parseInt(document.getElementById('createGamePeakChannels').value)
-    };
+    const formData = new FormData();
+    
+    formData.append('game', document.getElementById('createGameName').value);
+    formData.append('date', document.getElementById('createGameDate').value);
+    formData.append('hours_watched', document.getElementById('createGameHoursWatched').value);
+    formData.append('peak_viewers', document.getElementById('createGamePeakViewers').value);
+    formData.append('peak_channels', document.getElementById('createGamePeakChannels').value);
+    
+    const imageInput = document.getElementById('createGameImage');
+    if (imageInput.files.length > 0) {
+        formData.append('image', imageInput.files[0]);
+    }
 
     try {
-        const response = await fetch('/api/games/', {
+        const response = await fetch('/api/games', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(gameData)
+            body: formData
         });
 
         if (response.ok) {
@@ -862,6 +867,15 @@ async function buscarPorId(event) {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${game.id}</td>
+                <td>
+                    ${game.image_url ? 
+                        `<a href="${game.image_url}" target="_blank">
+                            <img src="${game.image_url}" alt="${game.game}" 
+                                 style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
+                        </a>` : 
+                        '❌ Sin imagen'
+                    }
+                </td>
                 <td>${game.game}</td>
                 <td>${game.date}</td>
                 <td>${game.hours_watched.toLocaleString()}</td>
@@ -872,7 +886,7 @@ async function buscarPorId(event) {
         } else {
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="6" style="text-align: center;">
+                    <td colspan="7" style="text-align: center;">
                         No se encontró ningún juego con el ID ${id}
                     </td>
                 </tr>`;
@@ -971,6 +985,7 @@ async function listGames() {
                             <thead>
                                 <tr>
                                     <th>ID</th>
+                                    <th>Imagen</th>
                                     <th>Nombre</th>
                                     <th>Fecha</th>
                                     <th>Horas Vistas</th>
@@ -984,6 +999,15 @@ async function listGames() {
                 tableHTML += `
                     <tr>
                         <td>${game.id}</td>
+                        <td>
+                            ${game.image_url ? 
+                                `<a href="${game.image_url}" target="_blank">
+                                    <img src="${game.image_url}" alt="${game.game}" 
+                                         style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
+                                </a>` : 
+                                '❌ Sin imagen'
+                            }
+                        </td>
                         <td>${game.game}</td>
                         <td>${game.date}</td>
                         <td>${game.hours_watched.toLocaleString()}</td>
@@ -1072,6 +1096,7 @@ async function showGamesList() {
                             <thead>
                                 <tr>
                                     <th>ID</th>
+                                    <th>Imagen</th>
                                     <th>Nombre</th>
                                     <th>Fecha</th>
                                     <th>Horas Vistas</th>
@@ -1083,6 +1108,15 @@ async function showGamesList() {
                                 ${games.map(game => `
                                     <tr>
                                         <td>${game.id}</td>
+                                        <td>
+                                            ${game.image_url ? 
+                                                `<a href="${game.image_url}" target="_blank">
+                                                    <img src="${game.image_url}" alt="${game.game}" 
+                                                         style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
+                                                </a>` : 
+                                                '❌ Sin imagen'
+                                            }
+                                        </td>
                                         <td>${game.game}</td>
                                         <td>${game.date}</td>
                                         <td>${game.hours_watched.toLocaleString()}</td>
@@ -1112,113 +1146,47 @@ async function showGamesList() {
     }
 }
 
-// Elimina todas las definiciones anteriores de partialUpdateGame
-// y reemplázalas solo con esta versión corregida:
-
+// Actualizar la función partialUpdateGame
 async function partialUpdateGame(event) {
     event.preventDefault();
-
-    // Obtener valores del formulario
     const gameId = document.getElementById('partialUpdateGameId').value;
-    const field = document.getElementById('partialUpdateField').value;
-    let value = document.getElementById('partialUpdateValue').value;
+    const formData = new FormData();
 
-    // Validaciones básicas
-    if (!gameId || isNaN(gameId) || gameId < 1) {
-        alert('Por favor ingresa un ID de juego válido (número mayor a 0)');
-        return;
-    }
+    // Recoger solo los campos que tienen valor
+    const game = document.getElementById('partialUpdateName').value;
+    const date = document.getElementById('partialUpdateDate').value;
+    const hoursWatched = document.getElementById('partialUpdateHoursWatched').value;
+    const peakViewers = document.getElementById('partialUpdatePeakViewers').value;
+    const peakChannels = document.getElementById('partialUpdatePeakChannels').value;
 
-    if (!field) {
-        alert('Por favor selecciona un campo a actualizar');
-        return;
-    }
+    if (game) formData.append('game', game);
+    if (date) formData.append('date', date);
+    if (hoursWatched) formData.append('hours_watched', hoursWatched);
+    if (peakViewers) formData.append('peak_viewers', peakViewers);
+    if (peakChannels) formData.append('peak_channels', peakChannels);
 
-    if (!value) {
-        alert('Por favor ingresa un valor para actualizar');
-        return;
-    }
-
-    // Convertir valores numéricos
-    if (field === 'hours_watched' || field === 'peak_viewers' || field === 'peak_channels') {
-        value = parseInt(value);
-        if (isNaN(value) || value < 0) {
-            alert('Por favor ingresa un número válido (mayor o igual a 0)');
-            return;
-        }
-    }
-
-    // Validar fecha (corregido)
-    if (field === 'date') {
-        // Usamos el mismo método de validación que en otros formularios
-        const fechaInput = document.createElement('input');
-        fechaInput.value = value;
-        fechaInput.id = 'tempDateInput';
-
-        if (!validarFecha(fechaInput)) {
-            alert('Por favor ingresa una fecha válida en formato AAAA-MM-DD');
-            return;
-        }
-    }
-
-    // Validar nombre (al menos 2 caracteres)
-    if (field === 'game' && value.length < 2) {
-        alert('El nombre del juego debe tener al menos 2 caracteres');
+    // Validar que al menos un campo tenga valor
+    if (!game && !date && !hoursWatched && !peakViewers && !peakChannels) {
+        alert('Debes modificar al menos un campo');
         return;
     }
 
     try {
-        // Mostrar mensaje de carga
-        const submitBtn = event.target.querySelector('button[type="submit"]');
-        const originalText = submitBtn.innerHTML;
-        submitBtn.innerHTML = '<span>⌛ Procesando...</span>';
-        submitBtn.disabled = true;
-
-        // Depuración: mostrar datos que se enviarán
-        console.log("Enviando:", {
-            field: field,
-            value: value
-        });
-
         const response = await fetch(`/api/games/partial-update/${gameId}`, {
             method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                field: field,
-                value: value
-            })
+            body: formData
         });
 
-        // Restaurar botón
-        submitBtn.innerHTML = originalText;
-        submitBtn.disabled = false;
-
-        // Depuración: mostrar respuesta
-        console.log("Respuesta:", response);
-
         if (response.ok) {
-            alert(`¡Campo ${field} del juego con ID ${gameId} actualizado correctamente!`);
-            // Limpiar el formulario
-            document.getElementById('partialUpdateGameId').value = '';
-            document.getElementById('partialUpdateField').value = '';
-            document.getElementById('partialUpdateValue').value = '';
-            // Recargar la página para ver cambios
+            alert('¡Juego actualizado correctamente!');
             location.reload();
         } else {
-            const error = await response.text();
-            alert('Error al actualizar: ' + error);
+            const error = await response.json();
+            alert('Error al actualizar el juego: ' + error.detail);
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('Error de conexión: ' + error.message);
-        // Restaurar botón en caso de error
-        const submitBtn = event.target.querySelector('button[type="submit"]');
-        if (submitBtn) {
-            submitBtn.innerHTML = '<span>💾 Guardar</span>';
-            submitBtn.disabled = false;
-        }
+        alert('Error al actualizar el juego');
     }
 }
 
@@ -1228,8 +1196,11 @@ function showPartialUpdateForm() {
     document.getElementById('partialUpdateForm').style.display = 'block';
     // Limpiar campos
     document.getElementById('partialUpdateGameId').value = '';
-    document.getElementById('partialUpdateField').value = '';
-    document.getElementById('partialUpdateValue').value = '';
+    document.getElementById('partialUpdateName').value = '';
+    document.getElementById('partialUpdateDate').value = '';
+    document.getElementById('partialUpdateHoursWatched').value = '';
+    document.getElementById('partialUpdatePeakViewers').value = '';
+    document.getElementById('partialUpdatePeakChannels').value = '';
 }
 
 </script>
@@ -1361,11 +1332,12 @@ async function showDeletedGames() {
                             <thead>
                                 <tr>
                                     <th>ID</th>
+                                    <th>Imagen</th>
                                     <th>Nombre</th>
                                     <th>Fecha</th>
                                     <th>Horas Vistas</th>
                                     <th>Pico Espectadores</th>
-                                    <th>Pico Canales</th>
+                                    <th>Pico de Canales</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
@@ -1373,6 +1345,15 @@ async function showDeletedGames() {
                                 ${deletedGames.map(game => `
                                     <tr>
                                         <td>${game.id}</td>
+                                        <td>
+                                            ${game.image_url ? 
+                                                `<a href="${game.image_url}" target="_blank">
+                                                    <img src="${game.image_url}" alt="${game.game}" 
+                                                         style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
+                                                </a>` : 
+                                                '❌ Sin imagen'
+                                            }
+                                        </td>
                                         <td>${game.game}</td>
                                         <td>${game.date}</td>
                                         <td>${parseInt(game.hours_watched).toLocaleString()}</td>

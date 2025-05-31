@@ -1,7 +1,7 @@
 from typing import Optional, List
 from sqlmodel import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from models_games import Game, GameWithID, UpdatedGame,GameCreate, Game
+from models_games import Game, GameWithID, UpdatedGame, GameCreate, Game
 from fastapi import UploadFile
 import os
 import csv
@@ -11,7 +11,6 @@ from image_operations import upload_game_image  # Importar aquí para evitar dep
 async def read_all_games(session: AsyncSession) -> List[GameWithID]:
     result = await session.execute(select(Game))
     return result.scalars().all()
-
 
 
 async def read_one_game(session: AsyncSession, game_id: int) -> Optional[GameWithID]:
@@ -24,7 +23,6 @@ async def create_game(session: AsyncSession, game: GameCreate) -> Game:
     await session.commit()
     await session.refresh(new_game)
     return new_game
-
 
 
 async def update_game(session: AsyncSession, game_id: int, update: UpdatedGame) -> Optional[GameWithID]:
@@ -57,6 +55,7 @@ async def delete_game(session: AsyncSession, game_id: int) -> Optional[GameWithI
     await session.commit()
     return plain_game
 
+
 async def search_games(session: AsyncSession, game_name: str = None) -> List[GameWithID]:
     try:
         query = select(Game)
@@ -76,6 +75,8 @@ async def search_games(session: AsyncSession, game_name: str = None) -> List[Gam
     except Exception as e:
         print(f"Error en la búsqueda de juegos: {str(e)}")
         return []
+
+
 # ✅ Operación para importar todos los videojuegos desde CSV a la base de datos
 async def import_games_from_csv(session: AsyncSession, csv_path: str = "games.csv") -> int:
     inserted = 0
@@ -93,6 +94,8 @@ async def import_games_from_csv(session: AsyncSession, csv_path: str = "games.cs
             inserted += 1
     await session.commit()
     return inserted
+
+
 def store_deleted_game(deleted_game: GameWithID):
     eliminados_path = "eliminados.csv"
 
@@ -132,34 +135,38 @@ def store_deleted_game(deleted_game: GameWithID):
         writer.writerows(existing_rows)  # Escribir las filas existentes
         if deleted_game.id not in existing_ids:
             writer.writerow(game_data)  # Escribir el nuevo juego eliminado
+
+
 async def partial_update_game(
-    session: AsyncSession,
-    game_id: int,
-    update_data: dict,
-    image: Optional[UploadFile] = None
+        session: AsyncSession,
+        game_id: int,
+        update_data: dict,
+        image: Optional[UploadFile] = None
 ) -> Optional[GameWithID]:
     """Actualiza parcialmente un juego, incluyendo la posibilidad de actualizar la imagen"""
-    
+
     existing = await session.get(Game, game_id)
     if not existing:
         return None
 
-    # Si hay una nueva imagen, subirla
-    if image:
-        try:
+    try:
+        # Si hay una nueva imagen, subirla
+        if image:
             image_url = await upload_game_image(image)
             if image_url:
                 update_data["image_url"] = image_url
-        except Exception as e:
-            print(f"Error al subir la imagen: {str(e)}")
-            # Continuar con otras actualizaciones incluso si la imagen falla
 
-    # Actualizar los campos proporcionados
-    for key, value in update_data.items():
-        if hasattr(existing, key):
-            setattr(existing, key, value)
+        # Actualizar solo los campos proporcionados
+        for key, value in update_data.items():
+            if hasattr(existing, key) and value is not None:  # Solo actualizar si el valor no es None
+                setattr(existing, key, value)
 
-    session.add(existing)
-    await session.commit()
-    await session.refresh(existing)
-    return existing
+        session.add(existing)
+        await session.commit()
+        await session.refresh(existing)
+        return existing
+
+    except Exception as e:
+        print(f"Error al actualizar juego: {str(e)}")
+        await session.rollback()  # Revertir cambios en caso de error
+        return None

@@ -48,6 +48,24 @@ th, td {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.photo-link {
+    display: flex;
+    justify-content: center;
+}
+
+.streamer-photo {
+    max-width: 80px;
+    max-height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.streamer-photo:hover {
+    transform: scale(1.1);
+}
+}
+
 th {
     background-color: rgba(0, 0, 0, 0.2);
 }

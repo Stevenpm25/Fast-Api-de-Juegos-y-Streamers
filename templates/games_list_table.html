@@ -16,6 +16,7 @@
                     <th>Horas Vistas</th>
                     <th>Pico Espectadores</th>
                     <th>Pico Canales</th>
+                    <th>Foto</th>
                 </tr>
             </thead>
             <tbody>
@@ -27,6 +28,13 @@
                     <td>{{ "{:,}".format(game.hours_watched) }}</td>
                     <td>{{ "{:,}".format(game.peak_viewers) }}</td>
                     <td>{{ "{:,}".format(game.peak_channels) }}</td>
+                    {% if game.photo_url %}
+                    <td>
+                        <a href="{{ game.photo_url }}" target="_blank" class="photo-link">
+                            <img src="{{ game.photo_url }}" alt="{{ game.game }}" class="game-photo">
+                        </a>
+                    </td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>

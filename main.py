@@ -455,46 +455,30 @@ async def update_existing_game(
 @app.patch("/api/games/partial-update/{game_id}", response_model=GameWithID, tags=["Games"])
 async def patch_partial_game(
     game_id: int,
-    game: Optional[str] = Query(None, description="Nuevo nombre del juego"),
-    date: Optional[str] = Query(None, description="Nueva fecha en formato AAAA-MM"),
-    hours_watched: Optional[int] = Query(None, description="Nuevas horas vistas"),
-    peak_viewers: Optional[int] = Query(None, description="Nuevo pico de espectadores"),
-    peak_channels: Optional[int] = Query(None, description="Nuevo pico de canales"),
-    data: Optional[dict] = Body(None),
-    image: Optional[UploadFile] = File(None, description="Nueva imagen del juego"),
+    game: Optional[str] = Form(default=None, description="Nuevo nombre del juego", openapi_extra={"allowEmptyValue": False}),
+    date: Optional[str] = Form(default=None, description="Nueva fecha en formato AAAA-MM", openapi_extra={"allowEmptyValue": False}),
+    hours_watched: Optional[int] = Form(default=None, description="Nuevas horas vistas", openapi_extra={"allowEmptyValue": False}),
+    peak_viewers: Optional[int] = Form(default=None, description="Nuevo pico de espectadores", openapi_extra={"allowEmptyValue": False}),
+    peak_channels: Optional[int] = Form(default=None, description="Nuevo pico de canales", openapi_extra={"allowEmptyValue": False}),
+    image: Optional[UploadFile] = Form(default=None, description="Nueva imagen del juego", openapi_extra={"allowEmptyValue": False}),
     session: AsyncSession = Depends(get_session)
 ):
     updates = {}
 
-    # Procesar parámetros de consulta (query parameters)
-    if game is not None:
+    # Solo incluir los campos que tienen valores válidos y no son valores por defecto
+    if game is not None and game.strip() and game.strip().lower() != "string":
         updates["game"] = game
-    if date is not None:
+    if date is not None and date.strip() and date.strip().lower() != "string":
         updates["date"] = date
-    if hours_watched is not None:
+    if hours_watched is not None and hours_watched > 0:  # Ignorar 0
         updates["hours_watched"] = hours_watched
-    if peak_viewers is not None:
+    if peak_viewers is not None and peak_viewers > 0:  # Ignorar 0
         updates["peak_viewers"] = peak_viewers
-    if peak_channels is not None:
+    if peak_channels is not None and peak_channels > 0:  # Ignorar 0
         updates["peak_channels"] = peak_channels
 
-    # Procesar datos del cuerpo (JSON)
-    if data:
-        for field, value in data.items():
-            if value is not None:
-                # Convertir valores numéricos si es necesario
-                if field in ["hours_watched", "peak_viewers", "peak_channels"]:
-                    try:
-                        value = int(value)
-                    except (ValueError, TypeError):
-                        raise HTTPException(
-                            status_code=400,
-                            detail=f"El valor para {field} debe ser un número entero"
-                        )
-                updates[field] = value
-
     if not updates and not image:
-        raise HTTPException(status_code=400, detail="No se proporcionaron datos para actualizar")
+        raise HTTPException(status_code=400, detail="No se proporcionaron datos válidos para actualizar")
 
     try:
         updated = await partial_update_game(session, game_id, updates, image)
@@ -946,43 +930,27 @@ async def recover_deleted_streamer(
 @app.patch("/api/streamers/partial-update/{streamer_id}", response_model=StreamerWithID, tags=["Streamers"])
 async def patch_partial_streamer(
     streamer_id: int,
-    name: Optional[str] = Query(None, description="Nuevo nombre del streamer"),
-    game: Optional[str] = Query(None, description="Nuevo juego asociado"),
-    follower_count: Optional[int] = Query(None, description="Nuevo número de seguidores"),
-    avg_viewers: Optional[int] = Query(None, description="Nuevo promedio de espectadores"),
-    data: Optional[dict] = Body(None),
-    image: Optional[UploadFile] = File(None, description="Nueva imagen del streamer"),
+    name: Optional[str] = Form(default=None, description="Nuevo nombre del streamer", openapi_extra={"allowEmptyValue": False}),
+    game: Optional[str] = Form(default=None, description="Nuevo juego asociado", openapi_extra={"allowEmptyValue": False}),
+    follower_count: Optional[int] = Form(default=None, description="Nuevo número de seguidores", openapi_extra={"allowEmptyValue": False}),
+    avg_viewers: Optional[int] = Form(default=None, description="Nuevo promedio de espectadores", openapi_extra={"allowEmptyValue": False}),
+    image: Optional[UploadFile] = Form(default=None, description="Nueva imagen del streamer", openapi_extra={"allowEmptyValue": False}),
     session: AsyncSession = Depends(get_session)
 ):
     updates = {}
 
-    # Procesar parámetros de consulta (query parameters)
-    if name is not None:
+    # Solo incluir los campos que tienen valores válidos y no son valores por defecto
+    if name is not None and name.strip() and name.strip().lower() != "string":
         updates["name"] = name
-    if game is not None:
+    if game is not None and game.strip() and game.strip().lower() != "string":
         updates["game"] = game
-    if follower_count is not None:
+    if follower_count is not None and follower_count > 0:  # Ignorar 0
         updates["follower_count"] = follower_count
-    if avg_viewers is not None:
+    if avg_viewers is not None and avg_viewers > 0:  # Ignorar 0
         updates["avg_viewers"] = avg_viewers
 
-    # Procesar datos del cuerpo (JSON)
-    if data:
-        for field, value in data.items():
-            if value is not None:
-                # Convertir valores numéricos si es necesario
-                if field in ["follower_count", "avg_viewers"]:
-                    try:
-                        value = int(value)
-                    except (ValueError, TypeError):
-                        raise HTTPException(
-                            status_code=400,
-                            detail=f"El valor para {field} debe ser un número entero"
-                        )
-                updates[field] = value
-
     if not updates and not image:
-        raise HTTPException(status_code=400, detail="No se proporcionaron datos para actualizar")
+        raise HTTPException(status_code=400, detail="No se proporcionaron datos válidos para actualizar")
 
     try:
         updated = await partial_update_streamer(session, streamer_id, updates, image)
