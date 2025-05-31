@@ -93,6 +93,7 @@ async function showDeletedGames() {
                             <thead>
                                 <tr>
                                     <th>ID</th>
+                                    <th>Imagen</th>
                                     <th>Nombre</th>
                                     <th>Fecha</th>
                                     <th>Horas Vistas</th>
@@ -105,6 +106,15 @@ async function showDeletedGames() {
                                 ${deletedGames.map(game => `
                                     <tr>
                                         <td>${game.id}</td>
+                                        <td>
+                                            ${game.image_url ?
+                                                `<a href="${game.image_url}" target="_blank">
+                                                    <img src="${game.image_url}" alt="${game.game}"
+                                                         style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
+                                                </a>` :
+                                                '❌ Sin imagen'
+                                            }
+                                        </td>
                                         <td>${game.game}</td>
                                         <td>${game.date}</td>
                                         <td>${parseInt(game.hours_watched).toLocaleString()}</td>

@@ -342,7 +342,7 @@ h2, h3 {
         <!-- Formulario de Actualización Parcial -->
         <div id="partialUpdateForm" class="operation-form rpgui-container framed-golden" style="display: none;">
             <h3>✏️🔧 Actualización Parcial</h3>
-            <form onsubmit="partialUpdateGame(event)">
+            <form onsubmit="partialUpdateGame(event)" enctype="multipart/form-data">
                 <div class="form-group">
                     <label class="rpgui-label">🔢 ID del Juego:</label>
                     <input type="number" id="partialUpdateGameId" class="rpgui-input" required min="1">
@@ -366,6 +366,14 @@ h2, h3 {
                 <div class="form-group">
                     <label class="rpgui-label">📺 Pico de Canales:</label>
                     <input type="number" id="partialUpdatePeakChannels" class="rpgui-input" min="0">
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">📸 Nueva Imagen:</label>
+                    <input type="file" id="partialUpdateImage" class="rpgui-input" accept="image/*">
+                    <div class="checkbox-wrapper" style="margin-top: 10px; display: none;">
+                        <input type="checkbox" id="sendEmptyImage" class="rpgui-checkbox">
+                        <label for="sendEmptyImage" class="rpgui-label">Marca esta opción si deseas agregar una imagen</label>
+                    </div>
                 </div>
                 <div class="form-buttons">
                     <button type="submit" class="rpgui-button">
@@ -444,11 +452,11 @@ async function buscarPorNombre(event) {
                     row.innerHTML = `
                         <td>${game.id}</td>
                         <td>
-                            ${game.image_url ? 
+                            ${game.image_url ?
                                 `<a href="${game.image_url}" target="_blank">
-                                    <img src="${game.image_url}" alt="${game.game}" 
+                                    <img src="${game.image_url}" alt="${game.game}"
                                          style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
-                                </a>` : 
+                                </a>` :
                                 '❌ Sin imagen'
                             }
                         </td>
@@ -535,11 +543,11 @@ async function buscarPorNombre(event) {
                     row.innerHTML = `
                         <td>${game.id}</td>
                         <td>
-                            ${game.image_url ? 
+                            ${game.image_url ?
                                 `<a href="${game.image_url}" target="_blank">
-                                    <img src="${game.image_url}" alt="${game.game}" 
+                                    <img src="${game.image_url}" alt="${game.game}"
                                          style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
-                                </a>` : 
+                                </a>` :
                                 '❌ Sin imagen'
                             }
                         </td>
@@ -646,13 +654,13 @@ async function updateGame(event) {
     event.preventDefault();
     const gameId = document.getElementById('updateGameId').value;
     const formData = new FormData();
-    
+
     formData.append('game', document.getElementById('updateGameName').value);
     formData.append('date', document.getElementById('updateGameDate').value);
     formData.append('hours_watched', document.getElementById('updateGameHoursWatched').value);
     formData.append('peak_viewers', document.getElementById('updateGamePeakViewers').value);
     formData.append('peak_channels', document.getElementById('updateGamePeakChannels').value);
-    
+
     const imageInput = document.getElementById('updateGameImage');
     if (imageInput.files.length > 0) {
         formData.append('image', imageInput.files[0]);
@@ -762,13 +770,13 @@ function showRestoreForm() {
 async function createGame(event) {
     event.preventDefault();
     const formData = new FormData();
-    
+
     formData.append('game', document.getElementById('createGameName').value);
     formData.append('date', document.getElementById('createGameDate').value);
     formData.append('hours_watched', document.getElementById('createGameHoursWatched').value);
     formData.append('peak_viewers', document.getElementById('createGamePeakViewers').value);
     formData.append('peak_channels', document.getElementById('createGamePeakChannels').value);
-    
+
     const imageInput = document.getElementById('createGameImage');
     if (imageInput.files.length > 0) {
         formData.append('image', imageInput.files[0]);
@@ -868,11 +876,11 @@ async function buscarPorId(event) {
             row.innerHTML = `
                 <td>${game.id}</td>
                 <td>
-                    ${game.image_url ? 
+                    ${game.image_url ?
                         `<a href="${game.image_url}" target="_blank">
-                            <img src="${game.image_url}" alt="${game.game}" 
+                            <img src="${game.image_url}" alt="${game.game}"
                                  style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
-                        </a>` : 
+                        </a>` :
                         '❌ Sin imagen'
                     }
                 </td>
@@ -1000,11 +1008,11 @@ async function listGames() {
                     <tr>
                         <td>${game.id}</td>
                         <td>
-                            ${game.image_url ? 
+                            ${game.image_url ?
                                 `<a href="${game.image_url}" target="_blank">
-                                    <img src="${game.image_url}" alt="${game.game}" 
+                                    <img src="${game.image_url}" alt="${game.game}"
                                          style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
-                                </a>` : 
+                                </a>` :
                                 '❌ Sin imagen'
                             }
                         </td>
@@ -1109,11 +1117,11 @@ async function showGamesList() {
                                     <tr>
                                         <td>${game.id}</td>
                                         <td>
-                                            ${game.image_url ? 
+                                            ${game.image_url ?
                                                 `<a href="${game.image_url}" target="_blank">
-                                                    <img src="${game.image_url}" alt="${game.game}" 
+                                                    <img src="${game.image_url}" alt="${game.game}"
                                                          style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
-                                                </a>` : 
+                                                </a>` :
                                                 '❌ Sin imagen'
                                             }
                                         </td>
@@ -1152,23 +1160,29 @@ async function partialUpdateGame(event) {
     const gameId = document.getElementById('partialUpdateGameId').value;
     const formData = new FormData();
 
-    // Recoger solo los campos que tienen valor
-    const game = document.getElementById('partialUpdateName').value;
+    // Campos opcionales - solo agregar si tienen valor
+    const name = document.getElementById('partialUpdateName').value;
     const date = document.getElementById('partialUpdateDate').value;
     const hoursWatched = document.getElementById('partialUpdateHoursWatched').value;
     const peakViewers = document.getElementById('partialUpdatePeakViewers').value;
     const peakChannels = document.getElementById('partialUpdatePeakChannels').value;
 
-    if (game) formData.append('game', game);
+    if (name) formData.append('game', name);
     if (date) formData.append('date', date);
     if (hoursWatched) formData.append('hours_watched', hoursWatched);
     if (peakViewers) formData.append('peak_viewers', peakViewers);
     if (peakChannels) formData.append('peak_channels', peakChannels);
 
-    // Validar que al menos un campo tenga valor
-    if (!game && !date && !hoursWatched && !peakViewers && !peakChannels) {
-        alert('Debes modificar al menos un campo');
-        return;
+    // Manejar la imagen
+    const imageInput = document.getElementById('partialUpdateImage');
+    const sendEmptyImage = document.getElementById('sendEmptyImage').checked;
+
+    if (sendEmptyImage) {
+        // Si se marca la opción de enviar valor vacío, enviar un string vacío
+        formData.append('image', '');
+    } else if (imageInput.files.length > 0) {
+        // Si se seleccionó una imagen, enviarla
+        formData.append('image', imageInput.files[0]);
     }
 
     try {
@@ -1346,11 +1360,11 @@ async function showDeletedGames() {
                                     <tr>
                                         <td>${game.id}</td>
                                         <td>
-                                            ${game.image_url ? 
+                                            ${game.image_url ?
                                                 `<a href="${game.image_url}" target="_blank">
-                                                    <img src="${game.image_url}" alt="${game.game}" 
+                                                    <img src="${game.image_url}" alt="${game.game}"
                                                          style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
-                                                </a>` : 
+                                                </a>` :
                                                 '❌ Sin imagen'
                                             }
                                         </td>

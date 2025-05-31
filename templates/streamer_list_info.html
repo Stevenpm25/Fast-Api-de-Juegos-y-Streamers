@@ -8,7 +8,7 @@
     grid-template-columns: 250px 1fr;
     gap: 1em;
     padding: 1em;
-    height: calc(100vh - 200px);
+    height: calc(100vh - 100px);
     overflow: hidden;
 }
 
@@ -112,6 +112,58 @@ h2, h3 {
     .form-buttons .rpgui-button {
         width: 100%;
     }
+}
+
+.table-wrapper {
+    max-height: 400px;
+    overflow-y: auto;
+    margin: 1em 0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.table-container {
+    width: 100%;
+}
+
+.table-container table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-container th {
+    position: sticky;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 1;
+    padding: 10px;
+    text-align: left;
+}
+
+.table-container td {
+    padding: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.table-container tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.table-wrapper::-webkit-scrollbar {
+    width: 12px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    border: 3px solid rgba(0, 0, 0, 0.3);
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.3);
 }
 </style>
 
@@ -319,7 +371,7 @@ h2, h3 {
         <!-- Formulario de Actualización Parcial -->
         <div id="partialUpdateForm" class="operation-form rpgui-container framed-golden" style="display: none;">
             <h3>✏️🔧 Actualización Parcial</h3>
-            <form onsubmit="partialUpdateStreamer(event)">
+            <form onsubmit="partialUpdateStreamer(event)" enctype="multipart/form-data">
                 <div class="form-group">
                     <label class="rpgui-label">🔢 ID del Streamer:</label>
                     <input type="number" id="partialUpdateStreamerId" class="rpgui-input" required min="1">
@@ -339,6 +391,14 @@ h2, h3 {
                 <div class="form-group">
                     <label class="rpgui-label">👀 Espectadores Promedio:</label>
                     <input type="number" id="partialUpdateAvgViewers" class="rpgui-input" min="0">
+                </div>
+                <div class="form-group">
+                    <label class="rpgui-label">📸 Nueva Imagen:</label>
+                    <input type="file" id="partialUpdateImage" class="rpgui-input" accept="image/*">
+                    <div class="checkbox-wrapper" style="margin-top: 10px; display: none;">
+                        <input type="checkbox" id="sendEmptyImage" class="rpgui-checkbox">
+                        <label for="sendEmptyImage" class="rpgui-label">Marca esta opción si deseas agregar una imagen</label>
+                    </div>
                 </div>
                 <div class="form-buttons">
                     <button type="submit" class="rpgui-button">
@@ -450,7 +510,7 @@ async function createStreamer(event) {
     formData.append('game', document.getElementById('createStreamerGame').value);
     formData.append('follower_count', document.getElementById('createStreamerFollowers').value);
     formData.append('avg_viewers', document.getElementById('createStreamerAvgViewers').value);
-    
+
     const imageInput = document.getElementById('createStreamerImage');
     if (imageInput.files.length > 0) {
         formData.append('image', imageInput.files[0]);
@@ -480,12 +540,12 @@ async function updateStreamer(event) {
     event.preventDefault();
     const streamerId = document.getElementById('updateStreamerId').value;
     const formData = new FormData();
-    
+
     formData.append('name', document.getElementById('updateStreamerName').value);
     formData.append('game', document.getElementById('updateStreamerGame').value);
     formData.append('follower_count', document.getElementById('updateStreamerFollowers').value);
     formData.append('avg_viewers', document.getElementById('updateStreamerAvgViewers').value);
-    
+
     const imageInput = document.getElementById('updateStreamerImage');
     if (imageInput.files.length > 0) {
         formData.append('image', imageInput.files[0]);
@@ -576,11 +636,11 @@ async function buscarPorId(event) {
             row.innerHTML = `
                 <td>${streamer.id}</td>
                 <td>
-                    ${streamer.image_url ? 
+                    ${streamer.image_url ?
                         `<a href="${streamer.image_url}" target="_blank">
-                            <img src="${streamer.image_url}" alt="${streamer.name}" 
+                            <img src="${streamer.image_url}" alt="${streamer.name}"
                                  style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
-                        </a>` : 
+                        </a>` :
                         '❌ Sin imagen'
                     }
                 </td>
@@ -625,11 +685,11 @@ async function buscarPorNombre(event) {
                     row.innerHTML = `
                         <td>${streamer.id}</td>
                         <td>
-                            ${streamer.image_url ? 
+                            ${streamer.image_url ?
                                 `<a href="${streamer.image_url}" target="_blank">
-                                    <img src="${streamer.image_url}" alt="${streamer.name}" 
+                                    <img src="${streamer.image_url}" alt="${streamer.name}"
                                          style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
-                                </a>` : 
+                                </a>` :
                                 '❌ Sin imagen'
                             }
                         </td>
@@ -696,7 +756,7 @@ async function partialUpdateStreamer(event) {
     const streamerId = document.getElementById('partialUpdateStreamerId').value;
     const formData = new FormData();
 
-    // Recoger solo los campos que tienen valor
+    // Campos opcionales - solo agregar si tienen valor
     const name = document.getElementById('partialUpdateName').value;
     const game = document.getElementById('partialUpdateGame').value;
     const followerCount = document.getElementById('partialUpdateFollowers').value;
@@ -707,10 +767,16 @@ async function partialUpdateStreamer(event) {
     if (followerCount) formData.append('follower_count', followerCount);
     if (avgViewers) formData.append('avg_viewers', avgViewers);
 
-    // Validar que al menos un campo tenga valor
-    if (!name && !game && !followerCount && !avgViewers) {
-        alert('Debes modificar al menos un campo');
-        return;
+    // Manejar la imagen
+    const imageInput = document.getElementById('partialUpdateImage');
+    const sendEmptyImage = document.getElementById('sendEmptyImage').checked;
+
+    if (sendEmptyImage) {
+        // Si se marca la opción de enviar valor vacío, enviar un string vacío
+        formData.append('image', '');
+    } else if (imageInput.files.length > 0) {
+        // Si se seleccionó una imagen, enviarla
+        formData.append('image', imageInput.files[0]);
     }
 
     try {
@@ -766,7 +832,7 @@ async function showDeletedStreamers() {
                                     <tr>
                                         <td>${streamer.id}</td>
                                         <td>
-                                            ${streamer.image_url ? 
+                                            ${streamer.image_url ?
                                                 `<img src="${streamer.image_url}" alt="${streamer.name}" style="width: 50px; height: 50px; object-fit: cover;">` :
                                                 '❌ Sin imagen'
                                             }
@@ -853,11 +919,11 @@ async function showStreamersList() {
                                     <tr>
                                         <td>${streamer.id}</td>
                                         <td>
-                                            ${streamer.image_url ? 
+                                            ${streamer.image_url ?
                                                 `<a href="${streamer.image_url}" target="_blank">
-                                                    <img src="${streamer.image_url}" alt="${streamer.name}" 
+                                                    <img src="${streamer.image_url}" alt="${streamer.name}"
                                                          style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
-                                                </a>` : 
+                                                </a>` :
                                                 '❌ Sin imagen'
                                             }
                                         </td>

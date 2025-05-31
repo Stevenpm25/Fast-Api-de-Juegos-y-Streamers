@@ -1,15 +1,15 @@
-{% exten{% extends 'base.html' %}
+{% extends 'base.html' %}
 {% block title %}Agregar Juego{% endblock %}
 
 {% block content %}
 <div class="rpgui-container framed">
     <h2>🎮 Agregar un Nuevo Juego</h2>
 
-    <form method="post" action="/add/game" class="rpgui-container framed-golden">
+    <form id="createGameForm" class="rpgui-container framed-golden" enctype="multipart/form-data">
         <div class="form-group">
             <label class="rpgui-label">🎲 Nombre del Juego:</label>
             <input type="text"
-                   name="game"
+                   id="createGameName"
                    class="rpgui-input"
                    placeholder="Ej: League of Legends"
                    minlength="1"
@@ -20,7 +20,7 @@
         <div class="form-group">
             <label class="rpgui-label">📅 Fecha del Registro:</label>
             <input type="text"
-                   name="date"
+                   id="createGameDate"
                    class="rpgui-input"
                    placeholder="AAAA-MM"
                    pattern="\d{4}-\d{2}"
@@ -31,7 +31,7 @@
         <div class="form-group">
             <label class="rpgui-label">⌛ Horas Vistas:</label>
             <input type="number"
-                   name="hours_watched"
+                   id="createGameHoursWatched"
                    class="rpgui-input"
                    placeholder="Ej: 1000000"
                    min="0"
@@ -41,7 +41,7 @@
         <div class="form-group">
             <label class="rpgui-label">👥 Pico de Espectadores:</label>
             <input type="number"
-                   name="peak_viewers"
+                   id="createGamePeakViewers"
                    class="rpgui-input"
                    placeholder="Ej: 15000"
                    min="0"
@@ -51,7 +51,7 @@
         <div class="form-group">
             <label class="rpgui-label">📺 Pico de Canales:</label>
             <input type="number"
-                   name="peak_channels"
+                   id="createGamePeakChannels"
                    class="rpgui-input"
                    placeholder="Ej: 300"
                    min="0"
@@ -59,19 +59,18 @@
         </div>
 
         <div class="form-group">
-            <label class="rpgui-label">🖼️ URL de la Foto:</label>
-            <input type="url"
-                   name="photo_url"
+            <label class="rpgui-label">🖼️ Imagen del Juego:</label>
+            <input type="file"
+                   id="createGameImage"
                    class="rpgui-input"
-                   placeholder="https://ejemplo.com/foto.jpg"
-                   pattern="https?://.+">
+                   accept="image/*">
         </div>
 
         <div class="button-group">
-            <button type="submit" class="rpgui-button">
+            <button type="submit" class="rpgui-button" onclick="createGame(event)">
                 <span>🎮 Agregar Juego</span>
             </button>
-            <a href="/games" class="rpgui-button" onclick="playBowSound()">
+            <a href="/games" class="rpgui-button">
                 <span>↩️ Volver</span>
             </a>
         </div>
@@ -117,4 +116,40 @@ h2 {
     margin-bottom: 1em;
 }
 </style>
+
+<script>
+async function createGame(event) {
+    event.preventDefault();
+    
+    const formData = new FormData();
+    formData.append('game', document.getElementById('createGameName').value);
+    formData.append('date', document.getElementById('createGameDate').value);
+    formData.append('hours_watched', document.getElementById('createGameHoursWatched').value);
+    formData.append('peak_viewers', document.getElementById('createGamePeakViewers').value);
+    formData.append('peak_channels', document.getElementById('createGamePeakChannels').value);
+    
+    const imageInput = document.getElementById('createGameImage');
+    if (imageInput.files.length > 0) {
+        formData.append('image', imageInput.files[0]);
+    }
+
+    try {
+        const response = await fetch('/api/games', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (response.ok) {
+            alert('¡Juego creado correctamente!');
+            window.location.href = '/games';
+        } else {
+            const error = await response.json();
+            alert('Error al crear el juego: ' + error.detail);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al crear el juego');
+    }
+}
+</script>
 {% endblock %}

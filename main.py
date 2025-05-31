@@ -354,7 +354,7 @@ async def buscar_id_page(request: Request):
         }
     )
 
-@app.post("/api/games/", response_model=GameWithID, tags=["Games"])
+@app.post("/api/games", response_model=GameWithID, tags=["Games"])
 async def create_new_game(
     game: str = Form(..., description="Nombre del juego"),
     date: str = Form(..., description="Fecha en formato AAAA-MM"),
@@ -460,7 +460,7 @@ async def patch_partial_game(
     hours_watched: Optional[int] = Form(default=None, description="Nuevas horas vistas", openapi_extra={"allowEmptyValue": False}),
     peak_viewers: Optional[int] = Form(default=None, description="Nuevo pico de espectadores", openapi_extra={"allowEmptyValue": False}),
     peak_channels: Optional[int] = Form(default=None, description="Nuevo pico de canales", openapi_extra={"allowEmptyValue": False}),
-    image: Optional[UploadFile] = Form(default=None, description="Nueva imagen del juego", openapi_extra={"allowEmptyValue": False}),
+    image: Optional[UploadFile] = Form(default=None, description="Nueva imagen del juego", openapi_extra={"allowEmptyValue": True}),
     session: AsyncSession = Depends(get_session)
 ):
     updates = {}
@@ -477,11 +477,15 @@ async def patch_partial_game(
     if peak_channels is not None and peak_channels > 0:  # Ignorar 0
         updates["peak_channels"] = peak_channels
 
-    if not updates and not image:
+    # Si se recibe una imagen vacía (Send empty value), establecer image_url a None
+    if image == '':
+        updates["image_url"] = None
+
+    if not updates and image is None:
         raise HTTPException(status_code=400, detail="No se proporcionaron datos válidos para actualizar")
 
     try:
-        updated = await partial_update_game(session, game_id, updates, image)
+        updated = await partial_update_game(session, game_id, updates, image if image != '' else None)
         if not updated:
             raise HTTPException(status_code=404, detail="Juego no encontrado")
         return updated
