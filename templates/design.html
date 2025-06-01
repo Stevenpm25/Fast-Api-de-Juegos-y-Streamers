@@ -1,0 +1,1181 @@
+{% extends 'base.html' %}
+{% block title %}Fase de Diseño{% endblock %}
+
+{% block content %}
+<style>
+  .design-section {
+    width: 100%;
+    max-width: 1800px;
+    padding: 30px;
+    margin: 1em 0;
+    position: relative;
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.85);
+    border-radius: 20px;
+    box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
+    animation: glow 3s infinite alternate;
+    transition: all 0.3s ease;
+  }
+
+  @keyframes glow {
+    from { box-shadow: 0 0 30px rgba(0, 255, 0, 0.3); }
+    to { box-shadow: 0 0 50px rgba(0, 255, 0, 0.6), 0 0 80px rgba(0, 255, 255, 0.3); }
+  }
+
+  .design-section h2 {
+    color: #00ff00;
+    margin-bottom: 25px;
+    text-align: center;
+    text-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
+    font-size: 2.5em;
+    letter-spacing: 3px;
+    font-weight: bold;
+    text-transform: uppercase;
+    position: relative;
+    padding-bottom: 20px;
+  }
+
+  .design-section h2:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #00ff00, transparent);
+  }
+
+  .design-section p {
+    color: #90EE90;
+    line-height: 2;
+    margin-bottom: 25px;
+    text-align: justify;
+    text-shadow: 0 0 8px rgba(0, 255, 0, 0.4);
+    font-size: 1.2em;
+    padding: 0 20px;
+  }
+
+  .design-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2em;
+    margin: 2em 0;
+    padding: 20px;
+  }
+
+  .design-card {
+    background: rgba(0, 255, 0, 0.05);
+    border-radius: 15px;
+    padding: 20px;
+    border: 1px solid rgba(0, 255, 0, 0.2);
+    transition: all 0.3s ease;
+  }
+
+  .design-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 255, 0, 0.2);
+  }
+
+  .design-card h3 {
+    color: #00ff00;
+    margin-bottom: 15px;
+    font-size: 1.4em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .design-card p {
+    font-size: 1em;
+    margin: 10px 0;
+    color: #98FB98;
+  }
+
+  .design-image {
+    width: 100%;
+    height: auto;
+    margin: 20px 0;
+    border-radius: 10px;
+    border: 2px solid rgba(0, 255, 0, 0.2);
+    transition: all 0.3s ease;
+  }
+
+  .design-image:hover {
+    border-color: rgba(0, 255, 0, 0.6);
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+  }
+
+  .highlight-text {
+    color: #00ff00;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.6);
+  }
+
+  .model-diagram {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    margin: 15px 0;
+    border: 1px solid rgba(0, 255, 0, 0.3);
+    font-family: 'Courier New', monospace;
+  }
+
+  .model-box {
+    border: 2px solid #00ff00;
+    border-radius: 5px;
+    margin: 20px 0;
+    background: rgba(0, 255, 0, 0.05);
+  }
+
+  .model-title {
+    background: rgba(0, 255, 0, 0.1);
+    color: #00ff00;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    border-bottom: 1px solid #00ff00;
+  }
+
+  .model-content {
+    padding: 15px;
+  }
+
+  .model-attribute {
+    color: #98FB98;
+    padding: 5px 10px;
+    border-bottom: 1px solid rgba(0, 255, 0, 0.1);
+  }
+
+  .model-arrow {
+    text-align: center;
+    color: #00ff00;
+    font-size: 24px;
+    margin: 10px 0;
+  }
+
+  .model-section {
+    margin-bottom: 40px;
+  }
+
+  .model-description {
+    color: #90EE90;
+    margin: 20px 0;
+    text-align: center;
+    font-style: italic;
+  }
+
+  .inheritance-line {
+    width: 2px;
+    height: 20px;
+    background: #00ff00;
+    margin: 10px auto;
+  }
+
+  .endpoint-section {
+    margin: 30px 0;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+    border: 1px solid rgba(0, 255, 0, 0.3);
+  }
+
+  .endpoint-section h4 {
+    color: #00ff00;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 1.3em;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+  }
+
+  .endpoint-box {
+    display: flex;
+    align-items: flex-start;
+    margin: 15px 0;
+    padding: 15px;
+    background: rgba(0, 255, 0, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(0, 255, 0, 0.2);
+    transition: all 0.3s ease;
+  }
+
+  .endpoint-box:hover {
+    transform: translateX(5px);
+    box-shadow: -5px 0 15px rgba(0, 255, 0, 0.2);
+    border-color: rgba(0, 255, 0, 0.4);
+  }
+
+  .endpoint-method {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    min-width: 80px;
+    text-align: center;
+    margin-right: 15px;
+    font-family: 'Courier New', monospace;
+  }
+
+  .endpoint-method.get {
+    background: rgba(0, 255, 0, 0.2);
+    color: #00ff00;
+  }
+
+  .endpoint-method.post {
+    background: rgba(0, 0, 255, 0.2);
+    color: #00ffff;
+  }
+
+  .endpoint-method.put {
+    background: rgba(255, 165, 0, 0.2);
+    color: #ffa500;
+  }
+
+  .endpoint-method.patch {
+    background: rgba(255, 255, 0, 0.2);
+    color: #ffff00;
+  }
+
+  .endpoint-method.delete {
+    background: rgba(255, 0, 0, 0.2);
+    color: #ff6b6b;
+  }
+
+  .endpoint-path {
+    color: #98FB98;
+    font-family: 'Courier New', monospace;
+    padding: 5px 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+    margin-right: 15px;
+    min-width: 200px;
+  }
+
+  .endpoint-description {
+    color: #90EE90;
+    flex-grow: 1;
+  }
+
+  .endpoint-details {
+    margin-top: 10px;
+    font-size: 0.9em;
+    color: #7CCD7C;
+  }
+
+  .detail-label {
+    color: #00ff00;
+    font-weight: bold;
+    margin-right: 5px;
+  }
+
+  .endpoint-params {
+    list-style: none;
+    margin: 5px 0 5px 15px;
+    padding: 0;
+  }
+
+  .endpoint-params li {
+    color: #98FB98;
+    font-family: 'Courier New', monospace;
+    margin: 3px 0;
+  }
+
+  .endpoint-params li::before {
+    content: "•";
+    color: #00ff00;
+    margin-right: 5px;
+  }
+</style>
+
+<div class="design-section">
+  <h2>📐 Fase de Diseño del Proyecto</h2>
+
+  <p>
+    Bienvenido a la sección de <span class="highlight-text">Diseño y Planificación</span> de nuestro sistema de gestión de Games y Streamers.
+    Aquí encontrarás toda la documentación técnica y visual que fundamenta la arquitectura y funcionalidad de nuestra aplicación.
+  </p>
+
+  <div class="design-grid">
+    <div class="design-card">
+      <h3>📊 Diagramas de Modelos</h3>
+      
+      <!-- Modelo Game -->
+      <div class="model-section">
+        <h4>🎮 Modelo Game</h4>
+        <div class="model-description">
+          Estructura principal para la gestión de juegos y sus estadísticas en Twitch
+        </div>
+        
+        <div class="model-box">
+          <div class="model-title">Game</div>
+          <div class="model-content">
+            <div class="model-attribute">+ id: Integer (PK)</div>
+            <div class="model-attribute">+ game: String</div>
+            <div class="model-attribute">+ date: String</div>
+            <div class="model-attribute">+ hours_watched: Integer</div>
+            <div class="model-attribute">+ peak_viewers: Integer</div>
+            <div class="model-attribute">+ peak_channels: Integer</div>
+            <div class="model-attribute">+ image_url: Optional[String]</div>
+          </div>
+        </div>
+
+        <div class="inheritance-line"></div>
+        <div class="model-arrow">▼</div>
+
+        <div class="model-box">
+          <div class="model-title">GameCreate</div>
+          <div class="model-content">
+            <div class="model-attribute">+ game: String</div>
+            <div class="model-attribute">+ date: String</div>
+            <div class="model-attribute">+ hours_watched: Integer</div>
+            <div class="model-attribute">+ peak_viewers: Integer</div>
+            <div class="model-attribute">+ peak_channels: Integer</div>
+            <div class="model-attribute">+ image_url: Optional[String]</div>
+          </div>
+        </div>
+
+        <div class="inheritance-line"></div>
+        <div class="model-arrow">▼</div>
+
+        <div class="model-box">
+          <div class="model-title">GameWithID</div>
+          <div class="model-content">
+            <div class="model-attribute">+ id: Integer</div>
+            <div class="model-attribute">+ game: String</div>
+            <div class="model-attribute">+ date: String</div>
+            <div class="model-attribute">+ hours_watched: Integer</div>
+            <div class="model-attribute">+ peak_viewers: Integer</div>
+            <div class="model-attribute">+ peak_channels: Integer</div>
+            <div class="model-attribute">+ image_url: Optional[String]</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modelo Streamer -->
+      <div class="model-section">
+        <h4>🎥 Modelo Streamer</h4>
+        <div class="model-description">
+          Estructura principal para la gestión de streamers y sus métricas
+        </div>
+        
+        <div class="model-box">
+          <div class="model-title">Streamer</div>
+          <div class="model-content">
+            <div class="model-attribute">+ id: Integer (PK)</div>
+            <div class="model-attribute">+ name: String</div>
+            <div class="model-attribute">+ game: String</div>
+            <div class="model-attribute">+ follower_count: Integer</div>
+            <div class="model-attribute">+ avg_viewers: Integer</div>
+            <div class="model-attribute">+ image_url: Optional[String]</div>
+          </div>
+        </div>
+
+        <div class="inheritance-line"></div>
+        <div class="model-arrow">▼</div>
+
+        <div class="model-box">
+          <div class="model-title">StreamerCreate</div>
+          <div class="model-content">
+            <div class="model-attribute">+ name: String</div>
+            <div class="model-attribute">+ game: String</div>
+            <div class="model-attribute">+ follower_count: Integer</div>
+            <div class="model-attribute">+ avg_viewers: Integer</div>
+            <div class="model-attribute">+ image_url: Optional[String]</div>
+          </div>
+        </div>
+
+        <div class="inheritance-line"></div>
+        <div class="model-arrow">▼</div>
+
+        <div class="model-box">
+          <div class="model-title">StreamerWithID</div>
+          <div class="model-content">
+            <div class="model-attribute">+ id: Integer</div>
+            <div class="model-attribute">+ name: String</div>
+            <div class="model-attribute">+ game: String</div>
+            <div class="model-attribute">+ follower_count: Integer</div>
+            <div class="model-attribute">+ avg_viewers: Integer</div>
+            <div class="model-attribute">+ image_url: Optional[String]</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="design-card">
+      <h3>🛣️ Mapa de Endpoints</h3>
+      <div class="model-description">
+        Documentación completa de todos los endpoints disponibles en la API
+      </div>
+
+      <!-- Games Endpoints -->
+      <div class="endpoint-section">
+        <h4>🎮 Endpoints de Games</h4>
+        
+        <!-- GET /games -->
+        <div class="endpoint-box">
+          <div class="endpoint-method get">GET</div>
+          <div class="endpoint-path">/api/games</div>
+          <div class="endpoint-description">
+            Obtener lista de todos los juegos
+            <div class="endpoint-details">
+              <span class="detail-label">Response:</span> List[GameWithID]
+            </div>
+          </div>
+        </div>
+
+        <!-- POST /games -->
+        <div class="endpoint-box">
+          <div class="endpoint-method post">POST</div>
+          <div class="endpoint-path">/api/games</div>
+          <div class="endpoint-description">
+            Crear un nuevo juego
+            <div class="endpoint-details">
+              <span class="detail-label">Body:</span> Form Data
+              <ul class="endpoint-params">
+                <li>game: string</li>
+                <li>date: string (AAAA-MM)</li>
+                <li>hours_watched: integer</li>
+                <li>peak_viewers: integer</li>
+                <li>peak_channels: integer</li>
+                <li>image: file (opcional)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- GET /games/{id} -->
+        <div class="endpoint-box">
+          <div class="endpoint-method get">GET</div>
+          <div class="endpoint-path">/api/games/{game_id}</div>
+          <div class="endpoint-description">
+            Obtener detalles de un juego específico
+            <div class="endpoint-details">
+              <span class="detail-label">Params:</span> game_id (integer)
+              <span class="detail-label">Response:</span> GameWithID
+            </div>
+          </div>
+        </div>
+
+        <!-- PUT /games/{id} -->
+        <div class="endpoint-box">
+          <div class="endpoint-method put">PUT</div>
+          <div class="endpoint-path">/api/games/{game_id}</div>
+          <div class="endpoint-description">
+            Actualizar un juego completo
+            <div class="endpoint-details">
+              <span class="detail-label">Params:</span> game_id (integer)
+              <span class="detail-label">Body:</span> Form Data
+              <ul class="endpoint-params">
+                <li>game: string</li>
+                <li>date: string</li>
+                <li>hours_watched: integer</li>
+                <li>peak_viewers: integer</li>
+                <li>peak_channels: integer</li>
+                <li>image: file (opcional)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- PATCH /games/{id} -->
+        <div class="endpoint-box">
+          <div class="endpoint-method patch">PATCH</div>
+          <div class="endpoint-path">/api/games/partial-update/{game_id}</div>
+          <div class="endpoint-description">
+            Actualización parcial de un juego
+            <div class="endpoint-details">
+              <span class="detail-label">Params:</span> game_id (integer)
+              <span class="detail-label">Body:</span> Form Data (campos opcionales)
+            </div>
+          </div>
+        </div>
+
+        <!-- DELETE /games/{id} -->
+        <div class="endpoint-box">
+          <div class="endpoint-method delete">DELETE</div>
+          <div class="endpoint-path">/api/games/{game_id}</div>
+          <div class="endpoint-description">
+            Eliminar un juego
+            <div class="endpoint-details">
+              <span class="detail-label">Params:</span> game_id (integer)
+            </div>
+          </div>
+        </div>
+
+        <!-- Endpoints adicionales de Games -->
+        <!-- GET /games/search -->
+        <div class="endpoint-box">
+          <div class="endpoint-method get">GET</div>
+          <div class="endpoint-path">/api/games/search</div>
+          <div class="endpoint-description">
+            Buscar juegos por nombre
+            <div class="endpoint-details">
+              <span class="detail-label">Query:</span> game_name (string)
+              <span class="detail-label">Response:</span> List[GameWithID]
+            </div>
+          </div>
+        </div>
+
+        <!-- POST /games/import -->
+        <div class="endpoint-box">
+          <div class="endpoint-method post">POST</div>
+          <div class="endpoint-path">/games/import</div>
+          <div class="endpoint-description">
+            Importar juegos desde archivo CSV
+            <div class="endpoint-details">
+              <span class="detail-label">Body:</span> file (CSV)
+              <span class="detail-label">Columns:</span> date, game, hours_watched, peak_viewers, peak_channels
+            </div>
+          </div>
+        </div>
+
+        <!-- GET /games/deleted -->
+        <div class="endpoint-box">
+          <div class="endpoint-method get">GET</div>
+          <div class="endpoint-path">/api/games/deleted</div>
+          <div class="endpoint-description">
+            Obtener lista de juegos eliminados
+            <div class="endpoint-details">
+              <span class="detail-label">Response:</span> List[DeletedGame]
+            </div>
+          </div>
+        </div>
+
+        <!-- POST /games/recover/{id} -->
+        <div class="endpoint-box">
+          <div class="endpoint-method post">POST</div>
+          <div class="endpoint-path">/api/games/recover/{game_id}</div>
+          <div class="endpoint-description">
+            Recuperar un juego eliminado
+            <div class="endpoint-details">
+              <span class="detail-label">Params:</span> game_id (integer)
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Streamers Endpoints -->
+      <div class="endpoint-section">
+        <h4>🎥 Endpoints de Streamers</h4>
+        
+        <!-- GET /streamers -->
+        <div class="endpoint-box">
+          <div class="endpoint-method get">GET</div>
+          <div class="endpoint-path">/api/streamers</div>
+          <div class="endpoint-description">
+            Obtener lista de todos los streamers
+            <div class="endpoint-details">
+              <span class="detail-label">Response:</span> List[StreamerWithID]
+            </div>
+          </div>
+        </div>
+
+        <!-- POST /streamers -->
+        <div class="endpoint-box">
+          <div class="endpoint-method post">POST</div>
+          <div class="endpoint-path">/api/streamers</div>
+          <div class="endpoint-description">
+            Crear un nuevo streamer
+            <div class="endpoint-details">
+              <span class="detail-label">Body:</span> Form Data
+              <ul class="endpoint-params">
+                <li>name: string</li>
+                <li>game: string</li>
+                <li>follower_count: integer</li>
+                <li>avg_viewers: integer</li>
+                <li>image: file (opcional)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- GET /streamers/{id} -->
+        <div class="endpoint-box">
+          <div class="endpoint-method get">GET</div>
+          <div class="endpoint-path">/api/streamers/{streamer_id}</div>
+          <div class="endpoint-description">
+            Obtener detalles de un streamer específico
+            <div class="endpoint-details">
+              <span class="detail-label">Params:</span> streamer_id (integer)
+              <span class="detail-label">Response:</span> StreamerWithID
+            </div>
+          </div>
+        </div>
+
+        <!-- PUT /streamers/{id} -->
+        <div class="endpoint-box">
+          <div class="endpoint-method put">PUT</div>
+          <div class="endpoint-path">/api/streamers/{streamer_id}</div>
+          <div class="endpoint-description">
+            Actualizar un streamer completo
+            <div class="endpoint-details">
+              <span class="detail-label">Params:</span> streamer_id (integer)
+              <span class="detail-label">Body:</span> Form Data
+              <ul class="endpoint-params">
+                <li>name: string</li>
+                <li>game: string</li>
+                <li>follower_count: integer</li>
+                <li>avg_viewers: integer</li>
+                <li>image: file (opcional)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- PATCH /streamers/{id} -->
+        <div class="endpoint-box">
+          <div class="endpoint-method patch">PATCH</div>
+          <div class="endpoint-path">/api/streamers/partial-update/{streamer_id}</div>
+          <div class="endpoint-description">
+            Actualización parcial de un streamer
+            <div class="endpoint-details">
+              <span class="detail-label">Params:</span> streamer_id (integer)
+              <span class="detail-label">Body:</span> Form Data (campos opcionales)
+            </div>
+          </div>
+        </div>
+
+        <!-- DELETE /streamers/{id} -->
+        <div class="endpoint-box">
+          <div class="endpoint-method delete">DELETE</div>
+          <div class="endpoint-path">/api/streamers/{streamer_id}</div>
+          <div class="endpoint-description">
+            Eliminar un streamer
+            <div class="endpoint-details">
+              <span class="detail-label">Params:</span> streamer_id (integer)
+            </div>
+          </div>
+        </div>
+
+        <!-- Endpoints adicionales de Streamers -->
+        <!-- GET /streamers/search -->
+        <div class="endpoint-box">
+          <div class="endpoint-method get">GET</div>
+          <div class="endpoint-path">/api/streamers/search</div>
+          <div class="endpoint-description">
+            Buscar streamers por nombre
+            <div class="endpoint-details">
+              <span class="detail-label">Query:</span> name (string)
+              <span class="detail-label">Response:</span> List[StreamerWithID]
+            </div>
+          </div>
+        </div>
+
+        <!-- POST /streamers/import -->
+        <div class="endpoint-box">
+          <div class="endpoint-method post">POST</div>
+          <div class="endpoint-path">/streamers/import</div>
+          <div class="endpoint-description">
+            Importar streamers desde archivo CSV
+            <div class="endpoint-details">
+              <span class="detail-label">Body:</span> file (CSV)
+              <span class="detail-label">Columns:</span> name, game, follower_count, avg_viewers
+            </div>
+          </div>
+        </div>
+
+        <!-- GET /streamers/deleted -->
+        <div class="endpoint-box">
+          <div class="endpoint-method get">GET</div>
+          <div class="endpoint-path">/api/streamers/deleted</div>
+          <div class="endpoint-description">
+            Obtener lista de streamers eliminados
+            <div class="endpoint-details">
+              <span class="detail-label">Response:</span> List[DeletedStreamer]
+            </div>
+          </div>
+        </div>
+
+        <!-- POST /streamers/recover/{id} -->
+        <div class="endpoint-box">
+          <div class="endpoint-method post">POST</div>
+          <div class="endpoint-path">/api/streamers/recover/{streamer_id}</div>
+          <div class="endpoint-description">
+            Recuperar un streamer eliminado
+            <div class="endpoint-details">
+              <span class="detail-label">Params:</span> streamer_id (integer)
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="design-card">
+      <h3>🎨 Wireframes y Mockups</h3>
+      <div class="model-description">
+        Diseños detallados de la interfaz de usuario y experiencia de usuario, siguiendo principios de diseño RPG y usabilidad moderna
+      </div>
+
+      <div class="wireframe-section">
+        <h4>📱 Páginas Principales</h4>
+
+        <div class="wireframe-grid">
+          <!-- Home Page -->
+          <div class="wireframe-box">
+            <div class="wireframe-title">🏠 Página de Inicio</div>
+            <div class="wireframe-preview">
+              <img src="/static/image/wireframe_home.png" alt="Home Wireframe">
+            </div>
+            <div class="wireframe-details">
+              <div class="wireframe-subsection">
+                <h5>Componentes UI</h5>
+                <ul>
+                  <li>Navbar con navegación principal y efectos hover</li>
+                  <li>Hero section con animaciones y partículas</li>
+                  <li>Tarjetas de acceso rápido con efectos 3D</li>
+                  <li>Footer con links y créditos</li>
+                </ul>
+              </div>
+              <div class="wireframe-subsection">
+                <h5>Interactividad</h5>
+                <ul>
+                  <li>Animaciones al hacer scroll</li>
+                  <li>Efectos de sonido RPG en interacciones</li>
+                  <li>Transiciones suaves entre secciones</li>
+                  <li>Feedback visual en hover y click</li>
+                </ul>
+              </div>
+              <div class="wireframe-subsection">
+                <h5>Características Responsivas</h5>
+                <ul>
+                  <li>Adaptación a múltiples dispositivos</li>
+                  <li>Menú hamburguesa en móviles</li>
+                  <li>Grid adaptativo para tarjetas</li>
+                  <li>Imágenes optimizadas por dispositivo</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Games List -->
+          <div class="wireframe-box">
+            <div class="wireframe-title">🎮 Lista de Juegos</div>
+            <div class="wireframe-preview">
+              <img src="/static/image/wireframe_games.png" alt="Games Wireframe">
+            </div>
+            <div class="wireframe-details">
+              <div class="wireframe-subsection">
+                <h5>Sistema de Grid</h5>
+                <ul>
+                  <li>Grid responsivo de 3x3 en desktop</li>
+                  <li>Tarjetas con efecto flip en hover</li>
+                  <li>Lazy loading de imágenes</li>
+                  <li>Animaciones de entrada suaves</li>
+                </ul>
+              </div>
+              <div class="wireframe-subsection">
+                <h5>Filtros y Búsqueda</h5>
+                <ul>
+                  <li>Búsqueda en tiempo real</li>
+                  <li>Filtros por fecha y popularidad</li>
+                  <li>Ordenamiento múltiple</li>
+                  <li>Filtros combinados</li>
+                </ul>
+              </div>
+              <div class="wireframe-subsection">
+                <h5>Detalles de Juego</h5>
+                <ul>
+                  <li>Modal con información detallada</li>
+                  <li>Estadísticas con gráficos</li>
+                  <li>Galería de imágenes</li>
+                  <li>Acciones CRUD con confirmación</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Streamers List -->
+          <div class="wireframe-box">
+            <div class="wireframe-title">🎥 Lista de Streamers</div>
+            <div class="wireframe-preview">
+              <img src="/static/image/wireframe_streamers.png" alt="Streamers Wireframe">
+            </div>
+            <div class="wireframe-details">
+              <div class="wireframe-subsection">
+                <h5>Tarjetas de Streamer</h5>
+                <ul>
+                  <li>Diseño con avatar y stats</li>
+                  <li>Indicador de estado online/offline</li>
+                  <li>Badges de logros y categorías</li>
+                  <li>Quick actions en hover</li>
+                </ul>
+              </div>
+              <div class="wireframe-subsection">
+                <h5>Funcionalidades Avanzadas</h5>
+                <ul>
+                  <li>Filtrado multi-criterio</li>
+                  <li>Vista de lista/grid toggle</li>
+                  <li>Sorting por métricas</li>
+                  <li>Export de datos</li>
+                </ul>
+              </div>
+              <div class="wireframe-subsection">
+                <h5>Perfil Detallado</h5>
+                <ul>
+                  <li>Stats históricos con gráficos</li>
+                  <li>Juegos más transmitidos</li>
+                  <li>Métricas de engagement</li>
+                  <li>Timeline de actividad</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Forms -->
+          <div class="wireframe-box">
+            <div class="wireframe-title">📝 Formularios</div>
+            <div class="wireframe-preview">
+              <img src="/static/image/wireframe_forms.png" alt="Forms Wireframe">
+            </div>
+            <div class="wireframe-details">
+              <div class="wireframe-subsection">
+                <h5>Diseño de Formularios</h5>
+                <ul>
+                  <li>Campos con estilo RPG</li>
+                  <li>Validación en tiempo real</li>
+                  <li>Mensajes de error temáticos</li>
+                  <li>Autocompletado inteligente</li>
+                </ul>
+              </div>
+              <div class="wireframe-subsection">
+                <h5>Gestión de Archivos</h5>
+                <ul>
+                  <li>Drag & drop de imágenes</li>
+                  <li>Preview antes de subir</li>
+                  <li>Compresión automática</li>
+                  <li>Soporte multi-archivo</li>
+                </ul>
+              </div>
+              <div class="wireframe-subsection">
+                <h5>UX Mejorada</h5>
+                <ul>
+                  <li>Guardado automático</li>
+                  <li>Recuperación de datos</li>
+                  <li>Modo wizard para forms largos</li>
+                  <li>Atajos de teclado</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Additional Pages -->
+          <div class="wireframe-box">
+            <div class="wireframe-title">📊 Dashboard</div>
+            <div class="wireframe-preview">
+              <img src="/static/image/wireframe_dashboard.png" alt="Dashboard Wireframe">
+            </div>
+            <div class="wireframe-details">
+              <div class="wireframe-subsection">
+                <h5>Visualización de Datos</h5>
+                <ul>
+                  <li>Gráficos interactivos</li>
+                  <li>KPIs principales</li>
+                  <li>Filtros temporales</li>
+                  <li>Export de reportes</li>
+                </ul>
+              </div>
+              <div class="wireframe-subsection">
+                <h5>Widgets Personalizables</h5>
+                <ul>
+                  <li>Drag & drop de widgets</li>
+                  <li>Layouts guardables</li>
+                  <li>Temas personalizados</li>
+                  <li>Actualización en tiempo real</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Info Page -->
+          <div class="wireframe-box">
+            <div class="wireframe-title">ℹ️ Página de Información</div>
+            <div class="wireframe-preview">
+              <img src="/static/image/wireframe_info.png" alt="Info Wireframe">
+            </div>
+            <div class="wireframe-details">
+              <div class="wireframe-subsection">
+                <h5>Contenido</h5>
+                <ul>
+                  <li>Documentación interactiva</li>
+                  <li>Tutoriales con video</li>
+                  <li>FAQs expandibles</li>
+                  <li>Enlaces a recursos</li>
+                </ul>
+              </div>
+              <div class="wireframe-subsection">
+                <h5>Navegación</h5>
+                <ul>
+                  <li>Índice lateral fijo</li>
+                  <li>Búsqueda en contenido</li>
+                  <li>Breadcrumbs</li>
+                  <li>Quick links</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <style>
+        .wireframe-section {
+          margin: 30px 0;
+        }
+
+        .wireframe-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 20px;
+          margin-top: 20px;
+        }
+
+        .wireframe-box {
+          background: rgba(0, 0, 0, 0.7);
+          border: 1px solid rgba(0, 255, 0, 0.3);
+          border-radius: 10px;
+          padding: 20px;
+          transition: all 0.3s ease;
+        }
+
+        .wireframe-box:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 5px 15px rgba(0, 255, 0, 0.2);
+        }
+
+        .wireframe-title {
+          color: #00ff00;
+          font-size: 1.2em;
+          margin-bottom: 15px;
+          text-align: center;
+          text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        .wireframe-preview {
+          margin: 15px 0;
+          border: 1px solid rgba(0, 255, 0, 0.2);
+          border-radius: 5px;
+          overflow: hidden;
+        }
+
+        .wireframe-preview img {
+          width: 100%;
+          height: auto;
+          transition: all 0.3s ease;
+        }
+
+        .wireframe-preview img:hover {
+          transform: scale(1.05);
+        }
+
+        .wireframe-details ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          color: #98FB98;
+        }
+
+        .wireframe-details li {
+          margin: 5px 0;
+          padding-left: 20px;
+          position: relative;
+        }
+
+        .wireframe-details li::before {
+          content: "→";
+          position: absolute;
+          left: 0;
+          color: #00ff00;
+        }
+
+        .wireframe-subsection {
+          margin: 15px 0;
+          padding: 10px;
+          background: rgba(0, 255, 0, 0.05);
+          border-radius: 5px;
+        }
+
+        .wireframe-subsection h5 {
+          color: #00ff00;
+          margin-bottom: 10px;
+          font-size: 1em;
+          text-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+        }
+      </style>
+    </div>
+
+    <div class="design-card">
+      <h3>🔧 Arquitectura del Sistema</h3>
+      <div class="model-description">
+        Estructura técnica detallada del sistema y sus componentes
+      </div>
+
+      <div class="architecture-section">
+        <div class="arch-grid">
+          <!-- Frontend -->
+          <div class="arch-box">
+            <div class="arch-title">🖥️ Frontend</div>
+            <div class="arch-content">
+              <div class="arch-component">
+                <h5>Tecnologías</h5>
+                <ul>
+                  <li>HTML5 + CSS3</li>
+                  <li>JavaScript (Vanilla)</li>
+                  <li>Jinja2 Templates</li>
+                  <li>RPGUI Framework</li>
+                </ul>
+              </div>
+              <div class="arch-component">
+                <h5>Características</h5>
+                <ul>
+                  <li>Diseño Responsivo</li>
+                  <li>Animaciones Fluidas</li>
+                  <li>Tema RPG Consistente</li>
+                  <li>Validación Client-side</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Backend -->
+          <div class="arch-box">
+            <div class="arch-title">⚙️ Backend</div>
+            <div class="arch-content">
+              <div class="arch-component">
+                <h5>Framework</h5>
+                <ul>
+                  <li>FastAPI</li>
+                  <li>SQLModel ORM</li>
+                  <li>Pydantic Models</li>
+                  <li>Async Support</li>
+                </ul>
+              </div>
+              <div class="arch-component">
+                <h5>Features</h5>
+                <ul>
+                  <li>API RESTful</li>
+                  <li>OpenAPI/Swagger</li>
+                  <li>Async Database</li>
+                  <li>File Handling</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Database -->
+          <div class="arch-box">
+            <div class="arch-title">🗄️ Base de Datos</div>
+            <div class="arch-content">
+              <div class="arch-component">
+                <h5>PostgreSQL</h5>
+                <ul>
+                  <li>Clever Cloud Hosting</li>
+                  <li>Async Pool</li>
+                  <li>Migrations</li>
+                  <li>Backups</li>
+                </ul>
+              </div>
+              <div class="arch-component">
+                <h5>Modelos</h5>
+                <ul>
+                  <li>Games Table</li>
+                  <li>Streamers Table</li>
+                  <li>Soft Deletes</li>
+                  <li>Constraints</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Storage -->
+          <div class="arch-box">
+            <div class="arch-title">📦 Almacenamiento</div>
+            <div class="arch-content">
+              <div class="arch-component">
+                <h5>Supabase Storage</h5>
+                <ul>
+                  <li>Image Upload</li>
+                  <li>CDN Distribution</li>
+                  <li>Secure Access</li>
+                  <li>Optimization</li>
+                </ul>
+              </div>
+              <div class="arch-component">
+                <h5>File Types</h5>
+                <ul>
+                  <li>Game Images</li>
+                  <li>Streamer Photos</li>
+                  <li>CSV Imports</li>
+                  <li>Temp Files</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <style>
+        .architecture-section {
+          margin: 30px 0;
+        }
+
+        .arch-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 20px;
+        }
+
+        .arch-box {
+          background: rgba(0, 0, 0, 0.7);
+          border: 1px solid rgba(0, 255, 0, 0.3);
+          border-radius: 10px;
+          padding: 20px;
+          transition: all 0.3s ease;
+        }
+
+        .arch-box:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 5px 15px rgba(0, 255, 0, 0.2);
+        }
+
+        .arch-title {
+          color: #00ff00;
+          font-size: 1.2em;
+          margin-bottom: 15px;
+          text-align: center;
+          text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        .arch-content {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 15px;
+        }
+
+        .arch-component h5 {
+          color: #00ff00;
+          margin-bottom: 10px;
+          font-size: 1em;
+        }
+
+        .arch-component ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          color: #98FB98;
+        }
+
+        .arch-component li {
+          margin: 5px 0;
+          padding-left: 15px;
+          position: relative;
+        }
+
+        .arch-component li::before {
+          content: "•";
+          position: absolute;
+          left: 0;
+          color: #00ff00;
+        }
+      </style>
+    </div>
+  </div>
+</div>
+{% endblock %} 

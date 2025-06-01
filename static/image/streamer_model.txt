@@ -1,0 +1,46 @@
++------------------------+
+|       Streamer        |
++------------------------+
+| + id: Integer (PK)    |
+| + name: String        |
+| + game: String        |
+| + follower_count: Int |
+| + avg_viewers: Int    |
+| + image_url: String?  |
++------------------------+
+           ▲
+           |
++------------------------+
+|    StreamerCreate     |
++------------------------+
+| + name: String        |
+| + game: String        |
+| + follower_count: Int |
+| + avg_viewers: Int    |
+| + image_url: String?  |
++------------------------+
+
+           ▲
+           |
++------------------------+
+|    StreamerWithID     |
++------------------------+
+| + id: Integer         |
+| + name: String        |
+| + game: String        |
+| + follower_count: Int |
+| + avg_viewers: Int    |
+| + image_url: String?  |
++------------------------+
+
+           ▲
+           |
++------------------------+
+|   UpdatedStreamer     |
++------------------------+
+| + name: String        |
+| + game: String        |
+| + follower_count: Int |
+| + avg_viewers: Int    |
+| + image_url: String?  |
++------------------------+ 

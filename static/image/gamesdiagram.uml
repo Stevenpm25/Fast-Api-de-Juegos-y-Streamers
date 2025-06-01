@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>Python</ID>
+  <OriginalElement>#D:/Entrega segundo corte/models_games.py</OriginalElement>
+  <nodes>
+    <node x="-230.5" y="2744.0">models_games.GameBase</node>
+    <node x="194.5" y="146.5">typing.Iterable</node>
+    <node x="-81.0" y="2254.5">sqlmodel.main.SQLModel</node>
+    <node x="240.5" y="842.5">pydantic.main.BaseModel</node>
+    <node x="388.0" y="238.5">object</node>
+    <node x="-85.0" y="2684.0">models_games.UpdatedGame</node>
+    <node x="-165.5" y="1430.5">sqlmodel.main.SQLModelMetaclass</node>
+    <node x="63.0" y="2924.0">models_games.GameWithID</node>
+    <node x="-231.5" y="2924.0">models_games.Game</node>
+    <node x="468.0" y="-13.5">typing.Hashable</node>
+    <node x="-97.5" y="2864.0">models_games.GameCreate</node>
+    <node x="-224.5" y="370.5">pydantic._internal._model_construction.ModelMetaclass</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="pydantic.main.BaseModel" target="object" relationship="REALIZATION">
+      <point x="103.75" y="-655.5" />
+      <point x="551.75" y="778.0" />
+      <point x="548.0" y="778.0" />
+      <point x="0.0" y="259.5" />
+    </edge>
+    <edge source="models_games.GameWithID" target="models_games.GameBase" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="188.0" y="2838.0" />
+      <point x="-132.0" y="2838.0" />
+      <point x="-132.0" y="2798.0" />
+      <point x="-252.0" y="2798.0" />
+      <point x="-252.0" y="2718.0" />
+      <point x="-112.0" y="2718.0" />
+      <point x="0.0" y="-14.0" />
+    </edge>
+    <edge source="models_games.Game" target="models_games.GameBase" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="-132.0" y="2798.0" />
+      <point x="-252.0" y="2798.0" />
+      <point x="-252.0" y="2718.0" />
+      <point x="-112.0" y="2718.0" />
+      <point x="0.0" y="-14.0" />
+    </edge>
+    <edge source="sqlmodel.main.SQLModel" target="sqlmodel.main.SQLModelMetaclass" relationship="INSTANCEOF">
+      <point x="-94.5" y="-163.5" />
+      <point x="13.5" y="2198.0" />
+      <point x="8.0" y="2198.0" />
+      <point x="0.0" y="67.5" />
+    </edge>
+    <edge source="object" target="typing.Hashable" relationship="REALIZATION">
+      <point x="0.0" y="-259.5" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="pydantic.main.BaseModel" target="pydantic._internal._model_construction.ModelMetaclass" relationship="INSTANCEOF">
+      <point x="-103.75" y="-655.5" />
+      <point x="344.25" y="818.0" />
+      <point x="268.0" y="818.0" />
+      <point x="268.0" y="778.0" />
+      <point x="124.25" y="778.0" />
+      <point x="116.25" y="127.5" />
+    </edge>
+    <edge source="sqlmodel.main.SQLModel" target="pydantic.main.BaseModel" relationship="REALIZATION">
+      <point x="94.5" y="-163.5" />
+      <point x="202.5" y="2198.0" />
+      <point x="208.0" y="2198.0" />
+      <point x="208.0" y="798.0" />
+      <point x="551.75" y="798.0" />
+      <point x="103.75" y="-655.5" />
+    </edge>
+    <edge source="models_games.UpdatedGame" target="sqlmodel.main.SQLModel" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="48.0" y="2658.0" />
+      <point x="-112.0" y="2658.0" />
+      <point x="-112.0" y="2218.0" />
+      <point x="202.5" y="2218.0" />
+      <point x="94.5" y="-163.5" />
+    </edge>
+    <edge source="pydantic.main.BaseModel" target="typing.Iterable" relationship="REALIZATION">
+      <point x="-103.75" y="-655.5" />
+      <point x="344.25" y="818.0" />
+      <point x="268.0" y="818.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="models_games.GameBase" target="sqlmodel.main.SQLModel" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="-112.0" y="2218.0" />
+      <point x="202.5" y="2218.0" />
+      <point x="94.5" y="-163.5" />
+    </edge>
+    <edge source="models_games.GameCreate" target="models_games.GameBase" relationship="REALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="28.0" y="2838.0" />
+      <point x="-132.0" y="2838.0" />
+      <point x="-132.0" y="2798.0" />
+      <point x="-252.0" y="2798.0" />
+      <point x="-252.0" y="2718.0" />
+      <point x="-112.0" y="2718.0" />
+      <point x="0.0" y="-14.0" />
+    </edge>
+    <edge source="sqlmodel.main.SQLModelMetaclass" target="pydantic._internal._model_construction.ModelMetaclass" relationship="REALIZATION">
+      <point x="0.0" y="-67.5" />
+      <point x="8.0" y="1398.0" />
+      <point x="-108.25" y="1398.0" />
+      <point x="-116.25" y="127.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="0.3721795462156732" showDependencies="false" x="462.5" y="764.4159999999999" />
+  <SelectedNodes>
+    <node>pydantic.main.BaseModel</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Methods</Category>
+  </Categories>
+</Diagram>
+

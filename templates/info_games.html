@@ -1,0 +1,321 @@
+<style>
+  .info-section {
+    width: 100%;
+    max-width: 1800px;
+    padding: 30px;
+    margin: 1em 0;
+    position: relative;
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.85);
+    border-radius: 20px;
+    box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
+    animation: glow 3s infinite alternate;
+    transition: all 0.3s ease;
+  }
+
+  @keyframes glow {
+    from {
+      box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
+    }
+    to {
+      box-shadow: 0 0 50px rgba(0, 255, 0, 0.6), 0 0 80px rgba(0, 255, 255, 0.3);
+    }
+  }
+
+  .info-section h2 {
+    color: #00ff00;
+    margin-bottom: 25px;
+    text-align: center;
+    text-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
+    font-size: 2.5em;
+    letter-spacing: 3px;
+    font-weight: bold;
+    text-transform: uppercase;
+    position: relative;
+    padding-bottom: 20px;
+  }
+
+  .info-section h2:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #00ff00, transparent);
+  }
+
+  .info-section p {
+    color: #90EE90;
+    line-height: 2;
+    margin-bottom: 25px;
+    text-align: justify;
+    text-shadow: 0 0 8px rgba(0, 255, 0, 0.4);
+    font-size: 1.2em;
+    padding: 0 20px;
+  }
+
+  .info-section .highlight-text {
+    color: #00ff00;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.6);
+  }
+
+  .info-section .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2em;
+    margin: 2em 0;
+    padding: 20px;
+  }
+
+  .info-section .feature-card {
+    background: rgba(0, 255, 0, 0.05);
+    border-radius: 15px;
+    padding: 20px;
+    border: 1px solid rgba(0, 255, 0, 0.2);
+    transition: all 0.3s ease;
+  }
+
+  .info-section .feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 255, 0, 0.2);
+  }
+
+  .info-section .feature-card h3 {
+    color: #00ff00;
+    margin-bottom: 15px;
+    font-size: 1.4em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .info-section .feature-card p {
+    font-size: 1em;
+    margin: 10px 0;
+    color: #98FB98;
+  }
+
+  .info-section .feature-card .button-info {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: 15px;
+  }
+
+  .info-section .feature-card .button-info span {
+    color: #7FFF00;
+    font-family: monospace;
+    font-size: 0.9em;
+  }
+
+  .info-section .tips-section {
+    margin-top: 2em;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 15px;
+    border: 1px solid rgba(0, 255, 0, 0.1);
+  }
+
+  .info-section .tips-section h3 {
+    color: #00ff00;
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 1.8em;
+  }
+
+  .info-section .tips-list {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  .info-section .tips-list li {
+    color: #98FB98;
+    margin: 15px 0;
+    padding-left: 30px;
+    position: relative;
+  }
+
+  .info-section .tips-list li:before {
+    content: "💡";
+    position: absolute;
+    left: 0;
+    animation: float 2s infinite ease-in-out;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+
+  .info-section .keyboard-shortcuts,
+  .info-section .shortcut,
+  .info-section .shortcut kbd {
+    display: none;
+  }
+
+  .info-section .stats-display {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1em;
+    margin: 2em 0;
+  }
+
+  .info-section .stat-card {
+    background: rgba(0, 255, 0, 0.05);
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    border: 1px solid rgba(0, 255, 0, 0.2);
+  }
+
+  .info-section .stat-card .stat-icon {
+    font-size: 2em;
+    margin-bottom: 10px;
+  }
+
+  .info-section .stat-card .stat-value {
+    color: #00ff00;
+    font-size: 1.5em;
+    font-weight: bold;
+  }
+
+  .info-section .stat-card .stat-label {
+    color: #98FB98;
+    font-size: 0.9em;
+  }
+</style>
+
+<div class="info-section" id="info-crud-wrapper">
+  <h2>🎮 CRUD de Juegos - Centro de Control</h2>
+
+  <p>
+    Bienvenido al módulo <span class="highlight-text">CRUD de Juegos</span>, tu centro de control definitivo para la gestión de videojuegos.
+    Este sistema ha sido diseñado para proporcionarte un control total sobre tu base de datos de juegos, con una interfaz intuitiva y potentes funcionalidades.
+    Descubre todas las herramientas a tu disposición y domina el arte de la gestión de datos de gaming.
+  </p>
+
+  <div class="stats-display">
+    <div class="stat-card">
+      <div class="stat-icon">📊</div>
+      <div class="stat-value">Tiempo Real</div>
+      <div class="stat-label">Actualización de Datos</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🎯</div>
+      <div class="stat-value">100%</div>
+      <div class="stat-label">Precisión en Búsquedas</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">⚡</div>
+      <div class="stat-value">Instantáneo</div>
+      <div class="stat-label">Tiempo de Respuesta</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🔄</div>
+      <div class="stat-value">Ilimitado</div>
+      <div class="stat-label">Historial de Cambios</div>
+    </div>
+  </div>
+
+  <div class="feature-grid">
+    <div class="feature-card">
+      <h3>➕ Creación de Juegos</h3>
+      <p>Añade nuevos juegos a la base de datos con todos sus detalles:</p>
+      <ul>
+        <li>Nombre del juego</li>
+        <li>Fecha de registro</li>
+        <li>Horas vistas</li>
+        <li>Pico de espectadores</li>
+        <li>Pico de canales</li>
+        <li>Imagen personalizada</li>
+      </ul>
+      <div class="button-info">
+        <span>🔘 Botón: "Crear" en el menú principal</span>
+      </div>
+    </div>
+
+    <div class="feature-card">
+      <h3>🔍 Búsqueda Avanzada</h3>
+      <p>Encuentra juegos específicos usando múltiples criterios:</p>
+      <ul>
+        <li>Búsqueda por ID única</li>
+        <li>Búsqueda por nombre</li>
+        <li>Filtrado por fecha</li>
+        <li>Resultados instantáneos</li>
+        <li>Vista detallada de juegos</li>
+      </ul>
+      <div class="button-info">
+        <span>🔘 Botones: "Buscar ID" y "Buscar Nombre"</span>
+      </div>
+    </div>
+
+    <div class="feature-card">
+      <h3>✏️ Sistema de Actualización</h3>
+      <p>Mantén los datos actualizados con herramientas avanzadas:</p>
+      <ul>
+        <li>Actualización completa de juegos</li>
+        <li>Modificación parcial de datos</li>
+        <li>Gestión de imágenes</li>
+        <li>Validación automática</li>
+        <li>Historial de cambios</li>
+      </ul>
+      <div class="button-info">
+        <span>🔘 Botones: "Actualizar" y "Actualización Parcial"</span>
+      </div>
+    </div>
+
+    <div class="feature-card">
+      <h3>🗑️ Control de Registros</h3>
+      <p>Gestión completa de la base de datos:</p>
+      <ul>
+        <li>Eliminación segura de juegos</li>
+        <li>Vista de juegos eliminados</li>
+        <li>Sistema de recuperación</li>
+        <li>Copias de seguridad</li>
+        <li>Protección de datos</li>
+      </ul>
+      <div class="button-info">
+        <span>🔘 Botones: "Eliminar", "Mostrar Eliminados" y "Recuperar"</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tips-list">
+    <h3>💡 Consejos Pro y Mejores Prácticas</h3>
+    <ul>
+      <li><strong>Imágenes de Juegos:</strong> Utiliza imágenes de alta calidad en formato horizontal para mejor visualización.</li>
+      <li><strong>Nombres de Juegos:</strong> Mantén consistencia en el formato de los nombres para facilitar las búsquedas.</li>
+      <li><strong>Datos Numéricos:</strong> Asegúrate de que las horas y picos sean números enteros positivos.</li>
+      <li><strong>Actualizaciones:</strong> Usa la actualización parcial para modificar campos específicos sin afectar otros datos.</li>
+      <li><strong>Importación CSV:</strong> Asegúrate de que tu archivo tenga las columnas: game, date, hours_watched, peak_viewers, peak_channels.</li>
+      <li><strong>Respaldos:</strong> Los juegos eliminados se pueden recuperar fácilmente desde la vista de eliminados.</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  function handleHighlight() {
+    const infoSection = document.getElementById('info-crud');
+    infoSection.classList.remove('highlight-animation');
+    void infoSection.offsetWidth;
+    infoSection.classList.add('highlight-animation');
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && entry.target.id === 'info-crud') {
+        handleHighlight();
+      }
+    });
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const infoSection = document.getElementById('info-crud');
+    if (infoSection) {
+      observer.observe(infoSection);
+    }
+  });
+</script>

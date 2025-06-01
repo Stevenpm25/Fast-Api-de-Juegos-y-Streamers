@@ -1,0 +1,831 @@
+{% extends 'base.html' %}
+{% block title %}Fase de Planificación{% endblock %}
+
+{% block content %}
+<style>
+  .planning-section {
+    width: 100%;
+    max-width: 1800px;
+    padding: 30px;
+    margin: 1em 0;
+    position: relative;
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.85);
+    border-radius: 20px;
+    box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
+    animation: glow 3s infinite alternate;
+    transition: all 0.3s ease;
+  }
+
+  @keyframes glow {
+    from { box-shadow: 0 0 30px rgba(0, 255, 0, 0.3); }
+    to { box-shadow: 0 0 50px rgba(0, 255, 0, 0.6), 0 0 80px rgba(0, 255, 255, 0.3); }
+  }
+
+  .planning-section h2 {
+    color: #00ff00;
+    margin-bottom: 25px;
+    text-align: center;
+    text-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
+    font-size: 2.5em;
+    letter-spacing: 3px;
+    font-weight: bold;
+    text-transform: uppercase;
+    position: relative;
+    padding-bottom: 20px;
+  }
+
+  .planning-section h2:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #00ff00, transparent);
+  }
+
+  .planning-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2em;
+    margin: 2em 0;
+    padding: 20px;
+  }
+
+  .planning-card {
+    background: rgba(0, 255, 0, 0.05);
+    border-radius: 15px;
+    padding: 20px;
+    border: 1px solid rgba(0, 255, 0, 0.2);
+    transition: all 0.3s ease;
+  }
+
+  .planning-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 255, 0, 0.2);
+  }
+
+  .planning-card h3 {
+    color: #00ff00;
+    margin-bottom: 15px;
+    font-size: 1.4em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .planning-box {
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(0, 255, 0, 0.3);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 15px 0;
+  }
+
+  .planning-box h4 {
+    color: #00ff00;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+  }
+
+  .planning-box p {
+    color: #98FB98;
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+
+  .planning-list {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+  }
+
+  .planning-list li {
+    color: #98FB98;
+    margin: 10px 0;
+    padding-left: 20px;
+    position: relative;
+  }
+
+  .planning-list li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: #00ff00;
+  }
+
+  .timeline {
+    position: relative;
+    padding: 20px 0;
+  }
+
+  .timeline-item {
+    padding: 20px;
+    margin: 20px 0;
+    border-left: 2px solid #00ff00;
+    position: relative;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -8px;
+    top: 24px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #00ff00;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+  }
+
+  .timeline-date {
+    color: #00ff00;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .timeline-content {
+    color: #98FB98;
+  }
+
+  .use-case-diagram {
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(0, 255, 0, 0.3);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 15px 0;
+  }
+
+  .use-case-actor {
+    text-align: center;
+    margin: 20px 0;
+  }
+
+  .use-case-actor img {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 10px;
+  }
+
+  .use-case-connection {
+    border-left: 2px solid #00ff00;
+    margin-left: 30px;
+    padding-left: 20px;
+  }
+
+  .use-case-item {
+    background: rgba(0, 255, 0, 0.1);
+    border: 1px solid rgba(0, 255, 0, 0.2);
+    border-radius: 20px;
+    padding: 10px 20px;
+    margin: 10px 0;
+    color: #98FB98;
+  }
+
+  .commit-box {
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(0, 255, 0, 0.3);
+    border-radius: 10px;
+    padding: 15px;
+    margin: 10px 0;
+  }
+
+  .commit-hash {
+    color: #00ff00;
+    font-family: monospace;
+    margin-bottom: 5px;
+  }
+
+  .commit-message {
+    color: #98FB98;
+  }
+
+  .commit-date {
+    color: #90EE90;
+    font-size: 0.9em;
+    margin-top: 5px;
+  }
+
+  .tech-stack {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+  }
+
+  .tech-item {
+    background: rgba(0, 255, 0, 0.05);
+    border: 1px solid rgba(0, 255, 0, 0.2);
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  .tech-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 255, 0, 0.2);
+  }
+
+  .tech-icon {
+    font-size: 2em;
+    color: #00ff00;
+    margin-bottom: 10px;
+  }
+
+  .tech-name {
+    color: #98FB98;
+    font-weight: bold;
+  }
+
+  .tech-description {
+    color: #90EE90;
+    font-size: 0.9em;
+    margin-top: 5px;
+  }
+
+  .explanation-card {
+    background: rgba(0, 0, 0, 0.8);
+    margin-bottom: 30px;
+  }
+
+  .explanation-box {
+    padding: 20px;
+    border: 1px solid rgba(0, 255, 0, 0.2);
+    border-radius: 10px;
+    background: rgba(0, 255, 0, 0.05);
+  }
+
+  .explanation-box p {
+    color: #98FB98;
+    line-height: 1.6;
+    margin-bottom: 15px;
+  }
+
+  .actor-description {
+    color: #90EE90;
+    font-size: 0.9em;
+    margin: 10px 0;
+  }
+
+  .use-case-item h6 {
+    color: #00ff00;
+    margin-bottom: 5px;
+    font-size: 1em;
+  }
+
+  .use-case-item p {
+    color: #98FB98;
+    font-size: 0.9em;
+    margin: 3px 0;
+  }
+
+  .commit-details {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(0, 255, 0, 0.2);
+  }
+
+  .commit-details ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .commit-details li {
+    color: #90EE90;
+    font-size: 0.9em;
+    margin: 3px 0;
+    padding-left: 15px;
+    position: relative;
+  }
+
+  .commit-details li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #00ff00;
+  }
+
+  .tech-details {
+    margin-top: 10px;
+    text-align: left;
+  }
+
+  .tech-details ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .tech-details li {
+    color: #90EE90;
+    font-size: 0.8em;
+    margin: 3px 0;
+    padding-left: 12px;
+    position: relative;
+  }
+
+  .tech-details li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #00ff00;
+  }
+</style>
+
+<div class="planning-section">
+  <h2>📋 Fase de Planificación del Proyecto</h2>
+
+  <div class="planning-grid">
+    <!-- Introducción a Casos de Uso -->
+    <div class="planning-card explanation-card">
+      <h3>❓ ¿Qué son los Casos de Uso?</h3>
+      <div class="explanation-box">
+        <p>Los casos de uso son una herramienta fundamental en el análisis y diseño de software que describe cómo los diferentes actores (usuarios, administradores, sistemas) interactúan con nuestra aplicación. Ayudan a:</p>
+        <ul class="planning-list">
+          <li>Identificar requisitos funcionales del sistema</li>
+          <li>Establecer el alcance del proyecto</li>
+          <li>Definir las interacciones usuario-sistema</li>
+          <li>Planificar el desarrollo de características</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Casos de Uso Detallados -->
+    <div class="planning-card">
+      <h3>📝 Casos de Uso Detallados</h3>
+      
+      <div class="use-case-diagram">
+        <h4>Actores y Acciones</h4>
+        
+        <!-- Usuario Regular -->
+        <div class="use-case-actor">
+          <img src="/static/image/user_icon.png" alt="Usuario">
+          <h5>Usuario Regular</h5>
+          <p class="actor-description">Visitante que consume información de la plataforma</p>
+          <div class="use-case-connection">
+            <div class="use-case-item">
+              <h6>Ver listado de juegos</h6>
+              <p>• Visualizar grid de juegos con estadísticas</p>
+              <p>• Filtrar por fecha y métricas</p>
+              <p>• Ver detalles expandidos</p>
+            </div>
+            <div class="use-case-item">
+              <h6>Ver listado de streamers</h6>
+              <p>• Explorar streamers activos</p>
+              <p>• Filtrar por juego y métricas</p>
+              <p>• Acceder a perfiles detallados</p>
+            </div>
+            <div class="use-case-item">
+              <h6>Búsqueda Avanzada</h6>
+              <p>• Búsqueda por nombre/título</p>
+              <p>• Filtros combinados</p>
+              <p>• Ordenamiento personalizado</p>
+            </div>
+            <div class="use-case-item">
+              <h6>Análisis de Datos</h6>
+              <p>• Ver tendencias temporales</p>
+              <p>• Comparar métricas</p>
+              <p>• Exportar información</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Administrador -->
+        <div class="use-case-actor">
+          <img src="/static/image/admin_icon.png" alt="Administrador">
+          <h5>Administrador</h5>
+          <p class="actor-description">Gestor con acceso total al sistema</p>
+          <div class="use-case-connection">
+            <div class="use-case-item">
+              <h6>Gestión de Juegos</h6>
+              <p>• Crear nuevos registros</p>
+              <p>• Actualizar información existente</p>
+              <p>• Eliminar registros obsoletos</p>
+              <p>• Gestionar imágenes</p>
+            </div>
+            <div class="use-case-item">
+              <h6>Gestión de Streamers</h6>
+              <p>• Administrar perfiles</p>
+              <p>• Actualizar estadísticas</p>
+              <p>• Moderar contenido</p>
+              <p>• Gestionar imágenes</p>
+            </div>
+            <div class="use-case-item">
+              <h6>Importación de Datos</h6>
+              <p>• Cargar archivos CSV</p>
+              <p>• Validar datos</p>
+              <p>• Resolver conflictos</p>
+            </div>
+            <div class="use-case-item">
+              <h6>Gestión de Recuperación</h6>
+              <p>• Ver elementos eliminados</p>
+              <p>• Restaurar registros</p>
+              <p>• Mantener historial</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sistema -->
+        <div class="use-case-actor">
+          <img src="/static/image/system_icon.png" alt="Sistema">
+          <h5>Sistema</h5>
+          <p class="actor-description">Procesos automatizados y servicios</p>
+          <div class="use-case-connection">
+            <div class="use-case-item">
+              <h6>Procesamiento de Imágenes</h6>
+              <p>• Optimización automática</p>
+              <p>• Generación de thumbnails</p>
+              <p>• Validación de formatos</p>
+            </div>
+            <div class="use-case-item">
+              <h6>Gestión de Storage</h6>
+              <p>• Almacenamiento en Supabase</p>
+              <p>• Distribución por CDN</p>
+              <p>• Limpieza automática</p>
+            </div>
+            <div class="use-case-item">
+              <h6>Validación de Datos</h6>
+              <p>• Verificación de integridad</p>
+              <p>• Sanitización de inputs</p>
+              <p>• Control de duplicados</p>
+            </div>
+            <div class="use-case-item">
+              <h6>Sistema de Logs</h6>
+              <p>• Registro de actividades</p>
+              <p>• Monitoreo de errores</p>
+              <p>• Auditoría de cambios</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Introducción al Modelo de Datos -->
+    <div class="planning-card explanation-card">
+      <h3>❓ ¿Qué es el Modelo de Datos?</h3>
+      <div class="explanation-box">
+        <p>El modelo de datos representa la estructura y organización de la información en nuestra base de datos. Define cómo se almacenan, relacionan y acceden los datos. Es crucial porque:</p>
+        <ul class="planning-list">
+          <li>Garantiza la integridad de la información</li>
+          <li>Optimiza el rendimiento de consultas</li>
+          <li>Facilita el mantenimiento y escalabilidad</li>
+          <li>Permite relaciones eficientes entre entidades</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Modelo de Datos Detallado -->
+    <div class="planning-card">
+      <h3>🗄️ Modelo de Datos Detallado</h3>
+      
+      <div class="planning-box">
+        <h4>Estructura de Base de Datos</h4>
+        <img src="/static/image/db_schema.png" alt="Esquema de Base de Datos" style="width: 100%; margin: 20px 0;">
+        
+        <div class="planning-list">
+          <h5>Tabla Games:</h5>
+          <ul>
+            <li>id (Integer, Primary Key): Identificador único del juego</li>
+            <li>game (String): Nombre del juego</li>
+            <li>date (String): Fecha en formato AAAA-MM</li>
+            <li>hours_watched (Integer): Total de horas vistas</li>
+            <li>peak_viewers (Integer): Pico máximo de espectadores</li>
+            <li>peak_channels (Integer): Pico máximo de canales</li>
+            <li>image_url (String, Optional): URL de la imagen en Supabase</li>
+          </ul>
+        </div>
+
+        <div class="planning-list">
+          <h5>Tabla Streamers:</h5>
+          <ul>
+            <li>id (Integer, Primary Key): Identificador único del streamer</li>
+            <li>name (String): Nombre del streamer</li>
+            <li>game (String): Juego principal</li>
+            <li>follower_count (Integer): Número de seguidores</li>
+            <li>avg_viewers (Integer): Promedio de espectadores</li>
+            <li>image_url (String, Optional): URL de la imagen en Supabase</li>
+          </ul>
+        </div>
+
+        <div class="planning-list">
+          <h5>Índices y Optimizaciones:</h5>
+          <ul>
+            <li>Índice en game.name para búsquedas rápidas</li>
+            <li>Índice en streamer.game para joins eficientes</li>
+            <li>Índice compuesto en (date, hours_watched) para reportes</li>
+            <li>Particionamiento por fecha para consultas temporales</li>
+          </ul>
+        </div>
+
+        <div class="planning-list">
+          <h5>Constraints y Validaciones:</h5>
+          <ul>
+            <li>NOT NULL en campos críticos (name, game, date)</li>
+            <li>CHECK para valores numéricos positivos</li>
+            <li>UNIQUE para evitar duplicados</li>
+            <li>Soft delete con timestamp para recuperación</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Timeline Detallado -->
+    <div class="planning-card">
+      <h3>📅 Timeline Detallado del Proyecto</h3>
+      
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-date">Fase 1: Inicialización (Abril 2024)</div>
+          <div class="timeline-content">
+            <ul class="planning-list">
+              <li>Creación del repositorio en GitHub</li>
+              <li>Setup del entorno virtual Python</li>
+              <li>Instalación de dependencias base</li>
+              <li>Configuración de FastAPI</li>
+              <li>Estructura inicial del proyecto</li>
+              <li>Configuración de linters y formatters</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">Fase 2: Desarrollo Base (Abril 2024)</div>
+          <div class="timeline-content">
+            <ul class="planning-list">
+              <li>Definición de modelos SQLModel</li>
+              <li>Implementación de endpoints CRUD básicos</li>
+              <li>Configuración de PostgreSQL</li>
+              <li>Setup de Clever Cloud</li>
+              <li>Pruebas de conexión y queries</li>
+              <li>Documentación inicial de API</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">Fase 3: UI/UX Base (Mayo 2024)</div>
+          <div class="timeline-content">
+            <ul class="planning-list">
+              <li>Integración de RPGUI Framework</li>
+              <li>Diseño de templates base</li>
+              <li>Implementación de navegación</li>
+              <li>Efectos visuales y sonidos</li>
+              <li>Responsive design</li>
+              <li>Optimización de assets</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">Fase 4: Características Avanzadas (Mayo 2024)</div>
+          <div class="timeline-content">
+            <ul class="planning-list">
+              <li>Integración con Supabase Storage</li>
+              <li>Sistema de imágenes y CDN</li>
+              <li>Importación/Exportación CSV</li>
+              <li>Búsqueda avanzada</li>
+              <li>Recuperación de elementos</li>
+              <li>Optimización de rendimiento</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">Fase 5: Documentación y Refinamiento (Mayo 2024)</div>
+          <div class="timeline-content">
+            <ul class="planning-list">
+              <li>Documentación técnica completa</li>
+              <li>Diagramas y wireframes</li>
+              <li>Pruebas finales</li>
+              <li>Optimización de UX</li>
+              <li>Deployment final</li>
+              <li>Presentación del proyecto</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Integración y Deployment Detallado -->
+    <div class="planning-card">
+      <h3>🚀 Integración y Deployment Detallado</h3>
+      
+      <div class="planning-box">
+        <h4>Clever Cloud Setup</h4>
+        <div class="planning-list">
+          <h5>Configuración de Base de Datos:</h5>
+          <ul>
+            <li>PostgreSQL addon con plan dev</li>
+            <li>Configuración de puerto 50013</li>
+            <li>Setup de variables de entorno</li>
+            <li>Configuración de SSL/TLS</li>
+            <li>Gestión de conexiones pool</li>
+            <li>Backups automáticos diarios</li>
+          </ul>
+        </div>
+
+        <h5>Deployment Application:</h5>
+        <ul>
+          <li>Python runtime configuration</li>
+          <li>Requirements.txt setup</li>
+          <li>Environment variables</li>
+          <li>Scaling configuration</li>
+          <li>Logs y monitoreo</li>
+          <li>Dominios y DNS</li>
+        </ul>
+      </div>
+
+      <div class="planning-box">
+        <h4>Supabase Integration</h4>
+        <div class="planning-list">
+          <h5>Storage Configuration:</h5>
+          <ul>
+            <li>Bucket público para imágenes</li>
+            <li>Políticas de acceso CRUD</li>
+            <li>Límites de tamaño</li>
+            <li>Tipos de archivo permitidos</li>
+            <li>CDN y caching</li>
+            <li>Backup strategy</li>
+          </ul>
+        </div>
+
+        <h5>Security Setup:</h5>
+        <ul>
+          <li>API keys y secretos</li>
+          <li>CORS configuration</li>
+          <li>Rate limiting</li>
+          <li>Access policies</li>
+          <li>Monitoring tools</li>
+          <li>Error handling</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Control de Versiones Detallado -->
+    <div class="planning-card">
+      <h3>🔄 Control de Versiones Detallado</h3>
+      
+      <!-- Abril 2024 - Desarrollo Base -->
+      <div class="commit-box">
+        <div class="commit-hash">f3e2a1b</div>
+        <div class="commit-message">🎉 Inicialización del proyecto FastAPI</div>
+        <div class="commit-date">2024-04-01</div>
+        <div class="commit-details">
+          <ul>
+            <li>Setup inicial de FastAPI</li>
+            <li>Configuración de entorno virtual</li>
+            <li>Estructura base del proyecto</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="commit-box">
+        <div class="commit-hash">c4d5e6f</div>
+        <div class="commit-message">✨ Implementación de modelos y CRUD base</div>
+        <div class="commit-date">2024-04-10</div>
+        <div class="commit-details">
+          <ul>
+            <li>Modelos SQLModel para Games y Streamers</li>
+            <li>Endpoints CRUD básicos</li>
+            <li>Integración con PostgreSQL</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Mayo 2024 - UI y Características Avanzadas -->
+      <div class="commit-box">
+        <div class="commit-hash">a7b8c9d</div>
+        <div class="commit-message">🎨 Integración de RPGUI y diseño base</div>
+        <div class="commit-date">2024-05-05</div>
+        <div class="commit-details">
+          <ul>
+            <li>Framework RPGUI implementado</li>
+            <li>Templates responsive</li>
+            <li>Efectos visuales y sonidos</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="commit-box">
+        <div class="commit-hash">e1f2g3h</div>
+        <div class="commit-message">🚀 Integración Supabase y características avanzadas</div>
+        <div class="commit-date">2024-05-15</div>
+        <div class="commit-details">
+          <ul>
+            <li>Storage de imágenes en Supabase</li>
+            <li>Sistema de importación CSV</li>
+            <li>Recuperación de elementos eliminados</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="commit-box">
+        <div class="commit-hash">i4j5k6l</div>
+        <div class="commit-message">📚 Documentación técnica y optimizaciones</div>
+        <div class="commit-date">2024-05-20</div>
+        <div class="commit-details">
+          <ul>
+            <li>Documentación completa</li>
+            <li>Diagramas y wireframes</li>
+            <li>Optimizaciones finales</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stack Tecnológico Detallado -->
+    <div class="planning-card">
+      <h3>🛠️ Stack Tecnológico Detallado</h3>
+      
+      <div class="tech-stack">
+        <div class="tech-item">
+          <div class="tech-icon">🐍</div>
+          <div class="tech-name">FastAPI</div>
+          <div class="tech-description">Framework principal</div>
+          <div class="tech-details">
+            <ul>
+              <li>Alto rendimiento</li>
+              <li>Async support</li>
+              <li>OpenAPI/Swagger</li>
+              <li>Validación Pydantic</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="tech-item">
+          <div class="tech-icon">🗄️</div>
+          <div class="tech-name">PostgreSQL</div>
+          <div class="tech-description">Base de datos</div>
+          <div class="tech-details">
+            <ul>
+              <li>ACID compliance</li>
+              <li>JSON support</li>
+              <li>Full-text search</li>
+              <li>Async drivers</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="tech-item">
+          <div class="tech-icon">📦</div>
+          <div class="tech-name">Supabase</div>
+          <div class="tech-description">Storage</div>
+          <div class="tech-details">
+            <ul>
+              <li>Object storage</li>
+              <li>CDN global</li>
+              <li>Image optimization</li>
+              <li>Security policies</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="tech-item">
+          <div class="tech-icon">☁️</div>
+          <div class="tech-name">Clever Cloud</div>
+          <div class="tech-description">Hosting</div>
+          <div class="tech-details">
+            <ul>
+              <li>Auto-scaling</li>
+              <li>High availability</li>
+              <li>Managed PostgreSQL</li>
+              <li>CI/CD support</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="tech-item">
+          <div class="tech-icon">🎨</div>
+          <div class="tech-name">Jinja2</div>
+          <div class="tech-description">Templates</div>
+          <div class="tech-details">
+            <ul>
+              <li>Template inheritance</li>
+              <li>Custom filters</li>
+              <li>Macros support</li>
+              <li>Security features</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="tech-item">
+          <div class="tech-icon">🔄</div>
+          <div class="tech-name">SQLModel</div>
+          <div class="tech-description">ORM</div>
+          <div class="tech-details">
+            <ul>
+              <li>Type annotations</li>
+              <li>Async support</li>
+              <li>Pydantic integration</li>
+              <li>Migration tools</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} 

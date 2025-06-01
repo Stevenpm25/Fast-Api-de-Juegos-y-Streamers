@@ -1,0 +1,50 @@
+@startuml Streamer Model
+
+skinparam class {
+    BackgroundColor #1E1E1E
+    BorderColor #00FF00
+    ArrowColor #00FF00
+    FontColor #00FF00
+}
+
+skinparam stereotypeCBackgroundColor #1E1E1E
+
+class Streamer {
+    + id: Integer <<PK>>
+    + name: String
+    + game: String
+    + follower_count: Integer
+    + avg_viewers: Integer
+    + image_url: Optional[String]
+}
+
+class StreamerCreate {
+    + name: String
+    + game: String
+    + follower_count: Integer
+    + avg_viewers: Integer
+    + image_url: Optional[String]
+}
+
+class StreamerWithID {
+    + id: Integer
+    + name: String
+    + game: String
+    + follower_count: Integer
+    + avg_viewers: Integer
+    + image_url: Optional[String]
+}
+
+class UpdatedStreamer {
+    + name: String
+    + game: String
+    + follower_count: Integer
+    + avg_viewers: Integer
+    + image_url: Optional[String]
+}
+
+Streamer <|-- StreamerWithID
+Streamer <|-- StreamerCreate
+Streamer <|-- UpdatedStreamer
+
+@enduml 

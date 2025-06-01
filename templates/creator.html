@@ -1,0 +1,293 @@
+{% extends 'base.html' %}
+{% block title %}Creador del Proyecto{% endblock %}
+
+{% block content %}
+<style>
+  .creator-section {
+    width: 100%;
+    max-width: 1200px;
+    margin: 2em auto;
+    padding: 30px;
+    background: rgba(0, 0, 0, 0.85);
+    border-radius: 20px;
+    box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
+    animation: glow 3s infinite alternate;
+  }
+
+  @keyframes glow {
+    from { box-shadow: 0 0 30px rgba(0, 255, 0, 0.3); }
+    to { box-shadow: 0 0 50px rgba(0, 255, 0, 0.6), 0 0 80px rgba(0, 255, 255, 0.3); }
+  }
+
+  .creator-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .creator-header h2 {
+    color: #00ff00;
+    font-size: 2.5em;
+    text-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
+    margin-bottom: 20px;
+  }
+
+  .creator-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 30px;
+    align-items: start;
+  }
+
+  .creator-image {
+    position: relative;
+    border: 3px solid rgba(0, 255, 0, 0.3);
+    border-radius: 15px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .creator-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+
+  .creator-image:hover img {
+    transform: scale(1.05);
+  }
+
+  .creator-info {
+    padding: 20px;
+    background: rgba(0, 255, 0, 0.05);
+    border-radius: 15px;
+    border: 1px solid rgba(0, 255, 0, 0.2);
+  }
+
+  .info-section {
+    margin-bottom: 30px;
+  }
+
+  .info-section h3 {
+    color: #00ff00;
+    font-size: 1.5em;
+    margin-bottom: 15px;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+  }
+
+  .info-section p {
+    color: #98FB98;
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+
+  .project-objective {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 30px;
+    border: 1px solid rgba(0, 255, 0, 0.2);
+  }
+
+  .project-objective h3 {
+    color: #00ff00;
+    margin-bottom: 15px;
+  }
+
+  .project-objective p {
+    color: #98FB98;
+    line-height: 1.8;
+  }
+
+  .welcome-message {
+    text-align: center;
+    color: #98FB98;
+    font-size: 1.2em;
+    line-height: 1.8;
+    margin: 20px 0 40px;
+    padding: 20px;
+    background: rgba(0, 255, 0, 0.05);
+    border-radius: 15px;
+    border: 1px solid rgba(0, 255, 0, 0.2);
+  }
+
+  .social-links {
+    margin-top: 30px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 15px;
+    border: 1px solid rgba(0, 255, 0, 0.2);
+  }
+
+  .social-links h3 {
+    color: #00ff00;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .social-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    background: rgba(0, 255, 0, 0.05);
+    border-radius: 10px;
+    border: 1px solid rgba(0, 255, 0, 0.2);
+    color: #98FB98;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .social-link:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 255, 0, 0.2);
+    background: rgba(0, 255, 0, 0.1);
+  }
+
+  .social-link i {
+    margin-right: 10px;
+    font-size: 1.5em;
+  }
+
+  .pets-section {
+    margin-top: 40px;
+    text-align: center;
+  }
+
+  .pets-card {
+    max-width: 600px;
+    margin: 20px auto;
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(0, 255, 0, 0.2);
+    border-radius: 15px;
+    padding: 20px;
+    transition: all 0.3s ease;
+  }
+
+  .pets-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 255, 0, 0.2);
+  }
+
+  .pets-card img {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    border-radius: 10px;
+    margin: 15px 0;
+  }
+
+  .pets-card h4 {
+    color: #00ff00;
+    margin: 15px 0;
+    font-size: 1.3em;
+  }
+
+  .pets-card p {
+    color: #98FB98;
+    font-size: 1.1em;
+    line-height: 1.6;
+  }
+
+  .rpgui-container.framed {
+    position: relative;
+  }
+
+  @media (max-width: 768px) {
+    .creator-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .pets-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<div class="creator-section">
+  <div class="creator-header">
+    <h2>🎮 ¡Bienvenidos a mi Proyecto! 🎮</h2>
+  </div>
+
+  <div class="welcome-message">
+    <p>¡Hola a todos! 👋 Me alegra mucho que estén aquí. Soy Steven Peña, estudiante de Ingeniería de Sistemas, 
+    y este es mi proyecto para la materia de Desarrollo de Software. Es una combinación de mis pasiones: 
+    la programación y los videojuegos. Espero que disfruten explorando esta API tanto como yo disfruté creándola. 
+    ¡Siéntanse libres de probar todas las funcionalidades! 🚀</p>
+  </div>
+
+  <div class="creator-grid">
+    <div class="creator-image">
+      <img src="/static/image/Steven.jpeg" alt="Steven Peña - Creador">
+    </div>
+
+    <div class="creator-info">
+      <div class="info-section">
+        <h3>👨‍💻 Información Personal</h3>
+        <p><strong>Nombre:</strong> Steven Peña</p>
+        <p><strong>Carrera:</strong> Ingeniería de Sistemas</p>
+        <p><strong>Semestre:</strong> Quinto Semestre</p>
+        <p><strong>Universidad:</strong> Universidad Católica de Colombia</p>
+      </div>
+
+      <div class="project-objective">
+        <h3>🎯 Objetivo del Proyecto</h3>
+        <p>
+          Crear una API que analice cómo el tipo de videojuego o la categoría de contenido
+          influye en el éxito de los streamers (medido en audiencia, crecimiento y monetización),
+          utilizando datos reales de plataformas como Twitch o datos públicos de análisis de
+          streaming.
+        </p>
+      </div>
+
+      <div class="info-section">
+        <h3>🛠️ Tecnologías Utilizadas</h3>
+        <p>• FastAPI para el desarrollo del backend</p>
+        <p>• PostgreSQL para la base de datos</p>
+        <p>• Supabase para almacenamiento de imágenes</p>
+        <p>• RPGUI para la interfaz de usuario</p>
+        <p>• Clever Cloud para el hosting</p>
+      </div>
+
+      <div class="social-links">
+        <h3>🌐 Mis Redes Sociales</h3>
+        <div class="social-grid">
+          <a href="https://www.facebook.com/StevenPe%C3%B1a" target="_blank" class="social-link">
+            <i class="fab fa-facebook"></i>
+            Facebook
+          </a>
+          <a href="https://www.instagram.com/steven_pem" target="_blank" class="social-link">
+            <i class="fab fa-instagram"></i>
+            Instagram
+          </a>
+          <a href="https://open.spotify.com/user/3142iaqwi2ffcbfv4em3tnnksusm" target="_blank" class="social-link">
+            <i class="fab fa-spotify"></i>
+            Spotify
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pets-section">
+    <h3>🐾 Mis Compañeros de Aventuras 🐾</h3>
+    <div class="pets-card">
+      <img src="/static/image/Niño y Niña.jpeg" alt="Niño y Niña - Mis gatos">
+      <h4>Niño y Niña</h4>
+      <p>Les presento a mis fieles compañeros de programación: Niño y Niña. 
+      Ellos son mis supervisores de código, expertos en debugging (especialmente cuando caminan sobre el teclado) 
+      y los mejores compañeros que podría tener durante las largas sesiones de codificación. 
+      ¡Son mi equipo de control de calidad favorito! 🐱💻</p>
+    </div>
+  </div>
+</div>
+
+<!-- Añadir Font Awesome para los iconos de redes sociales -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %} 

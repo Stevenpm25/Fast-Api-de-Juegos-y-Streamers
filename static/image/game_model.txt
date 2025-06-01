@@ -1,0 +1,50 @@
++------------------------+
+|         Game          |
++------------------------+
+| + id: Integer (PK)    |
+| + game: String        |
+| + date: String        |
+| + hours_watched: Int  |
+| + peak_viewers: Int   |
+| + peak_channels: Int  |
+| + image_url: String?  |
++------------------------+
+           ▲
+           |
++------------------------+
+|      GameCreate       |
++------------------------+
+| + game: String        |
+| + date: String        |
+| + hours_watched: Int  |
+| + peak_viewers: Int   |
+| + peak_channels: Int  |
+| + image_url: String?  |
++------------------------+
+
+           ▲
+           |
++------------------------+
+|      GameWithID       |
++------------------------+
+| + id: Integer         |
+| + game: String        |
+| + date: String        |
+| + hours_watched: Int  |
+| + peak_viewers: Int   |
+| + peak_channels: Int  |
+| + image_url: String?  |
++------------------------+
+
+           ▲
+           |
++------------------------+
+|     UpdatedGame       |
++------------------------+
+| + game: String        |
+| + date: String        |
+| + hours_watched: Int  |
+| + peak_viewers: Int   |
+| + peak_channels: Int  |
+| + image_url: String?  |
++------------------------+ 

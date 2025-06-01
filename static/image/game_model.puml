@@ -1,0 +1,54 @@
+@startuml Game Model
+
+skinparam class {
+    BackgroundColor #1E1E1E
+    BorderColor #00FF00
+    ArrowColor #00FF00
+    FontColor #00FF00
+}
+
+skinparam stereotypeCBackgroundColor #1E1E1E
+
+class Game {
+    + id: Integer <<PK>>
+    + game: String
+    + date: String
+    + hours_watched: Integer
+    + peak_viewers: Integer
+    + peak_channels: Integer
+    + image_url: Optional[String]
+}
+
+class GameCreate {
+    + game: String
+    + date: String
+    + hours_watched: Integer
+    + peak_viewers: Integer
+    + peak_channels: Integer
+    + image_url: Optional[String]
+}
+
+class GameWithID {
+    + id: Integer
+    + game: String
+    + date: String
+    + hours_watched: Integer
+    + peak_viewers: Integer
+    + peak_channels: Integer
+    + image_url: Optional[String]
+}
+
+class UpdatedGame {
+    + game: String
+    + date: String
+    + hours_watched: Integer
+    + peak_viewers: Integer
+    + peak_channels: Integer
+    + image_url: Optional[String]
+}
+
+Game <|-- GameWithID
+Game <|-- GameCreate
+Game <|-- UpdatedGame
+
+@enduml 
