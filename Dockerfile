@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y \
     libmagic1 \
     gcc \
     python3-dev \
+    git \
     && rm -rf /var/lib/apt/lists/*
 
 # Configurar pip
@@ -22,6 +23,7 @@ ENV PATH="/opt/venv/bin:$PATH"
 
 # Actualizar pip e instalar dependencias
 RUN pip install --no-cache-dir -U pip setuptools wheel && \
+    pip install --no-cache-dir supabase && \
     pip install --no-cache-dir -r requirements.txt
 
 # Copiar el resto de la aplicación
