@@ -122,6 +122,40 @@ async def read_home(request: Request):
             detail=f"No se pudo cargar la página home: {str(e)}"
         )
 
+@app.get("/creador", response_class=HTMLResponse)
+async def creator_page(request: Request):
+    try:
+        return templates.TemplateResponse(
+            "creator.html",
+            {
+                "request": request,
+                "current_year": datetime.datetime.now().year
+            }
+        )
+    except Exception as e:
+        print(f"Error al renderizar la plantilla del creador: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"No se pudo cargar la página del creador: {str(e)}"
+        )
+
+@app.get("/planeacion", response_class=HTMLResponse)
+async def planning_page(request: Request):
+    try:
+        return templates.TemplateResponse(
+            "planning.html",
+            {
+                "request": request,
+                "current_year": datetime.datetime.now().year
+            }
+        )
+    except Exception as e:
+        print(f"Error al renderizar la plantilla de planificación: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"No se pudo cargar la página de planificación: {str(e)}"
+        )
+
 @app.get("/design", response_class=HTMLResponse)
 async def design_page(request: Request):
     try:
