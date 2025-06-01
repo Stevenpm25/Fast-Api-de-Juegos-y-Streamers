@@ -115,6 +115,12 @@
     </style>
 </head>
 <body>
+    <!-- Audio player oculto que se reproducirá en loop -->
+    <audio id="backgroundMusic" loop style="display: none;">
+        <source src="/static/music/Joris de Man - Aloy's Theme _ Horizon Forbidden West (Original Soundtrack) ft. Julie Elven.mp4" type="audio/mp4">
+        Tu navegador no soporta el elemento de audio.
+    </audio>
+
     <div class="rpgui-content">
         <div class="main-container rpgui-container framed">
             <nav class="navbar">
@@ -130,5 +136,44 @@
             </footer>
         </div>
     </div>
+
+    <script>
+    // Función para iniciar la música
+    function initMusic() {
+        const music = document.getElementById('backgroundMusic');
+        
+        // Intentar reproducir la música cuando el usuario interactúe con la página
+        document.addEventListener('click', function() {
+            music.play().catch(function(error) {
+                console.log("Error reproduciendo música:", error);
+            });
+        }, { once: true }); // El evento solo se dispara una vez
+        
+        // Asegurarse de que la música continúe reproduciéndose
+        music.addEventListener('ended', function() {
+            music.play();
+        });
+    }
+
+    // Iniciar la música cuando la página cargue
+    window.addEventListener('load', initMusic);
+
+    // Mantener la música sonando cuando se navegue entre páginas
+    if (window.performance && window.performance.navigation.type === window.performance.navigation.TYPE_NAVIGATE) {
+        const music = document.getElementById('backgroundMusic');
+        if (music) {
+            music.currentTime = sessionStorage.getItem('musicTime') || 0;
+            music.play();
+        }
+    }
+
+    // Guardar el tiempo actual de la música antes de navegar
+    window.addEventListener('beforeunload', function() {
+        const music = document.getElementById('backgroundMusic');
+        if (music) {
+            sessionStorage.setItem('musicTime', music.currentTime);
+        }
+    });
+    </script>
 </body>
 </html>

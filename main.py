@@ -56,18 +56,15 @@ templates = Jinja2Templates(directory="templates")
 
 # Configuración de la base de datos
 def get_database_url():
-    # Usamos la URI proporcionada por Clever Cloud
     uri = os.getenv('POSTGRESQL_ADDON_URI')
     if uri:
-        # Reemplazamos el puerto por 50013 y el driver por asyncpg
         return uri.replace("postgresql://", "postgresql+asyncpg://").replace(":5432/", ":50013/")
 
-    # Fallback si no hay URI disponible
     return (
         f"postgresql+asyncpg://{os.getenv('POSTGRESQL_ADDON_USER')}:"
         f"{os.getenv('POSTGRESQL_ADDON_PASSWORD')}@"
         f"{os.getenv('POSTGRESQL_ADDON_HOST')}:"
-        f"50013/"  # Puerto fijo 50013
+        f"50013/"
         f"{os.getenv('POSTGRESQL_ADDON_DB')}"
     )
 
@@ -80,8 +77,8 @@ try:
         DATABASE_URL,
         echo=True,
         pool_pre_ping=True,
-        pool_size=3,
-        max_overflow=0,
+        pool_size=5,
+        max_overflow=2,
         pool_recycle=300,
         pool_timeout=30
     )
