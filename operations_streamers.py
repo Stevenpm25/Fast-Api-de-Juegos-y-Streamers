@@ -57,7 +57,7 @@ def store_deleted_streamer(deleted_streamer: StreamerWithID):
                     existing_ids.add(int(row["id"]))
 
     # Preparar los datos del streamer eliminado
-    streamer_data = {
+    streamer_data = { #hola
         "id": deleted_streamer.id,
         "name": deleted_streamer.name,
         "game": deleted_streamer.game,
