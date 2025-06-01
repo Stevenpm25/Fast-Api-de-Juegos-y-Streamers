@@ -487,52 +487,85 @@ h2, h3 {
 
 <!-- Scripts -->
 <script>
-// Funciones para mostrar/ocultar formularios
-function showForm(formId) {
-    hideAllForms();
-    document.getElementById(formId).style.display = 'block';
-}
-
 function hideAllForms() {
-    const forms = [
-        'createForm',
-        'deleteForm',
-        'updateForm',
-        'searchByIdForm',
-        'searchByNameForm',
-        'importForm',
-        'listForm',
-        'deletedStreamersForm',
-        'partialUpdateForm',
-        'restoreForm'
-    ];
-
-    forms.forEach(formId => {
-        const form = document.getElementById(formId);
-        if (form) form.style.display = 'none';
+    // Ocultar todos los formularios
+    document.querySelectorAll('.operation-form').forEach(form => {
+        form.style.display = 'none';
+    });
+    
+    // Ocultar la información de streamers
+    const infoContainer = document.querySelector('.info-container');
+    if (infoContainer) {
+        infoContainer.style.display = 'none';
+    }
+    
+    // Limpiar la lista de streamers
+    const streamersList = document.getElementById('streamersList');
+    if (streamersList) {
+        streamersList.innerHTML = '';
+    }
+    
+    // Limpiar mensajes
+    document.querySelectorAll('.message').forEach(msg => {
+        msg.style.display = 'none';
     });
 }
 
-function showCreateForm() { showForm('createForm'); }
-function showDeleteForm() { showForm('deleteForm'); }
-function showUpdateForm() { showForm('updateForm'); }
+function showCreateForm() {
+    hideAllForms();
+    document.getElementById('createForm').style.display = 'block';
+}
+
+function showDeleteForm() {
+    hideAllForms();
+    document.getElementById('deleteForm').style.display = 'block';
+}
+
+function showUpdateForm() {
+    hideAllForms();
+    document.getElementById('updateForm').style.display = 'block';
+}
+
 function showSearchById() {
     hideAllForms();
     document.getElementById('searchByIdForm').style.display = 'block';
-    document.getElementById('buscarStreamerId').value = '';
-    document.getElementById('searchIdResultsBody').innerHTML = '';
-    document.getElementById('searchIdResult').style.display = 'none';
 }
+
 function showSearchByName() {
     hideAllForms();
     document.getElementById('searchByNameForm').style.display = 'block';
-    document.getElementById('buscarStreamerName').value = '';
-    document.getElementById('searchNameResultsBody').innerHTML = '';
-    document.getElementById('searchNameResult').style.display = 'none';
 }
-function showImportForm() { showForm('importForm'); }
-function showPartialUpdateForm() { showForm('partialUpdateForm'); }
-function showRestoreForm() { showForm('restoreForm'); }
+
+function showImportForm() {
+    hideAllForms();
+    document.getElementById('importForm').style.display = 'block';
+}
+
+function showDeletedStreamers() {
+    hideAllForms();
+    document.getElementById('deletedStreamersSection').style.display = 'block';
+    loadDeletedStreamers();
+}
+
+function showPartialUpdateForm() {
+    hideAllForms();
+    document.getElementById('partialUpdateForm').style.display = 'block';
+}
+
+function showRestoreForm() {
+    hideAllForms();
+    document.getElementById('restoreForm').style.display = 'block';
+}
+
+function showStreamersList() {
+    hideAllForms();
+    // Mostrar la información de streamers nuevamente
+    const infoContainer = document.querySelector('.info-container');
+    if (infoContainer) {
+        infoContainer.style.display = 'block';
+    }
+    loadStreamers();
+}
 
 // Crear streamer
 async function createStreamer(event) {

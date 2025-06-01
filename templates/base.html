@@ -28,6 +28,7 @@
             justify-content: center;
             padding: 0;
             margin: 0;
+            font-size: 16px;
         }
 
         .main-container {
@@ -40,6 +41,7 @@
             left: 0 !important;
             display: flex;
             flex-direction: column;
+            max-width: 2000px;
         }
 
         main {
@@ -58,6 +60,57 @@
             width: 100%;
             padding: 15px;
             margin-top: auto;
+        }
+
+        /* Media queries para diferentes tamaños de pantalla */
+        @media (max-width: 1200px) {
+            .rpgui-content {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .rpgui-content {
+                font-size: 13px;
+            }
+            main {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .rpgui-content {
+                font-size: 12px;
+            }
+            main {
+                padding: 10px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .rpgui-content {
+                font-size: 11px;
+            }
+            main {
+                padding: 8px;
+            }
+            .navbar, .footer {
+                padding: 10px;
+            }
+        }
+
+        /* Ajustes para pantallas muy pequeñas */
+        @media (max-width: 320px) {
+            .rpgui-content {
+                font-size: 10px;
+            }
+        }
+
+        /* Ajustes para pantallas grandes */
+        @media (min-width: 2000px) {
+            .main-container {
+                margin: 0 auto;
+            }
         }
     </style>
 </head>
