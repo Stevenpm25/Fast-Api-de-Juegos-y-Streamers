@@ -5,207 +5,256 @@
 <style>
   .creator-section {
     width: 100%;
-    max-width: 1200px;
-    margin: 2em auto;
-    padding: 30px;
+    max-width: 1800px;
+    margin: 1em auto;
+    padding: 40px;
     background: rgba(0, 0, 0, 0.85);
-    border-radius: 20px;
-    box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
+    border-radius: 25px;
+    box-shadow: 0 0 50px rgba(0, 255, 0, 0.3);
     animation: glow 3s infinite alternate;
   }
 
   @keyframes glow {
-    from { box-shadow: 0 0 30px rgba(0, 255, 0, 0.3); }
-    to { box-shadow: 0 0 50px rgba(0, 255, 0, 0.6), 0 0 80px rgba(0, 255, 255, 0.3); }
+    from { box-shadow: 0 0 50px rgba(0, 255, 0, 0.3); }
+    to { box-shadow: 0 0 80px rgba(0, 255, 0, 0.6), 0 0 120px rgba(0, 255, 255, 0.3); }
   }
 
   .creator-header {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 60px;
   }
 
   .creator-header h2 {
     color: #00ff00;
-    font-size: 2.5em;
-    text-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
-    margin-bottom: 20px;
+    font-size: 3em;
+    text-shadow: 0 0 25px rgba(0, 255, 0, 0.7);
+    margin-bottom: 30px;
+    letter-spacing: 3px;
+  }
+
+  .welcome-message {
+    max-width: 1600px;
+    margin: 0 auto 50px;
+    padding: 30px;
+    background: rgba(0, 255, 0, 0.05);
+    border-radius: 20px;
+    border: 2px solid rgba(0, 255, 0, 0.2);
+  }
+
+  .welcome-message p {
+    color: #98FB98;
+    font-size: 1.4em;
+    line-height: 1.8;
+    text-align: justify;
+    text-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
   }
 
   .creator-grid {
     display: grid;
     grid-template-columns: 1fr 2fr;
-    gap: 30px;
+    gap: 50px;
     align-items: start;
+    margin-bottom: 50px;
   }
 
   .creator-image {
     position: relative;
-    border: 3px solid rgba(0, 255, 0, 0.3);
-    border-radius: 15px;
+    border: 4px solid rgba(0, 255, 0, 0.3);
+    border-radius: 25px;
     overflow: hidden;
-    transition: all 0.3s ease;
+    transition: all 0.5s ease;
+    box-shadow: 0 0 30px rgba(0, 255, 0, 0.2);
   }
 
   .creator-image img {
     width: 100%;
     height: auto;
     display: block;
-    transition: transform 0.3s ease;
+    transition: transform 0.5s ease;
   }
 
   .creator-image:hover img {
-    transform: scale(1.05);
+    transform: scale(1.1);
   }
 
   .creator-info {
-    padding: 20px;
+    padding: 40px;
     background: rgba(0, 255, 0, 0.05);
-    border-radius: 15px;
-    border: 1px solid rgba(0, 255, 0, 0.2);
+    border-radius: 25px;
+    border: 2px solid rgba(0, 255, 0, 0.2);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
   }
 
   .info-section {
-    margin-bottom: 30px;
+    margin-bottom: 40px;
+    grid-column: span 2;
   }
 
   .info-section h3 {
     color: #00ff00;
-    font-size: 1.5em;
-    margin-bottom: 15px;
-    text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    font-size: 2em;
+    margin-bottom: 25px;
+    text-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+    letter-spacing: 2px;
   }
 
   .info-section p {
     color: #98FB98;
-    line-height: 1.6;
-    margin-bottom: 10px;
+    font-size: 1.2em;
+    line-height: 1.8;
+    margin-bottom: 15px;
   }
 
   .project-objective {
     background: rgba(0, 0, 0, 0.7);
-    padding: 20px;
-    border-radius: 10px;
-    margin-top: 30px;
-    border: 1px solid rgba(0, 255, 0, 0.2);
+    padding: 30px;
+    border-radius: 20px;
+    margin: 40px 0;
+    border: 2px solid rgba(0, 255, 0, 0.2);
+    grid-column: span 2;
   }
 
   .project-objective h3 {
     color: #00ff00;
-    margin-bottom: 15px;
+    margin-bottom: 25px;
+    font-size: 2em;
   }
 
   .project-objective p {
-    color: #98FB98;
+    font-size: 1.3em;
     line-height: 1.8;
-  }
-
-  .welcome-message {
-    text-align: center;
-    color: #98FB98;
-    font-size: 1.2em;
-    line-height: 1.8;
-    margin: 20px 0 40px;
-    padding: 20px;
-    background: rgba(0, 255, 0, 0.05);
-    border-radius: 15px;
-    border: 1px solid rgba(0, 255, 0, 0.2);
   }
 
   .social-links {
+    grid-column: span 2;
     margin-top: 30px;
-    padding: 20px;
-    background: rgba(0, 0, 0, 0.7);
-    border-radius: 15px;
-    border: 1px solid rgba(0, 255, 0, 0.2);
   }
 
   .social-links h3 {
     color: #00ff00;
-    margin-bottom: 20px;
-    text-align: center;
+    font-size: 2em;
+    margin-bottom: 25px;
+    text-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
   }
 
   .social-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    gap: 30px;
   }
 
   .social-link {
     display: flex;
     align-items: center;
-    justify-content: center;
-    padding: 15px;
-    background: rgba(0, 255, 0, 0.05);
-    border-radius: 10px;
-    border: 1px solid rgba(0, 255, 0, 0.2);
+    gap: 15px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 15px;
+    border: 2px solid rgba(0, 255, 0, 0.2);
     color: #98FB98;
     text-decoration: none;
+    font-size: 1.2em;
     transition: all 0.3s ease;
   }
 
   .social-link:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0, 255, 0, 0.2);
-    background: rgba(0, 255, 0, 0.1);
-  }
-
-  .social-link i {
-    margin-right: 10px;
-    font-size: 1.5em;
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0, 255, 0, 0.3);
+    border-color: rgba(0, 255, 0, 0.5);
   }
 
   .pets-section {
-    margin-top: 40px;
+    margin-top: 60px;
+  }
+
+  .pets-section h3 {
+    color: #00ff00;
+    font-size: 2.5em;
     text-align: center;
+    margin-bottom: 40px;
+    text-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
   }
 
   .pets-card {
-    max-width: 600px;
-    margin: 20px auto;
     background: rgba(0, 0, 0, 0.7);
-    border: 1px solid rgba(0, 255, 0, 0.2);
-    border-radius: 15px;
-    padding: 20px;
-    transition: all 0.3s ease;
-  }
-
-  .pets-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0, 255, 0, 0.2);
+    border-radius: 25px;
+    padding: 40px;
+    border: 2px solid rgba(0, 255, 0, 0.2);
+    text-align: center;
+    max-width: 1600px;
+    margin: 0 auto;
   }
 
   .pets-card img {
     width: 100%;
-    max-width: 500px;
+    max-width: 800px;
     height: auto;
-    border-radius: 10px;
-    margin: 15px 0;
+    border-radius: 20px;
+    margin-bottom: 30px;
+    border: 3px solid rgba(0, 255, 0, 0.3);
   }
 
   .pets-card h4 {
     color: #00ff00;
-    margin: 15px 0;
-    font-size: 1.3em;
+    font-size: 2em;
+    margin-bottom: 20px;
+    text-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
   }
 
   .pets-card p {
     color: #98FB98;
-    font-size: 1.1em;
-    line-height: 1.6;
+    font-size: 1.3em;
+    line-height: 1.8;
+    max-width: 1200px;
+    margin: 0 auto;
   }
 
-  .rpgui-container.framed {
-    position: relative;
+  @media (max-width: 1600px) {
+    .creator-section {
+      max-width: 95%;
+      padding: 30px;
+    }
+    
+    .welcome-message,
+    .pets-card {
+      max-width: 95%;
+    }
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 1200px) {
     .creator-grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    .creator-info {
       grid-template-columns: 1fr;
     }
 
-    .pets-grid {
+    .social-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .creator-header h2 {
+      font-size: 2.5em;
+    }
+
+    .welcome-message p,
+    .info-section p,
+    .project-objective p {
+      font-size: 1.1em;
+    }
+
+    .social-grid {
       grid-template-columns: 1fr;
+    }
+
+    .pets-card img {
+      max-width: 100%;
     }
   }
 </style>
@@ -239,7 +288,7 @@
       <div class="project-objective">
         <h3>🎯 Objetivo del Proyecto</h3>
         <p>
-          Crear una API que analice cómo el tipo de videojuego o la categoría de contenido
+          Crear una API que analice cómo el tipo de videojuego o categoría de contenido
           influye en el éxito de los streamers (medido en audiencia, crecimiento y monetización),
           utilizando datos reales de plataformas como Twitch o datos públicos de análisis de
           streaming.

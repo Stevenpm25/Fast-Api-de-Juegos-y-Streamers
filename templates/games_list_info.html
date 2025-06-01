@@ -40,6 +40,7 @@
     height: 100%;
     overflow-y: auto;
     padding-right: 1em;
+    max-width: 100%;
 }
 
 .operation-form {
@@ -1293,36 +1294,119 @@ function showPartialUpdateForm() {
     height: 100%;
     overflow-y: auto;
     padding-right: 1em;
+    max-width: 100%;
 }
 
-/* Nuevos estilos para la tabla */
-.table-container {
-    height: 100%;
+/* Contenedor principal del formulario */
+#listForm {
+    max-width: 100%;
+    margin: 0 auto;
     overflow: hidden;
 }
 
-#listForm {
-    height: calc(100vh - 150px);
-    display: flex;
-    flex-direction: column;
-}
-
-.table-wrapper {
-    flex: 1;
-    overflow-y: auto;
+/* Contenedor de la tabla con scroll horizontal */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
     margin-top: 1em;
+    padding-bottom: 1em; /* Espacio para el scroll horizontal */
 }
 
+/* Estilos de la tabla */
 table {
     width: 100%;
     border-collapse: collapse;
+    white-space: nowrap; /* Evita que el texto se rompa en múltiples líneas */
+    font-size: 0.9em; /* Reduce ligeramente el tamaño de la fuente */
 }
 
-th {
-    position: sticky;
-    top: 0;
-    background-color: rgba(0, 0, 0, 0.8);
-    z-index: 1;
+/* Ajustar anchos específicos para cada columna */
+th:nth-child(1), td:nth-child(1) { /* ID */
+    width: 50px;
+    min-width: 50px;
+    max-width: 50px;
+}
+
+th:nth-child(2), td:nth-child(2) { /* Imagen */
+    width: 60px;
+    min-width: 60px;
+    max-width: 60px;
+}
+
+th:nth-child(3), td:nth-child(3) { /* Nombre */
+    width: 150px;
+    min-width: 150px;
+    max-width: 150px;
+}
+
+th:nth-child(4), td:nth-child(4) { /* Fecha */
+    width: 100px;
+    min-width: 100px;
+    max-width: 100px;
+}
+
+th:nth-child(5), td:nth-child(5), /* Horas vistas */
+th:nth-child(6), td:nth-child(6), /* Pico espectadores */
+th:nth-child(7), td:nth-child(7) { /* Pico canales */
+    width: 120px;
+    min-width: 120px;
+    max-width: 120px;
+}
+
+/* Estilos para las celdas */
+th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Hacer que las imágenes sean más pequeñas y consistentes */
+td img {
+    width: 40px !important;
+    height: 40px !important;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* Estilo para la barra de desplazamiento horizontal */
+.table-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 255, 0, 0.2);
+    border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 255, 0, 0.3);
+}
+
+/* Estilos responsivos */
+@media (max-width: 1200px) {
+    table {
+        font-size: 0.85em;
+    }
+}
+
+@media (max-width: 768px) {
+    table {
+        font-size: 0.8em;
+    }
+    
+    th:nth-child(5), td:nth-child(5),
+    th:nth-child(6), td:nth-child(6),
+    th:nth-child(7), td:nth-child(7) {
+        width: 100px;
+        min-width: 100px;
+    }
 }
 </style>
 
@@ -1423,168 +1507,4 @@ async function recoverGame(gameId) {
         }
     }
 }
-</script>
-
-<style>
-/* Estilos para hacer la tabla más compacta */
-.table-wrapper {
-    max-height: 70vh;
-    overflow-y: auto;
-    margin: 1em 0;
-    width: 100%;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.9em;
-}
-
-th, td {
-    padding: 0.5em;
-    text-align: left;
-    max-width: 120px; /* Limitar el ancho máximo de las columnas */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-/* Ajustar anchos específicos para cada columna */
-th:nth-child(1), td:nth-child(1) { /* ID */
-    width: 50px;
-}
-
-th:nth-child(2), td:nth-child(2) { /* Imagen */
-    width: 60px;
-}
-
-th:nth-child(3), td:nth-child(3) { /* Nombre */
-    width: 150px;
-}
-
-th:nth-child(4), td:nth-child(4) { /* Fecha */
-    width: 100px;
-}
-
-th:nth-child(5), td:nth-child(5) { /* Horas vistas */
-    width: 100px;
-}
-
-th:nth-child(6), td:nth-child(6) { /* Pico espectadores */
-    width: 120px;
-}
-
-th:nth-child(7), td:nth-child(7) { /* Pico canales */
-    width: 100px;
-}
-
-/* Hacer que las imágenes sean más pequeñas */
-td img {
-    width: 40px !important;
-    height: 40px !important;
-}
-
-/* Ajustar el contenedor principal */
-.operation-form {
-    max-width: 800px;
-    margin: 0 auto;
-}
-</style>
-
-<script>
-// Variables para la paginación
-let currentPage = 1;
-const itemsPerPage = 10;
-let allGames = [];
-
-// Función para mostrar los juegos con paginación
-async function showGamesList() {
-    try {
-        const response = await fetch('/api/games');
-        if (response.ok) {
-            allGames = await response.json();
-            hideAllForms();
-            displayGamesPage(currentPage);
-        } else {
-            alert('Error al cargar los juegos');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('Error al cargar los juegos');
-    }
-}
-
-// Función para mostrar una página específica
-function displayGamesPage(page) {
-    const startIndex = (page - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const gamesForPage = allGames.slice(startIndex, endIndex);
-
-    const tableHTML = `
-        <div id="listForm" class="operation-form rpgui-container framed-golden">
-            <h3>📋 Lista de Juegos</h3>
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Imagen</th>
-                            <th>Nombre</th>
-                            <th>Fecha</th>
-                            <th>Horas Vistas</th>
-                            <th>Pico Espectadores</th>
-                            <th>Pico Canales</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${gamesForPage.map(game => `
-                            <tr>
-                                <td>${game.id}</td>
-                                <td>
-                                    ${game.image_url ?
-                                        `<a href="${game.image_url}" target="_blank">
-                                            <img src="${game.image_url}" alt="${game.game}"
-                                                 style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
-                                        </a>` :
-                                        '❌ Sin imagen'
-                                    }
-                                </td>
-                                <td>${game.game}</td>
-                                <td>${game.date}</td>
-                                <td>${game.hours_watched.toLocaleString()}</td>
-                                <td>${game.peak_viewers.toLocaleString()}</td>
-                                <td>${game.peak_channels.toLocaleString()}</td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            </div>
-            <div class="pagination">
-                <button onclick="changePage(-1)" ${page === 1 ? 'disabled' : ''}>Anterior</button>
-                <span>Página ${page} de ${Math.ceil(allGames.length / itemsPerPage)}</span>
-                <button onclick="changePage(1)" ${page >= Math.ceil(allGames.length / itemsPerPage) ? 'disabled' : ''}>Siguiente</button>
-            </div>
-        </div>`;
-
-    const formsContainer = document.querySelector('.forms-container');
-    const existingList = document.getElementById('listForm');
-    if (existingList) {
-        existingList.remove();
-    }
-    formsContainer.insertAdjacentHTML('beforeend', tableHTML);
-    document.getElementById('listForm').style.display = 'block';
-}
-
-// Función para cambiar de página
-function changePage(delta) {
-    const maxPage = Math.ceil(allGames.length / itemsPerPage);
-    const newPage = currentPage + delta;
-    
-    if (newPage >= 1 && newPage <= maxPage) {
-        currentPage = newPage;
-        displayGamesPage(currentPage);
-    }
-}
-
-// ... existing code ...
 </script>
