@@ -1066,6 +1066,15 @@ function showInfoGames() {
 
 <style>
 .table-container {
+    max-height: 55vh;
+    overflow-y: auto;
+    overflow-x: auto;
+    margin-top: 1em;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.table-container {
     overflow-x: auto;
     margin-top: 1em;
 }
@@ -1218,7 +1227,6 @@ function showPartialUpdateForm() {
     document.getElementById('partialUpdatePeakViewers').value = '';
     document.getElementById('partialUpdatePeakChannels').value = '';
 }
-
 </script>
 
 <!-- Añade estos estilos específicos -->
@@ -1231,88 +1239,19 @@ function showPartialUpdateForm() {
 }
 
 .table-container {
-    width: 100%;
-}
-
-.table-container table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.table-container th {
-    position: sticky;
-    top: 0;
-    background-color: rgba(0, 0, 0, 0.8);
-    z-index: 1;
-    padding: 10px;
-    text-align: left;
-}
-
-.table-container td {
-    padding: 8px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.table-container tr:hover {
-    background-color: rgba(255, 255, 255, 0.05);
-}
-
-/* Estilo para la barra de desplazamiento */
-.table-wrapper::-webkit-scrollbar {
-    width: 12px;
-}
-
-.table-wrapper::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.3);
-}
-
-.table-wrapper::-webkit-scrollbar-thumb {
-    background-color: rgba(255, 255, 255, 0.2);
-    border-radius: 6px;
-    border: 3px solid rgba(0, 0, 0, 0.3);
-}
-
-.table-wrapper::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(255, 255, 255, 0.3);
-}
-</style>
-<!-- Script para la funcionalidad de recuperar juegos eliminados -->
-<script src="/static/js/restore_game.js"></script>
-{% endblock %}
-<style>
-/* Asegúrate de que estos estilos estén presentes y no sean sobrescritos */
-.page-layout {
-    display: grid;
-    grid-template-columns: 180px 1fr;
-    gap: 0.5em;
-    padding: 0.5em;
-    height: calc(100vh - 150px);
-    overflow: hidden;
-}
-
-.forms-container {
-    height: 100%;
+    max-height: 55vh;
     overflow-y: auto;
-    padding-right: 1em;
-    max-width: 100%;
-}
-
-/* Contenedor principal del formulario */
-#listForm {
-    max-width: 100%;
-    margin: 0 auto;
-    overflow: hidden;
-}
-
-/* Contenedor de la tabla con scroll horizontal */
-.table-container {
-    width: 100%;
     overflow-x: auto;
     margin-top: 1em;
-    padding-bottom: 1em; /* Espacio para el scroll horizontal */
+    width: 100%;
+    box-sizing: border-box;
 }
 
-/* Estilos de la tabla */
+.table-container {
+    overflow-x: auto;
+    margin-top: 1em;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -1508,3 +1447,136 @@ async function recoverGame(gameId) {
     }
 }
 </script>
+<!-- Script para la funcionalidad de recuperar juegos eliminados -->
+<script src="/static/js/restore_game.js"></script>
+{% endblock %}
+<style>
+/* Asegúrate de que estos estilos estén presentes y no sean sobrescritos */
+.page-layout {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 0.5em;
+    padding: 0.5em;
+    height: calc(100vh - 150px);
+    overflow: hidden;
+}
+
+.forms-container {
+    height: 100%;
+    overflow-y: auto;
+    padding-right: 1em;
+    max-width: 100%;
+}
+
+/* Contenedor principal del formulario */
+#listForm {
+    max-width: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+/* Contenedor de la tabla con scroll horizontal */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 1em;
+    padding-bottom: 1em; /* Espacio para el scroll horizontal */
+}
+
+/* Estilos de la tabla */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap; /* Evita que el texto se rompa en múltiples líneas */
+    font-size: 0.9em; /* Reduce ligeramente el tamaño de la fuente */
+}
+
+/* Ajustar anchos específicos para cada columna */
+th:nth-child(1), td:nth-child(1) { /* ID */
+    width: 50px;
+    min-width: 50px;
+    max-width: 50px;
+}
+
+th:nth-child(2), td:nth-child(2) { /* Imagen */
+    width: 60px;
+    min-width: 60px;
+    max-width: 60px;
+}
+
+th:nth-child(3), td:nth-child(3) { /* Nombre */
+    width: 150px;
+    min-width: 150px;
+    max-width: 150px;
+}
+
+th:nth-child(4), td:nth-child(4) { /* Fecha */
+    width: 100px;
+    min-width: 100px;
+    max-width: 100px;
+}
+
+th:nth-child(5), td:nth-child(5), /* Horas vistas */
+th:nth-child(6), td:nth-child(6), /* Pico espectadores */
+th:nth-child(7), td:nth-child(7) { /* Pico canales */
+    width: 120px;
+    min-width: 120px;
+    max-width: 120px;
+}
+
+/* Estilos para las celdas */
+th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Hacer que las imágenes sean más pequeñas y consistentes */
+td img {
+    width: 40px !important;
+    height: 40px !important;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* Estilo para la barra de desplazamiento horizontal */
+.table-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 255, 0, 0.2);
+    border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 255, 0, 0.3);
+}
+
+/* Estilos responsivos */
+@media (max-width: 1200px) {
+    table {
+        font-size: 0.85em;
+    }
+}
+
+@media (max-width: 768px) {
+    table {
+        font-size: 0.8em;
+    }
+    
+    th:nth-child(5), td:nth-child(5),
+    th:nth-child(6), td:nth-child(6),
+    th:nth-child(7), td:nth-child(7) {
+        width: 100px;
+        min-width: 100px;
+    }
+}
+</style>
