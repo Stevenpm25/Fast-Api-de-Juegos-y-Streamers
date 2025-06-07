@@ -192,6 +192,11 @@ h2, h3 {
 ::-webkit-scrollbar-thumb:hover {
     background: rgba(0, 255, 0, 0.5);
 }
+
+.form-scroll {
+    max-height: 400px;
+    overflow-y: auto;
+}
 </style>
 
 <div class="page-layout" style="display: flex; gap: 2em; align-items: flex-start;">
@@ -226,7 +231,7 @@ h2, h3 {
       {% endif %}
 
       <!-- Formulario de creación -->
-      <div id="createForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+      <div id="createForm" class="operation-form rpgui-container framed-golden form-scroll" style="display: none;">
           <h3>➕ Crear Nuevo Streamer</h3>
           <form onsubmit="createStreamer(event)" enctype="multipart/form-data">
               <div class="form-group">
@@ -294,7 +299,7 @@ h2, h3 {
       </div>
 
       <!-- Formulario de Búsqueda por ID -->
-      <div id="searchByIdForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+      <div id="searchByIdForm" class="operation-form rpgui-container framed-golden form-scroll" style="display: none;">
           <h3>🔍 Buscar Streamer por ID</h3>
           <form onsubmit="buscarPorId(event)">
               <div class="form-group">
@@ -314,27 +319,29 @@ h2, h3 {
           <!-- Contenedor para mostrar el resultado -->
           <div id="searchIdResult" style="display: none; margin-top: 20px;">
               <h3>📋 Resultado:</h3>
-              <div class="table-wrapper">
-                  <table>
+              <div class="table-wrapper" style="background: none; border: none;">
+                  <div style="overflow-x:auto;">
+                  <table style="min-width: 600px; max-width: 100%; margin: 0 auto; border-collapse: separate; border-spacing: 0 10px;">
                       <thead>
                           <tr>
-                              <th>ID</th>
-                              <th>Imagen</th>
-                              <th>Nombre</th>
-                              <th>Juego</th>
-                              <th>Seguidores</th>
-                              <th>Espectadores Promedio</th>
+                              <th style="padding: 12px 18px; text-align:center;">ID</th>
+                              <th style="padding: 12px 18px; text-align:center;">Imagen</th>
+                              <th style="padding: 12px 18px; text-align:center;">Nombre</th>
+                              <th style="padding: 12px 18px; text-align:center;">Juego</th>
+                              <th style="padding: 12px 18px; text-align:center;">Seguidores</th>
+                              <th style="padding: 12px 18px; text-align:center;">Espectadores Promedio</th>
                           </tr>
                       </thead>
-                      <tbody id="searchIdResultsBody">
+                      <tbody id="searchIdResultsBody" style="font-size: 1.08em;">
                       </tbody>
                   </table>
+                  </div>
               </div>
           </div>
       </div>
 
       <!-- Formulario de Búsqueda por Nombre -->
-      <div id="searchByNameForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+      <div id="searchByNameForm" class="operation-form rpgui-container framed-golden form-scroll" style="display: none;">
           <h3>🔎 Buscar Streamer por Nombre</h3>
           <form onsubmit="buscarPorNombre(event)">
               <div class="form-group">
@@ -354,19 +361,19 @@ h2, h3 {
           <!-- Contenedor para mostrar los resultados -->
           <div id="searchNameResult" style="display: none;">
               <h3>📋 Resultados:</h3>
-              <div class="table-wrapper">
-                  <table>
+              <div class="table-wrapper" style="background: none; border: none;">
+                  <table style="min-width: 600px; max-width: 100%; margin: 0 auto; border-collapse: separate; border-spacing: 0 10px;">
                       <thead>
                           <tr>
-                              <th>ID</th>
-                              <th>Imagen</th>
-                              <th>Nombre</th>
-                              <th>Juego</th>
-                              <th>Seguidores</th>
-                              <th>Espectadores Promedio</th>
+                              <th style="padding: 12px 18px; text-align:center;">ID</th>
+                              <th style="padding: 12px 18px; text-align:center;">Imagen</th>
+                              <th style="padding: 12px 18px; text-align:center;">Nombre</th>
+                              <th style="padding: 12px 18px; text-align:center;">Juego</th>
+                              <th style="padding: 12px 18px; text-align:center;">Seguidores</th>
+                              <th style="padding: 12px 18px; text-align:center;">Espectadores Promedio</th>
                           </tr>
                       </thead>
-                      <tbody id="searchNameResultsBody">
+                      <tbody id="searchNameResultsBody" style="font-size: 1.08em;">
                       </tbody>
                   </table>
               </div>
@@ -396,7 +403,7 @@ h2, h3 {
       </div>
 
       <!-- Formulario de Actualización Parcial -->
-      <div id="partialUpdateForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+      <div id="partialUpdateForm" class="operation-form rpgui-container framed-golden form-scroll" style="display: none;">
           <h3>✏️🔧 Actualización Parcial</h3>
           <form onsubmit="partialUpdateStreamer(event)" enctype="multipart/form-data">
               <div class="form-group">
@@ -439,7 +446,7 @@ h2, h3 {
       </div>
 
       <!-- Formulario de Actualización -->
-      <div id="updateForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+      <div id="updateForm" class="operation-form rpgui-container framed-golden form-scroll" style="display: none;">
           <h3>✏️ Actualizar Streamer</h3>
           <form onsubmit="updateStreamer(event)" enctype="multipart/form-data">
               <div class="form-group">
@@ -475,6 +482,28 @@ h2, h3 {
                   </button>
               </div>
           </form>
+      </div>
+
+      <!-- Listar todos los streamers -->
+      <div id="listForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+          <h3>📋 Lista de Streamers</h3>
+          <div class="table-wrapper" style="max-height: 420px; overflow-y: auto;">
+              <table>
+                  <thead>
+                      <tr>
+                          <th>ID</th>
+                          <th>Imagen</th>
+                          <th>Nombre</th>
+                          <th>Juego</th>
+                          <th style="min-width: 110px;">Seguidores</th>
+                          <th style="min-width: 150px;">Espectadores Promedio</th>
+                      </tr>
+                  </thead>
+                  <tbody id="listStreamersBody">
+                      <!-- Las filas se insertan por JS -->
+                  </tbody>
+              </table>
+          </div>
       </div>
     </div>
 
@@ -699,27 +728,27 @@ async function buscarPorId(event) {
             const streamer = await response.json();
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${streamer.id}</td>
-                <td>
+                <td style="padding: 14px 18px; text-align: center; vertical-align: middle;">${streamer.id}</td>
+                <td style="padding: 14px 18px; text-align: center; vertical-align: middle;">
                     ${streamer.image_url ?
                         `<a href="${streamer.image_url}" target="_blank">
                             <img src="${streamer.image_url}" alt="${streamer.name}"
-                                 style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
+                                 style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; margin: 0 auto; display: block;">
                         </a>` :
                         '❌ Sin imagen'
                     }
                 </td>
-                <td>${streamer.name}</td>
-                <td>${streamer.game}</td>
-                <td>${streamer.follower_count.toLocaleString()}</td>
-                <td>${streamer.avg_viewers.toLocaleString()}</td>
+                <td style="padding: 14px 18px; text-align: center; vertical-align: middle;">${streamer.name}</td>
+                <td style="padding: 14px 18px; text-align: center; vertical-align: middle;">${streamer.game}</td>
+                <td style="padding: 14px 18px; text-align: center; vertical-align: middle;">${streamer.follower_count.toLocaleString()}</td>
+                <td style="padding: 14px 18px; text-align: center; vertical-align: middle;">${streamer.avg_viewers.toLocaleString()}</td>
             `;
             tbody.appendChild(row);
         } else {
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="6" style="text-align: center;">
-                        No se encontró ningún streamer con el ID ${id}
+                    <td colspan="6" style="text-align: center; padding: 14px;">
+                        No se encontró ningún streamer con el ID <b>${id}</b>
                     </td>
                 </tr>`;
         }
@@ -731,7 +760,6 @@ async function buscarPorId(event) {
     }
 }
 
-// Búsqueda por nombre
 async function buscarPorNombre(event) {
     event.preventDefault();
     const nombre = document.getElementById('buscarStreamerName').value;
@@ -748,27 +776,27 @@ async function buscarPorNombre(event) {
                 streamers.forEach(streamer => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td>${streamer.id}</td>
-                        <td>
+                        <td style="padding: 14px 18px; text-align: center; vertical-align: middle;">${streamer.id}</td>
+                        <td style="padding: 14px 18px; text-align: center; vertical-align: middle;">
                             ${streamer.image_url ?
                                 `<a href="${streamer.image_url}" target="_blank">
                                     <img src="${streamer.image_url}" alt="${streamer.name}"
-                                         style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
+                                         style="width: 48px; height: 48px; object-fit: cover; border-radius: 50%; margin: 0 auto; display: block;">
                                 </a>` :
                                 '❌ Sin imagen'
                             }
                         </td>
-                        <td>${streamer.name}</td>
-                        <td>${streamer.game}</td>
-                        <td>${streamer.follower_count.toLocaleString()}</td>
-                        <td>${streamer.avg_viewers.toLocaleString()}</td>
+                        <td style="padding: 14px 18px; text-align: center; vertical-align: middle;">${streamer.name}</td>
+                        <td style="padding: 14px 18px; text-align: center; vertical-align: middle;">${streamer.game}</td>
+                        <td style="padding: 14px 18px; text-align: center; vertical-align: middle;">${streamer.follower_count.toLocaleString()}</td>
+                        <td style="padding: 14px 18px; text-align: center; vertical-align: middle;">${streamer.avg_viewers.toLocaleString()}</td>
                     `;
                     tbody.appendChild(row);
                 });
             } else {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="6" style="text-align: center;">
+                        <td colspan="6" style="text-align: center; padding: 14px;">
                             No se encontraron streamers con el nombre "${nombre}"
                         </td>
                     </tr>`;
@@ -776,7 +804,7 @@ async function buscarPorNombre(event) {
         } else {
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="6" style="text-align: center;">
+                    <td colspan="6" style="text-align: center; padding: 14px;">
                         Nombre no encontrado: "${nombre}"
                     </td>
                 </tr>`;
@@ -965,9 +993,9 @@ async function showStreamersList() {
             hideAllForms();
 
             const tableHTML = `
-                <div id="listForm" class="operation-form rpgui-container framed-golden">
+                <div id="listForm" class="operation-form rpgui-container framed-golden" style="display: block;">
                     <h3>📋 Lista de Streamers</h3>
-                    <div class="table-wrapper">
+                    <div class="table-wrapper" style="max-height: 420px; overflow-y: auto;">
                         <table>
                             <thead>
                                 <tr>
@@ -979,7 +1007,7 @@ async function showStreamersList() {
                                     <th>Espectadores Promedio</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="listStreamersBody">
                                 ${streamers.map(streamer => `
                                     <tr>
                                         <td>${streamer.id}</td>
@@ -1009,7 +1037,6 @@ async function showStreamersList() {
             if (existingList) existingList.remove();
 
             formsContainer.insertAdjacentHTML('beforeend', tableHTML);
-            document.getElementById('listForm').style.display = 'block';
         } else {
             alert('Error al cargar los streamers');
         }
