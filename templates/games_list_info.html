@@ -46,6 +46,8 @@
 .operation-form {
     margin-bottom: 1em;
     padding: 1em;
+    max-height: 350px;
+    overflow-y: auto;
 }
 
 .form-group {
@@ -116,6 +118,30 @@ h2, h3 {
         width: 100%;
     }
 }
+
+/* Añade estos estilos para los botones en la tabla */
+.actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.actions .rpgui-button {
+    padding: 5px 10px !important;
+    min-height: unset !important;
+    font-size: 0.9em;
+}
+
+/* Estilos específicos para formularios más grandes */
+.larger-form {
+    max-width: 600px !important;
+    min-width: 420px !important;
+    width: 100% !important;
+    max-height: 440px !important;
+    min-height: 320px !important;
+    overflow-y: auto !important;
+    margin: 0 auto !important;
+}
 </style>
 
 <div class="page-layout" style="display: flex; gap: 2em; align-items: flex-start;">
@@ -153,7 +179,7 @@ h2, h3 {
 
         <!-- Formularios aquí -->
         <!-- Ejemplo del formulario de creación (los demás seguirían el mismo patrón) -->
-        <div id="createForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+        <div id="createForm" class="operation-form rpgui-container framed-golden larger-form" style="display: none; max-width: 600px; min-width: 420px; width: 100%; max-height: 440px; min-height: 320px; overflow-y: auto; margin: 0 auto;">
             <h3>➕ Crear Nuevo Juego</h3>
             <form onsubmit="createGame(event)" enctype="multipart/form-data">
                 <div class="form-group">
@@ -342,7 +368,7 @@ h2, h3 {
         </div>
 
         <!-- Formulario de Actualización Parcial -->
-        <div id="partialUpdateForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+        <div id="partialUpdateForm" class="operation-form rpgui-container framed-golden larger-form" style="display: none; max-width: 600px; min-width: 420px; width: 100%; max-height: 440px; min-height: 320px; overflow-y: auto; margin: 0 auto;">
             <h3>✏️🔧 Actualización Parcial</h3>
             <form onsubmit="partialUpdateGame(event)" enctype="multipart/form-data">
                 <div class="form-group">
@@ -389,7 +415,7 @@ h2, h3 {
         </div>
 
         <!-- Formulario de Actualización -->
-        <div id="updateForm" class="operation-form rpgui-container framed-golden" style="display: none;">
+        <div id="updateForm" class="operation-form rpgui-container framed-golden larger-form" style="display: none; max-width: 600px; min-width: 420px; width: 100%; max-height: 440px; min-height: 320px; overflow-y: auto; margin: 0 auto;">
             <h3>✏️ Actualizar Juego</h3>
             <form onsubmit="updateGame(event)" enctype="multipart/form-data">
                 <div class="form-group">
@@ -425,6 +451,29 @@ h2, h3 {
                 </div>
             </form>
         </div>
+
+        <!-- Formulario de Juegos Eliminados -->
+        <div id="deletedGamesForm" class="operation-form rpgui-container framed-golden" style="display: none; max-width: 600px; min-width: 420px; width: 100%; max-height: 440px; min-height: 320px; overflow-y: auto; margin: 0 auto;">
+            <h3>🗑️👀 Juegos Eliminados</h3>
+            <div class="table-wrapper" style="max-height: 300px; overflow-y: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Imagen</th>
+                            <th>Nombre</th>
+                            <th>Fecha</th>
+                            <th>Horas Vistas</th>
+                            <th>Pico Espectadores</th>
+                            <th>Pico Canales</th>
+                        </tr>
+                    </thead>
+                    <tbody id="deletedGamesResultsBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 
 </div>
@@ -502,20 +551,6 @@ async function buscarPorNombre(event) {
 }
 </script>     <!-- Los demás formularios seguirían el mismo patrón -->
 
-<style>
-/* Añade estos estilos para los botones en la tabla */
-.actions {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-}
-
-.actions .rpgui-button {
-    padding: 5px 10px !important;
-    min-height: unset !important;
-    font-size: 0.9em;
-}
-</style>
 <script>
 function showSearchByName() {
     hideAllForms();
@@ -974,9 +1009,6 @@ async function importGames(event) {
         alert('Error al importar los juegos');
     }
 }
-</script>
-
-<script>
 // Agregar esta función al script existente
 async function listGames() {
     try {
@@ -1050,6 +1082,8 @@ async function listGames() {
         console.error('Error:', error);
         alert('Error al cargar los juegos');
     }
+}
+
 // Función que resalta y baja hacia la info del CRUD si se quiere
 function showInfoGames() {
   hideAllForms();
@@ -1060,7 +1094,6 @@ function showInfoGames() {
     void infoSection.offsetWidth;
     infoSection.classList.add('highlight-animation');
   }
-}
 }
 </script>
 
@@ -1229,354 +1262,6 @@ function showPartialUpdateForm() {
 }
 </script>
 
-<!-- Añade estos estilos específicos -->
-<style>
-.table-wrapper {
-    max-height: 400px;  /* Altura máxima fija */
-    overflow-y: auto;   /* Scroll vertical */
-    margin: 1em 0;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.table-container {
-    max-height: 55vh;
-    overflow-y: auto;
-    overflow-x: auto;
-    margin-top: 1em;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.table-container {
-    overflow-x: auto;
-    margin-top: 1em;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    white-space: nowrap; /* Evita que el texto se rompa en múltiples líneas */
-    font-size: 0.9em; /* Reduce ligeramente el tamaño de la fuente */
-}
-
-/* Ajustar anchos específicos para cada columna */
-th:nth-child(1), td:nth-child(1) { /* ID */
-    width: 50px;
-    min-width: 50px;
-    max-width: 50px;
-}
-
-th:nth-child(2), td:nth-child(2) { /* Imagen */
-    width: 60px;
-    min-width: 60px;
-    max-width: 60px;
-}
-
-th:nth-child(3), td:nth-child(3) { /* Nombre */
-    width: 150px;
-    min-width: 150px;
-    max-width: 150px;
-}
-
-th:nth-child(4), td:nth-child(4) { /* Fecha */
-    width: 100px;
-    min-width: 100px;
-    max-width: 100px;
-}
-
-th:nth-child(5), td:nth-child(5), /* Horas vistas */
-th:nth-child(6), td:nth-child(6), /* Pico espectadores */
-th:nth-child(7), td:nth-child(7) { /* Pico canales */
-    width: 120px;
-    min-width: 120px;
-    max-width: 120px;
-}
-
-/* Estilos para las celdas */
-th, td {
-    padding: 8px;
-    text-align: left;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-/* Hacer que las imágenes sean más pequeñas y consistentes */
-td img {
-    width: 40px !important;
-    height: 40px !important;
-    object-fit: cover;
-    border-radius: 50%;
-}
-
-/* Estilo para la barra de desplazamiento horizontal */
-.table-container::-webkit-scrollbar {
-    height: 8px;
-}
-
-.table-container::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 4px;
-}
-
-.table-container::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 255, 0, 0.2);
-    border-radius: 4px;
-}
-
-.table-container::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(0, 255, 0, 0.3);
-}
-
-/* Estilos responsivos */
-@media (max-width: 1200px) {
-    table {
-        font-size: 0.85em;
-    }
-}
-
-@media (max-width: 768px) {
-    table {
-        font-size: 0.8em;
-    }
-    
-    th:nth-child(5), td:nth-child(5),
-    th:nth-child(6), td:nth-child(6),
-    th:nth-child(7), td:nth-child(7) {
-        width: 100px;
-        min-width: 100px;
-    }
-}
-</style>
-
-<script>
-async function showDeletedGames() {
-    try {
-        const response = await fetch('/api/games/deleted');
-        if (response.ok) {
-            const deletedGames = await response.json();
-            hideAllForms();
-
-            if (deletedGames.length === 0) {
-                alert('No hay juegos eliminados para mostrar');
-                return;
-            }
-
-            const tableHTML = `
-                <div id="deletedGamesForm" class="operation-form rpgui-container framed-golden">
-                    <h3>🗑️👀 Juegos Eliminados</h3>
-                    <div class="table-wrapper rpgui-container framed">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Imagen</th>
-                                    <th>Nombre</th>
-                                    <th>Fecha</th>
-                                    <th>Horas Vistas</th>
-                                    <th>Pico Espectadores</th>
-                                    <th>Pico de Canales</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${deletedGames.map(game => `
-                                    <tr>
-                                        <td>${game.id}</td>
-                                        <td>
-                                            ${game.image_url ?
-                                                `<a href="${game.image_url}" target="_blank">
-                                                    <img src="${game.image_url}" alt="${game.game}"
-                                                         style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;">
-                                                </a>` :
-                                                '❌ Sin imagen'
-                                            }
-                                        </td>
-                                        <td>${game.game}</td>
-                                        <td>${game.date}</td>
-                                        <td>${parseInt(game.hours_watched).toLocaleString()}</td>
-                                        <td>${parseInt(game.peak_viewers).toLocaleString()}</td>
-                                        <td>${parseInt(game.peak_channels).toLocaleString()}</td>
-                                        <td>
-                                            <button class="rpgui-button" onclick="recoverGame(${game.id})">
-                                                <span>♻️ Recuperar</span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            `;
-
-            const formsContainer = document.querySelector('.forms-container');
-            const existingList = document.getElementById('deletedGamesForm');
-            if (existingList) {
-                existingList.remove();
-            }
-            formsContainer.insertAdjacentHTML('beforeend', tableHTML);
-            document.getElementById('deletedGamesForm').style.display = 'block';
-        } else {
-            alert('Error al cargar los juegos eliminados');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('Error al cargar los juegos eliminados');
-    }
-}
-
-async function recoverGame(gameId) {
-    if (confirm(`¿Estás seguro de que deseas recuperar el juego con ID ${gameId}?`)) {
-        try {
-            const response = await fetch(`/api/games/recover/${gameId}`, {
-                method: 'POST'
-            });
-
-            if (response.ok) {
-                alert('¡Juego recuperado correctamente!');
-                location.reload();
-            } else {
-                const error = await response.json();
-                alert('Error al recuperar el juego: ' + error.detail);
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Error al recuperar el juego');
-        }
-    }
-}
-</script>
 <!-- Script para la funcionalidad de recuperar juegos eliminados -->
 <script src="/static/js/restore_game.js"></script>
 {% endblock %}
-<style>
-/* Asegúrate de que estos estilos estén presentes y no sean sobrescritos */
-.page-layout {
-    display: grid;
-    grid-template-columns: 180px 1fr;
-    gap: 0.5em;
-    padding: 0.5em;
-    height: calc(100vh - 150px);
-    overflow: hidden;
-}
-
-.forms-container {
-    height: 100%;
-    overflow-y: auto;
-    padding-right: 1em;
-    max-width: 100%;
-}
-
-/* Contenedor principal del formulario */
-#listForm {
-    max-width: 100%;
-    margin: 0 auto;
-    overflow: hidden;
-}
-
-/* Contenedor de la tabla con scroll horizontal */
-.table-container {
-    width: 100%;
-    overflow-x: auto;
-    margin-top: 1em;
-    padding-bottom: 1em; /* Espacio para el scroll horizontal */
-}
-
-/* Estilos de la tabla */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    white-space: nowrap; /* Evita que el texto se rompa en múltiples líneas */
-    font-size: 0.9em; /* Reduce ligeramente el tamaño de la fuente */
-}
-
-/* Ajustar anchos específicos para cada columna */
-th:nth-child(1), td:nth-child(1) { /* ID */
-    width: 50px;
-    min-width: 50px;
-    max-width: 50px;
-}
-
-th:nth-child(2), td:nth-child(2) { /* Imagen */
-    width: 60px;
-    min-width: 60px;
-    max-width: 60px;
-}
-
-th:nth-child(3), td:nth-child(3) { /* Nombre */
-    width: 150px;
-    min-width: 150px;
-    max-width: 150px;
-}
-
-th:nth-child(4), td:nth-child(4) { /* Fecha */
-    width: 100px;
-    min-width: 100px;
-    max-width: 100px;
-}
-
-th:nth-child(5), td:nth-child(5), /* Horas vistas */
-th:nth-child(6), td:nth-child(6), /* Pico espectadores */
-th:nth-child(7), td:nth-child(7) { /* Pico canales */
-    width: 120px;
-    min-width: 120px;
-    max-width: 120px;
-}
-
-/* Estilos para las celdas */
-th, td {
-    padding: 8px;
-    text-align: left;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-/* Hacer que las imágenes sean más pequeñas y consistentes */
-td img {
-    width: 40px !important;
-    height: 40px !important;
-    object-fit: cover;
-    border-radius: 50%;
-}
-
-/* Estilo para la barra de desplazamiento horizontal */
-.table-container::-webkit-scrollbar {
-    height: 8px;
-}
-
-.table-container::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 4px;
-}
-
-.table-container::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 255, 0, 0.2);
-    border-radius: 4px;
-}
-
-.table-container::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(0, 255, 0, 0.3);
-}
-
-/* Estilos responsivos */
-@media (max-width: 1200px) {
-    table {
-        font-size: 0.85em;
-    }
-}
-
-@media (max-width: 768px) {
-    table {
-        font-size: 0.8em;
-    }
-    
-    th:nth-child(5), td:nth-child(5),
-    th:nth-child(6), td:nth-child(6),
-    th:nth-child(7), td:nth-child(7) {
-        width: 100px;
-        min-width: 100px;
-    }
-}
-</style>

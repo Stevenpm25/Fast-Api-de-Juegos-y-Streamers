@@ -492,19 +492,19 @@ function hideAllForms() {
     document.querySelectorAll('.operation-form').forEach(form => {
         form.style.display = 'none';
     });
-    
+
     // Ocultar la información de streamers
     const infoContainer = document.querySelector('.info-container');
     if (infoContainer) {
         infoContainer.style.display = 'none';
     }
-    
+
     // Limpiar la lista de streamers
     const streamersList = document.getElementById('streamersList');
     if (streamersList) {
         streamersList.innerHTML = '';
     }
-    
+
     // Limpiar mensajes
     document.querySelectorAll('.message').forEach(msg => {
         msg.style.display = 'none';
