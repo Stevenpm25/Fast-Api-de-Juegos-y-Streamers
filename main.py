@@ -54,6 +54,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 # Configuración de Jinja2
 templates = Jinja2Templates(directory="templates")
 
+
 # Configuración de la base de datos
 def get_database_url():
     uri = os.getenv('POSTGRESQL_ADDON_URI')
@@ -67,6 +68,7 @@ def get_database_url():
         f"50013/"
         f"{os.getenv('POSTGRESQL_ADDON_DB')}"
     )
+
 
 try:
     DATABASE_URL = get_database_url()
@@ -96,10 +98,12 @@ except Exception as e:
     print("3. Que el puerto sea 50013")
     raise
 
+
 # Dependency
 async def get_session() -> AsyncSession:
     async with async_session() as session:
         yield session
+
 
 # Rutas de la interfaz web
 @app.get("/", response_class=HTMLResponse)
@@ -119,6 +123,7 @@ async def read_home(request: Request):
             detail=f"No se pudo cargar la página home: {str(e)}"
         )
 
+
 @app.get("/creador", response_class=HTMLResponse)
 async def creator_page(request: Request):
     try:
@@ -135,6 +140,7 @@ async def creator_page(request: Request):
             status_code=500,
             detail=f"No se pudo cargar la página del creador: {str(e)}"
         )
+
 
 @app.get("/planeacion", response_class=HTMLResponse)
 async def planning_page(request: Request):
@@ -153,6 +159,7 @@ async def planning_page(request: Request):
             detail=f"No se pudo cargar la página de planificación: {str(e)}"
         )
 
+
 @app.get("/design", response_class=HTMLResponse)
 async def design_page(request: Request):
     try:
@@ -170,15 +177,21 @@ async def design_page(request: Request):
             detail=f"No se pudo cargar la página de diseño: {str(e)}"
         )
 
+
+@app.get("/analysis", response_class=HTMLResponse)
+async def analysis_page(request: Request):
+    return templates.TemplateResponse("analysis.html", {"request": request})
+
+
 # Rutas para Games (Web)
 @app.get("/games", response_class=HTMLResponse)
 async def games_page(
-    request: Request,
-    game_name: Optional[str] = None,
-    year: Optional[str] = None,
-    success_msg: Optional[str] = None,
-    error_msg: Optional[str] = None,
-    session: AsyncSession = Depends(get_session)
+        request: Request,
+        game_name: Optional[str] = None,
+        year: Optional[str] = None,
+        success_msg: Optional[str] = None,
+        error_msg: Optional[str] = None,
+        session: AsyncSession = Depends(get_session)
 ):
     try:
         games = await search_games(session, game_name, year) if game_name or year else await read_all_games(session)
@@ -204,15 +217,17 @@ async def games_page(
                 "current_year": datetime.datetime.now().year
             }
         )
+
+
 # Rutas para Streamers (Web)
 @app.get("/streamers", response_class=HTMLResponse)
 async def streamers_page(
-    request: Request,
-    name: Optional[str] = None,
-    game: Optional[str] = None,
-    success_msg: Optional[str] = None,
-    error_msg: Optional[str] = None,
-    session: AsyncSession = Depends(get_session)
+        request: Request,
+        name: Optional[str] = None,
+        game: Optional[str] = None,
+        success_msg: Optional[str] = None,
+        error_msg: Optional[str] = None,
+        session: AsyncSession = Depends(get_session)
 ):
     try:
         streamers = await search_streamers(session, name, game) if name or game else await read_all_streamers(session)
@@ -239,11 +254,12 @@ async def streamers_page(
             }
         )
 
+
 @app.get("/games/{game_id}", response_class=HTMLResponse)
 async def game_detail_page(
-    request: Request,
-    game_id: int,
-    session: AsyncSession = Depends(get_session)
+        request: Request,
+        game_id: int,
+        session: AsyncSession = Depends(get_session)
 ):
     try:
         game = await read_one_game(session, game_id)
@@ -261,6 +277,7 @@ async def game_detail_page(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
 @app.get("/add/game", response_class=HTMLResponse)
 async def add_game_page(request: Request):
     return templates.TemplateResponse(
@@ -271,15 +288,16 @@ async def add_game_page(request: Request):
         }
     )
 
+
 @app.post("/add/game")
 async def add_game_submit(
-    request: Request,
-    game: str = Form(...),
-    date: str = Form(...),
-    hours_watched: int = Form(...),
-    peak_viewers: int = Form(...),
-    peak_channels: int = Form(...),
-    session: AsyncSession = Depends(get_session)
+        request: Request,
+        game: str = Form(...),
+        date: str = Form(...),
+        hours_watched: int = Form(...),
+        peak_viewers: int = Form(...),
+        peak_channels: int = Form(...),
+        session: AsyncSession = Depends(get_session)
 ):
     try:
         # Validar el formato de la fecha
@@ -328,6 +346,7 @@ async def add_game_submit(
             status_code=303
         )
 
+
 # API endpoints para Games
 @app.post("/games/import", tags=["Games"])
 async def import_games(file: UploadFile = File(...), session: AsyncSession = Depends(get_session)):
@@ -373,9 +392,11 @@ async def import_games(file: UploadFile = File(...), session: AsyncSession = Dep
         await session.rollback()
         raise HTTPException(status_code=400, detail=str(e))
 
+
 @app.get("/api/games", response_model=List[GameWithID], tags=["Games"])
 async def get_all_games(session: AsyncSession = Depends(get_session)):
     return await read_all_games(session)
+
 
 @app.get("/api/games/search", response_model=List[GameWithID], tags=["Games"])
 async def search_game(
@@ -393,6 +414,8 @@ async def search_game(
             status_code=500,
             detail=f"Error en la búsqueda: {str(e)}"
         )
+
+
 @app.get("/buscar-id", response_class=HTMLResponse)
 async def buscar_id_page(request: Request):
     return templates.TemplateResponse(
@@ -402,15 +425,16 @@ async def buscar_id_page(request: Request):
         }
     )
 
+
 @app.post("/api/games", response_model=GameWithID, tags=["Games"])
 async def create_new_game(
-    game: str = Form(..., description="Nombre del juego"),
-    date: str = Form(..., description="Fecha en formato AAAA-MM"),
-    hours_watched: int = Form(..., description="Total de horas vistas"),
-    peak_viewers: int = Form(..., description="Pico máximo de espectadores"),
-    peak_channels: int = Form(..., description="Pico máximo de canales"),
-    image: Optional[UploadFile] = File(None, description="Imagen del juego (opcional)"),
-    session: AsyncSession = Depends(get_session)
+        game: str = Form(..., description="Nombre del juego"),
+        date: str = Form(..., description="Fecha en formato AAAA-MM"),
+        hours_watched: int = Form(..., description="Total de horas vistas"),
+        peak_viewers: int = Form(..., description="Pico máximo de espectadores"),
+        peak_channels: int = Form(..., description="Pico máximo de canales"),
+        image: Optional[UploadFile] = File(None, description="Imagen del juego (opcional)"),
+        session: AsyncSession = Depends(get_session)
 ):
     """
     Crear un nuevo juego con imagen opcional.
@@ -442,16 +466,17 @@ async def create_new_game(
             detail=f"Error al crear el juego: {str(e)}"
         )
 
+
 @app.put("/api/games/{game_id}", response_model=GameWithID, tags=["Games"])
 async def update_existing_game(
-    game_id: int,
-    game: str = Form(..., description="Nombre del juego"),
-    date: str = Form(..., description="Fecha en formato AAAA-MM"),
-    hours_watched: int = Form(..., description="Total de horas vistas"),
-    peak_viewers: int = Form(..., description="Pico máximo de espectadores"),
-    peak_channels: int = Form(..., description="Pico máximo de canales"),
-    image: Optional[UploadFile] = File(None, description="Nueva imagen del juego (opcional)"),
-    session: AsyncSession = Depends(get_session)
+        game_id: int,
+        game: str = Form(..., description="Nombre del juego"),
+        date: str = Form(..., description="Fecha en formato AAAA-MM"),
+        hours_watched: int = Form(..., description="Total de horas vistas"),
+        peak_viewers: int = Form(..., description="Pico máximo de espectadores"),
+        peak_channels: int = Form(..., description="Pico máximo de canales"),
+        image: Optional[UploadFile] = File(None, description="Nueva imagen del juego (opcional)"),
+        session: AsyncSession = Depends(get_session)
 ):
     """
     Actualizar un juego existente con opción de cambiar la imagen.
@@ -500,16 +525,23 @@ async def update_existing_game(
             detail=f"Error al actualizar el juego: {str(e)}"
         )
 
+
 @app.patch("/api/games/partial-update/{game_id}", response_model=GameWithID, tags=["Games"])
 async def patch_partial_game(
-    game_id: int,
-    game: Optional[str] = Form(default=None, description="Nuevo nombre del juego", openapi_extra={"allowEmptyValue": False}),
-    date: Optional[str] = Form(default=None, description="Nueva fecha en formato AAAA-MM", openapi_extra={"allowEmptyValue": False}),
-    hours_watched: Optional[int] = Form(default=None, description="Nuevas horas vistas", openapi_extra={"allowEmptyValue": False}),
-    peak_viewers: Optional[int] = Form(default=None, description="Nuevo pico de espectadores", openapi_extra={"allowEmptyValue": False}),
-    peak_channels: Optional[int] = Form(default=None, description="Nuevo pico de canales", openapi_extra={"allowEmptyValue": False}),
-    image: Optional[UploadFile] = Form(default=None, description="Nueva imagen del juego", openapi_extra={"allowEmptyValue": True}),
-    session: AsyncSession = Depends(get_session)
+        game_id: int,
+        game: Optional[str] = Form(default=None, description="Nuevo nombre del juego",
+                                   openapi_extra={"allowEmptyValue": False}),
+        date: Optional[str] = Form(default=None, description="Nueva fecha en formato AAAA-MM",
+                                   openapi_extra={"allowEmptyValue": False}),
+        hours_watched: Optional[int] = Form(default=None, description="Nuevas horas vistas",
+                                            openapi_extra={"allowEmptyValue": False}),
+        peak_viewers: Optional[int] = Form(default=None, description="Nuevo pico de espectadores",
+                                           openapi_extra={"allowEmptyValue": False}),
+        peak_channels: Optional[int] = Form(default=None, description="Nuevo pico de canales",
+                                            openapi_extra={"allowEmptyValue": False}),
+        image: Optional[UploadFile] = Form(default=None, description="Nueva imagen del juego",
+                                           openapi_extra={"allowEmptyValue": True}),
+        session: AsyncSession = Depends(get_session)
 ):
     updates = {}
 
@@ -542,6 +574,7 @@ async def patch_partial_game(
             status_code=500,
             detail=f"Error al actualizar el juego: {str(e)}"
         )
+
 
 @app.delete("/api/games/{game_id}", response_model=GameWithID, tags=["Games"])
 async def delete_existing_game(game_id: int, session: AsyncSession = Depends(get_session)):
@@ -578,12 +611,14 @@ async def get_deleted_games():
 
     return deleted_games
 
+
 @app.get("/api/games/{game_id}", response_model=GameWithID, tags=["Games"])
 async def get_game(game_id: int, session: AsyncSession = Depends(get_session)):
     game = await read_one_game(session, game_id)
     if not game:
         raise HTTPException(status_code=404, detail="Game not found")
     return game
+
 
 # API endpoints para Streamers
 @app.post("/streamers/import", tags=["Streamers"])
@@ -628,10 +663,12 @@ async def import_streamers(file: UploadFile = File(...), session: AsyncSession =
     except Exception as e:
         await session.rollback()
         raise HTTPException(status_code=400, detail=str(e))
+
+
 @app.get("/api/streamers/search", response_model=List[StreamerWithID], tags=["Streamers"])
 async def search_streamer(
-    name: str = Query(..., description="Nombre del streamer a buscar"),  # Parámetro obligatorio
-    session: AsyncSession = Depends(get_session)
+        name: str = Query(..., description="Nombre del streamer a buscar"),  # Parámetro obligatorio
+        session: AsyncSession = Depends(get_session)
 ):
     try:
         # Limpieza del nombre de búsqueda
@@ -656,6 +693,8 @@ async def search_streamer(
             status_code=500,
             detail=f"Error en la búsqueda: {str(e)}"
         )
+
+
 @app.post("/api/games/recover/{game_id}", tags=["Games"])
 async def recover_deleted_game(game_id: int, session: AsyncSession = Depends(get_session)):
     try:
@@ -741,14 +780,16 @@ async def recover_deleted_game(game_id: int, session: AsyncSession = Depends(get
             detail=f"Error al recuperar el juego: {str(e)}"
         )
 
+
 @app.get("/api/streamers", response_model=List[StreamerWithID], tags=["Streamers"])
 async def get_all_streamers(session: AsyncSession = Depends(get_session)):
     return await read_all_streamers(session)
 
+
 @app.delete("/api/streamers/{streamer_id}", tags=["Streamers"])
 async def delete_existing_streamer(
-    streamer_id: int,
-    session: AsyncSession = Depends(get_session)
+        streamer_id: int,
+        session: AsyncSession = Depends(get_session)
 ):
     try:
         deleted = await delete_streamer(session, streamer_id)
@@ -770,6 +811,8 @@ async def delete_existing_streamer(
             status_code=500,
             detail=f"Error al eliminar el streamer: {str(e)}"
         )
+
+
 @app.get("/api/streamers/deleted", tags=["Streamers"])
 async def get_deleted_streamers():
     eliminados_path = "streamerseliminados.csv"
@@ -789,6 +832,8 @@ async def get_deleted_streamers():
             deleted_streamers.append(row)
 
     return deleted_streamers
+
+
 @app.get("/api/streamers/{streamer_id}", response_model=StreamerWithID, tags=["Streamers"])
 async def get_streamer(streamer_id: int, session: AsyncSession = Depends(get_session)):
     streamer = await read_one_streamer(session, streamer_id)
@@ -796,14 +841,15 @@ async def get_streamer(streamer_id: int, session: AsyncSession = Depends(get_ses
         raise HTTPException(status_code=404, detail="Streamer not found")
     return streamer
 
+
 @app.post("/api/streamers", response_model=StreamerWithID, tags=["Streamers"])
 async def create_new_streamer(
-    name: str = Form(..., description="Nombre del streamer"),
-    game: str = Form(..., description="Juego que transmite"),
-    follower_count: int = Form(..., description="Número de seguidores"),
-    avg_viewers: int = Form(..., description="Promedio de espectadores"),
-    image: Optional[UploadFile] = File(None, description="Imagen del streamer (opcional)"),
-    session: AsyncSession = Depends(get_session)
+        name: str = Form(..., description="Nombre del streamer"),
+        game: str = Form(..., description="Juego que transmite"),
+        follower_count: int = Form(..., description="Número de seguidores"),
+        avg_viewers: int = Form(..., description="Promedio de espectadores"),
+        image: Optional[UploadFile] = File(None, description="Imagen del streamer (opcional)"),
+        session: AsyncSession = Depends(get_session)
 ):
     """
     Crear un nuevo streamer con imagen opcional.
@@ -854,15 +900,16 @@ async def create_new_streamer(
             detail=f"Error al crear el streamer: {str(e)}"
         )
 
+
 @app.put("/api/streamers/{streamer_id}", response_model=StreamerWithID, tags=["Streamers"])
 async def update_existing_streamer(
-    streamer_id: int,
-    name: Optional[str] = Form(None, description="Nombre del streamer"),
-    game: Optional[str] = Form(None, description="Juego que transmite"),
-    follower_count: Optional[int] = Form(None, description="Número de seguidores"),
-    avg_viewers: Optional[int] = Form(None, description="Promedio de espectadores"),
-    image: Optional[UploadFile] = File(None, description="Nueva imagen del streamer (opcional)"),
-    session: AsyncSession = Depends(get_session)
+        streamer_id: int,
+        name: Optional[str] = Form(None, description="Nombre del streamer"),
+        game: Optional[str] = Form(None, description="Juego que transmite"),
+        follower_count: Optional[int] = Form(None, description="Número de seguidores"),
+        avg_viewers: Optional[int] = Form(None, description="Promedio de espectadores"),
+        image: Optional[UploadFile] = File(None, description="Nueva imagen del streamer (opcional)"),
+        session: AsyncSession = Depends(get_session)
 ):
     try:
         # Crear el objeto UpdatedStreamer con los campos que no son None
@@ -884,13 +931,14 @@ async def update_existing_streamer(
 
         update = UpdatedStreamer(**update_data)
         updated_streamer = await update_streamer(session, streamer_id, update)
-        
+
         if not updated_streamer:
             raise HTTPException(status_code=404, detail="Streamer no encontrado")
-            
+
         return updated_streamer
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
 
 @app.post("/api/streamers/recover/{streamer_id}", tags=["Streamers"])
 async def recover_deleted_streamer(
@@ -979,15 +1027,22 @@ async def recover_deleted_streamer(
             status_code=500,
             detail=f"Error al recuperar el streamer: {str(e)}"
         )
+
+
 @app.patch("/api/streamers/partial-update/{streamer_id}", response_model=StreamerWithID, tags=["Streamers"])
 async def patch_partial_streamer(
-    streamer_id: int,
-    name: Optional[str] = Form(default=None, description="Nuevo nombre del streamer", openapi_extra={"allowEmptyValue": False}),
-    game: Optional[str] = Form(default=None, description="Nuevo juego asociado", openapi_extra={"allowEmptyValue": False}),
-    follower_count: Optional[int] = Form(default=None, description="Nuevo número de seguidores", openapi_extra={"allowEmptyValue": False}),
-    avg_viewers: Optional[int] = Form(default=None, description="Nuevo promedio de espectadores", openapi_extra={"allowEmptyValue": False}),
-    image: Optional[UploadFile] = Form(default=None, description="Nueva imagen del streamer", openapi_extra={"allowEmptyValue": False}),
-    session: AsyncSession = Depends(get_session)
+        streamer_id: int,
+        name: Optional[str] = Form(default=None, description="Nuevo nombre del streamer",
+                                   openapi_extra={"allowEmptyValue": False}),
+        game: Optional[str] = Form(default=None, description="Nuevo juego asociado",
+                                   openapi_extra={"allowEmptyValue": False}),
+        follower_count: Optional[int] = Form(default=None, description="Nuevo número de seguidores",
+                                             openapi_extra={"allowEmptyValue": False}),
+        avg_viewers: Optional[int] = Form(default=None, description="Nuevo promedio de espectadores",
+                                          openapi_extra={"allowEmptyValue": False}),
+        image: Optional[UploadFile] = Form(default=None, description="Nueva imagen del streamer",
+                                           openapi_extra={"allowEmptyValue": False}),
+        session: AsyncSession = Depends(get_session)
 ):
     updates = {}
 
@@ -1015,6 +1070,7 @@ async def patch_partial_streamer(
             detail=f"Error al actualizar el streamer: {str(e)}"
         )
 
+
 # Eventos de inicio y cierre
 @app.on_event("startup")
 async def on_startup():
@@ -1034,18 +1090,18 @@ async def on_startup():
         print("3. Que las credenciales sean correctas.")
         raise
 
+
 @app.on_event("shutdown")
 async def shutdown_db_connection():
     await engine.dispose()
     print("✅ Conexiones de la base de datos cerradas")
 
 
-
-
 # Endpoints de salud
 @app.get("/health", tags=["System"])
 async def health_check():
     return {"status": "OK", "message": "API is running"}
+
 
 @app.get("/db-check", tags=["System"])
 async def db_check(session: AsyncSession = Depends(get_session)):
@@ -1057,3 +1113,34 @@ async def db_check(session: AsyncSession = Depends(get_session)):
             status_code=500,
             detail=f"Database connection failed: {str(e)}"
         )
+
+
+@app.get("/api/analysis-data")
+async def get_analysis_data():
+    data = {
+        "games": [
+            {"name": "Valorant", "viewers": 6079825, "followers": 2812},
+            {"name": "GTA V", "viewers": 9654278, "followers": 35803},
+            {"name": "League of Legends", "viewers": 5033750, "followers": 49635},
+            {"name": "Counter-Strike", "viewers": 4590554, "followers": 30352},
+            {"name": "Minecraft", "viewers": 9996130, "followers": 23958},
+            {"name": "Apex Legends", "viewers": 372219, "followers": 21609},
+            {"name": "Call of Duty", "viewers": 6648584, "followers": 35670},
+            {"name": "Dota 2", "viewers": 3595177, "followers": 4941},
+            {"name": "World of Warcraft", "viewers": 1579353, "followers": 13377},
+            {"name": "Fortnite", "viewers": 3872409, "followers": 30612}
+        ],
+        "streamers": [
+            {"name": "Rubius", "followers": 6079825, "avg_viewers": 2812},
+            {"name": "Asmongold", "followers": 9654278, "avg_viewers": 35803},
+            {"name": "Shroud", "followers": 9144183, "avg_viewers": 5298},
+            {"name": "xQc", "followers": 5033750, "avg_viewers": 49635},
+            {"name": "Pokimane", "followers": 4590554, "avg_viewers": 30352},
+            {"name": "Summit1G", "followers": 9996130, "avg_viewers": 23958},
+            {"name": "Myth", "followers": 372219, "avg_viewers": 21609},
+            {"name": "Tfue", "followers": 6648584, "avg_viewers": 35670},
+            {"name": "DrDisrespect", "followers": 3595177, "avg_viewers": 4941},
+            {"name": "Ninja", "followers": 1579353, "avg_viewers": 13377}
+        ]
+    }
+    return data

@@ -7,8 +7,8 @@
     display: flex;
     gap: 2em;
     align-items: flex-start;
-    height: calc(100vh - 100px);
-    padding: 20px;
+    height: calc(100vh - 150px); /* Adjusted height to match games list view */
+    overflow: hidden; /* Prevent overflow */
 }
 
 .buttons-container {
@@ -22,6 +22,10 @@
     border-radius: 15px;
     padding: 20px;
     margin-bottom: 20px;
+    height: 100%;
+    overflow-y: auto; /* Ensure independent scrolling */
+    padding-right: 1em;
+    max-width: 100%;
 }
 
 .info-container {
@@ -43,7 +47,8 @@
 
 .button-row .rpgui-button {
     width: 100%;
-    padding: 0.5em !important;
+    padding: 0.6em 1.2em !important; /* Match padding with games CRUD */
+    font-size: 0.9em; /* Adjust font size for consistency */
     min-height: unset !important;
 }
 
@@ -122,10 +127,12 @@ h2, h3 {
 }
 
 .table-wrapper {
-    max-height: 400px;
+    max-height: calc(4 * 60px + 1em); /* 4 rows of 60px height each plus some margin */
     overflow-y: auto;
-    margin: 1em 0;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow-x: auto;
+    margin-top: 1em;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .table-container {
@@ -196,6 +203,25 @@ h2, h3 {
 .form-scroll {
     max-height: 400px;
     overflow-y: auto;
+}
+
+/* Ajustar el espaciado interno y alineación de las celdas */
+.table-wrapper td, .table-wrapper th {
+    padding: 14px 20px; /* Más espacio interno */
+    text-align: center; /* Centrar el contenido */
+}
+
+.table-wrapper tr {
+    height: 60px; /* Aumentar la altura de las filas */
+}
+/* Ajustar el espaciado interno y alineación de las celdas */
+.table-wrapper td, .table-wrapper th {
+    padding: 14px 20px; /* Más espacio interno */
+    text-align: center; /* Centrar el contenido */
+}
+
+.table-wrapper tr {
+    height: 60px; /* Aumentar la altura de las filas */
 }
 </style>
 
