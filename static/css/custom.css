@@ -1,0 +1,47 @@
+/* --- AJUSTES PARA CRUDS Y TABLAS --- */
+.table-wrapper, .crud-table-container, .crud-forms-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    overflow-x: auto;
+    box-sizing: border-box;
+}
+table {
+    width: 100%;
+    min-width: 600px;
+    max-width: 100%;
+    table-layout: auto;
+    word-break: break-word;
+}
+.crud-form, .crud-form-container, form {
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto 24px auto;
+    box-sizing: border-box;
+}
+.larger-form {
+    max-width: 600px !important;
+    min-width: 420px !important;
+    width: 100% !important;
+    max-height: 500px !important;
+    min-height: 380px !important;
+    overflow-y: auto !important;
+    margin: 0 auto !important;
+}
+@media (max-width: 1300px) {
+    .table-wrapper, .crud-table-container, .crud-forms-container {
+        max-width: 98vw;
+    }
+    .crud-form, .crud-form-container, form {
+        max-width: 98vw;
+    }
+}
+@media (max-width: 900px) {
+    .table-wrapper, .crud-table-container, .crud-forms-container {
+        max-width: 100vw;
+    }
+    .crud-form, .crud-form-container, form {
+        max-width: 100vw;
+    }
+}
+/* --- FIN DE AJUSTES --- */

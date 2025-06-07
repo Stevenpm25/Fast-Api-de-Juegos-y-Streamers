@@ -1,0 +1,314 @@
+{% extends 'base.html' %}
+{% block title %}Análisis de Datos{% endblock %}
+
+{% block content %}
+<style>
+  .analysis-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.85);
+    border-radius: 20px;
+    padding: 30px;
+    margin: 20px auto;
+    max-width: 1400px;
+    color: #fff;
+    box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
+    animation: glow 3s infinite alternate;
+    transition: all 0.3s ease;
+  }
+
+  @keyframes glow {
+    from { box-shadow: 0 0 30px rgba(0, 255, 0, 0.3); }
+    to { box-shadow: 0 0 50px rgba(0, 255, 0, 0.6), 0 0 80px rgba(0, 255, 255, 0.3); }
+  }
+
+  .analysis-container h1 {
+    font-size: 2.5em;
+    margin-bottom: 1em;
+    text-align: center;
+    color: #00ff00;
+    text-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
+    letter-spacing: 3px;
+    font-weight: bold;
+    text-transform: uppercase;
+    position: relative;
+    padding-bottom: 20px;
+  }
+
+  .analysis-container h1:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #00ff00, transparent);
+  }
+
+  .charts-container {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    width: 100%;
+    padding: 20px;
+  }
+
+  .chart {
+    background: rgba(0, 255, 0, 0.05);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 255, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 450px;
+    border: 1px solid rgba(0, 255, 0, 0.2);
+    transition: all 0.3s ease;
+  }
+
+  .chart:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 255, 0, 0.2);
+  }
+
+  .chart-description {
+    margin-top: 10px;
+    color: #90EE90;
+    font-size: 1.1em;
+    text-align: center;
+    text-shadow: 0 0 8px rgba(0, 255, 0, 0.4);
+  }
+</style>
+
+<div class="analysis-container">
+  <h1>📊 Análisis de Datos</h1>
+  <p>Explora los datos más relevantes sobre streamers y juegos a través de gráficos interactivos.</p>
+
+  <div class="charts-container">
+    <div class="chart">
+      <canvas id="chart1" style="height: 400px;"></canvas>
+      <div class="chart-description">
+        En esta gráfica podemos observar la distribución de espectadores entre los juegos más populares. Cada segmento del gráfico representa un juego, y el tamaño del segmento indica la cantidad de espectadores que tiene ese juego.
+      </div>
+    </div>
+    <div class="chart">
+      <canvas id="chart2" style="height: 400px;"></canvas>
+      <div class="chart-description">
+        Esta gráfica de barras muestra el número de seguidores por juego. Es útil para identificar qué juegos tienen una base de seguidores más grande y cómo se comparan entre sí.
+      </div>
+    </div>
+    <div class="chart">
+      <canvas id="chart3" style="height: 400px;"></canvas>
+      <div class="chart-description">
+        Aquí podemos ver la evolución de los espectadores promedio por streamer. Cada punto en la línea representa un streamer, y la altura del punto indica el promedio de espectadores que tiene.
+      </div>
+    </div>
+    <div class="chart">
+      <canvas id="chart4" style="height: 400px;"></canvas>
+      <div class="chart-description">
+        Esta gráfica muestra los 10 juegos más vistos, ordenados por la cantidad de espectadores. Es útil para identificar las tendencias actuales en la plataforma.
+      </div>
+    </div>
+    <div class="chart">
+      <canvas id="chart5" style="height: 400px;"></canvas>
+      <div class="chart-description">
+        Aquí se presentan los 10 streamers más populares, clasificados por la cantidad de espectadores promedio que atraen.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  async function fetchAnalysisData() {
+    try {
+      const response = await fetch('/api/analysis-data');
+      const data = await response.json();
+
+      // Populate the charts with fetched data
+      const gameNames = data.games.map(game => `${game.name} (Viewers: ${game.viewers}, Followers: ${game.followers})`);
+      const gameViewers = data.games.map(game => game.viewers);
+      const gameFollowers = data.games.map(game => game.followers);
+
+      const streamerNames = data.streamers.map(streamer => `${streamer.name} (Followers: ${streamer.followers}, Avg Viewers: ${streamer.avg_viewers})`);
+      const streamerFollowers = data.streamers.map(streamer => streamer.followers);
+      const streamerAvgViewers = data.streamers.map(streamer => streamer.avg_viewers);
+
+      // Update chart1: Pie chart for game viewers
+      new Chart(document.getElementById('chart1').getContext('2d'), {
+        type: 'pie',
+        data: {
+          labels: gameNames,
+          datasets: [{
+            data: gameViewers,
+            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
+          }]
+        },
+        options: {
+          plugins: {
+            title: {
+              display: true,
+              text: 'Juegos más populares (Viewers)'
+            },
+            legend: {
+              position: 'top'
+            }
+          }
+        }
+      });
+
+      // Update chart2: Bar chart for game followers
+      new Chart(document.getElementById('chart2').getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: gameNames,
+          datasets: [{
+            label: 'Seguidores',
+            data: gameFollowers,
+            backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0', '#9966FF']
+          }]
+        },
+        options: {
+          plugins: {
+            title: {
+              display: true,
+              text: 'Seguidores por juego'
+            },
+            legend: {
+              position: 'top'
+            }
+          },
+          scales: {
+            x: {
+              ticks: {
+                autoSkip: false
+              }
+            }
+          }
+        }
+      });
+
+      // Update chart3: Line chart for streamer average viewers
+      new Chart(document.getElementById('chart3').getContext('2d'), {
+        type: 'line',
+        data: {
+          labels: streamerNames,
+          datasets: [{
+            label: 'Espectadores promedio',
+            data: streamerAvgViewers,
+            borderColor: '#36A2EB',
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            fill: true
+          }]
+        },
+        options: {
+          plugins: {
+            title: {
+              display: true,
+              text: 'Espectadores promedio por streamer'
+            },
+            legend: {
+              position: 'top'
+            }
+          },
+          scales: {
+            x: {
+              ticks: {
+                autoSkip: false
+              }
+            }
+          }
+        }
+      });
+    } catch (error) {
+      console.error('Error fetching analysis data:', error);
+    }
+  }
+
+  async function fetchTop10Data() {
+    try {
+      const response = await fetch('/api/analysis-data');
+      const data = await response.json();
+
+      // Top 10 games by viewers
+      const topGames = data.games.sort((a, b) => b.viewers - a.viewers).slice(0, 10);
+      const topGameNames = topGames.map(game => `${game.name} (Viewers: ${game.viewers}, Followers: ${game.followers})`);
+      const topGameViewers = topGames.map(game => game.viewers);
+
+      new Chart(document.getElementById('chart4').getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: topGameNames,
+          datasets: [{
+            label: 'Viewers',
+            data: topGameViewers,
+            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#FFCD56', '#4BC0C0', '#9966FF', '#FF6384']
+          }]
+        },
+        options: {
+          plugins: {
+            title: {
+              display: true,
+              text: 'Top 10 Juegos Más Vistos'
+            },
+            legend: {
+              position: 'top'
+            }
+          },
+          scales: {
+            x: {
+              ticks: {
+                autoSkip: false
+              }
+            }
+          }
+        }
+      });
+
+      // Top 10 streamers by average viewers
+      const topStreamers = data.streamers.sort((a, b) => b.avg_viewers - a.avg_viewers).slice(0, 10);
+      const topStreamerNames = topStreamers.map(streamer => `${streamer.name} (Followers: ${streamer.followers}, Avg Viewers: ${streamer.avg_viewers})`);
+      const topStreamerViewers = topStreamers.map(streamer => streamer.avg_viewers);
+
+      new Chart(document.getElementById('chart5').getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: topStreamerNames,
+          datasets: [{
+            label: 'Avg Viewers',
+            data: topStreamerViewers,
+            backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#FFCD56', '#4BC0C0', '#9966FF', '#FF6384']
+          }]
+        },
+        options: {
+          plugins: {
+            title: {
+              display: true,
+              text: 'Top 10 Streamers Más Vistos'
+            },
+            legend: {
+              position: 'top'
+            }
+          },
+          scales: {
+            x: {
+              ticks: {
+                autoSkip: false
+              }
+            }
+          }
+        }
+      });
+    } catch (error) {
+      console.error('Error fetching top 10 dataa:', error);
+    }
+  }
+
+
+  fetchAnalysisData();
+  fetchTop10Data();
+</script>
+{% endblock %}
