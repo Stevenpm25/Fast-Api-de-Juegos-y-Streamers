@@ -53,8 +53,8 @@
 }
 
 .operation-form {
-    margin-bottom: 1em;
-    padding: 1em;
+    margin-bottom: 0.5em;
+    padding: 0.5em;
 }
 
 .form-group {
@@ -127,12 +127,10 @@ h2, h3 {
 }
 
 .table-wrapper {
-    max-height: calc(4 * 60px + 1em); /* 4 rows of 60px height each plus some margin */
+    max-height: 200px !important;
     overflow-y: auto;
-    overflow-x: auto;
-    margin-top: 1em;
-    width: 100%;
-    box-sizing: border-box;
+    margin: 0.3em 0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .table-container {
@@ -149,12 +147,14 @@ h2, h3 {
     top: 0;
     background-color: rgba(0, 0, 0, 0.8);
     z-index: 1;
-    padding: 10px;
+    padding: 4px 6px !important;
     text-align: left;
+    font-size: 0.85em !important;
+    line-height: 1.2 !important;
 }
 
 .table-container td {
-    padding: 8px;
+    padding: 2px !important;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -222,6 +222,23 @@ h2, h3 {
 
 .table-wrapper tr {
     height: 60px; /* Aumentar la altura de las filas */
+}
+
+td {
+    padding: 4px 6px !important;
+    font-size: 0.85em !important;
+    line-height: 1.2 !important;
+}
+
+th {
+    padding: 4px 6px !important;
+    font-size: 0.85em !important;
+    line-height: 1.2 !important;
+}
+
+img {
+    width: 25px !important;
+    height: 25px !important;
 }
 </style>
 
@@ -512,17 +529,17 @@ h2, h3 {
 
       <!-- Listar todos los streamers -->
       <div id="listForm" class="operation-form rpgui-container framed-golden" style="display: none;">
-          <h3>📋 Lista de Streamers</h3>
-          <div class="table-wrapper" style="max-height: 420px; overflow-y: auto;">
+          <h3 style="margin-bottom: 0.2em; font-size: 0.95em;">📋 Lista de Streamers</h3>
+          <div class="table-wrapper" style="max-height: 200px; overflow-y: auto;">
               <table>
                   <thead>
                       <tr>
-                          <th>ID</th>
-                          <th>Imagen</th>
-                          <th>Nombre</th>
-                          <th>Juego</th>
-                          <th style="min-width: 110px;">Seguidores</th>
-                          <th style="min-width: 150px;">Espectadores Promedio</th>
+                          <th style="padding: 4px 6px;">ID</th>
+                          <th style="padding: 4px 6px;">Imagen</th>
+                          <th style="padding: 4px 6px;">Nombre</th>
+                          <th style="padding: 4px 6px;">Juego</th>
+                          <th style="padding: 4px 6px;">Seguidores</th>
+                          <th style="padding: 4px 6px;">Espectadores Promedio</th>
                       </tr>
                   </thead>
                   <tbody id="listStreamersBody">

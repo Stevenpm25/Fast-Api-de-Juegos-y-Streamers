@@ -406,112 +406,129 @@
         Documentación completa de todos los endpoints disponibles en la API
       </div>
 
-      <!-- Games Endpoints -->
+      <!-- Endpoints HTML -->
+      <div class="endpoint-section">
+        <h4>🌐 Endpoints HTML</h4>
+        
+        <!-- GET / -->
+        <div class="endpoint-box">
+          <div class="endpoint-method get">GET</div>
+          <div class="endpoint-path">/</div>
+          <div class="endpoint-description">
+            Página principal (Home)
+          </div>
+        </div>
+
+        <!-- GET /streamers -->
+        <div class="endpoint-box">
+          <div class="endpoint-method get">GET</div>
+          <div class="endpoint-path">/streamers</div>
+          <div class="endpoint-description">
+            Página de gestión de streamers
+          </div>
+        </div>
+
+        <!-- GET /design -->
+        <div class="endpoint-box">
+          <div class="endpoint-method get">GET</div>
+          <div class="endpoint-path">/design</div>
+          <div class="endpoint-description">
+            Página de diseño del proyecto
+          </div>
+        </div>
+
+        <!-- GET /planning -->
+        <div class="endpoint-box">
+          <div class="endpoint-method get">GET</div>
+          <div class="endpoint-path">/planning</div>
+          <div class="endpoint-description">
+            Página de planificación del proyecto
+          </div>
+        </div>
+
+        <!-- GET /analysis -->
+        <div class="endpoint-box">
+          <div class="endpoint-method get">GET</div>
+          <div class="endpoint-path">/analysis</div>
+          <div class="endpoint-description">
+            Página de análisis de datos
+          </div>
+        </div>
+
+        <!-- GET /creator -->
+        <div class="endpoint-box">
+          <div class="endpoint-method get">GET</div>
+          <div class="endpoint-path">/creator</div>
+          <div class="endpoint-description">
+            Página del creador del proyecto
+          </div>
+        </div>
+      </div>
+
+      <!-- Endpoints de Games -->
       <div class="endpoint-section">
         <h4>🎮 Endpoints de Games</h4>
         
-        <!-- GET /games -->
+        <!-- GET /api/games -->
         <div class="endpoint-box">
           <div class="endpoint-method get">GET</div>
           <div class="endpoint-path">/api/games</div>
           <div class="endpoint-description">
             Obtener lista de todos los juegos
-            <div class="endpoint-details">
-              <span class="detail-label">Response:</span> List[GameWithID]
-            </div>
           </div>
         </div>
 
-        <!-- POST /games -->
-        <div class="endpoint-box">
-          <div class="endpoint-method post">POST</div>
-          <div class="endpoint-path">/api/games</div>
-          <div class="endpoint-description">
-            Crear un nuevo juego
-            <div class="endpoint-details">
-              <span class="detail-label">Body:</span> Form Data
-              <ul class="endpoint-params">
-                <li>game: string</li>
-                <li>date: string (AAAA-MM)</li>
-                <li>hours_watched: integer</li>
-                <li>peak_viewers: integer</li>
-                <li>peak_channels: integer</li>
-                <li>image: file (opcional)</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <!-- GET /games/{id} -->
+        <!-- GET /api/games/{id} -->
         <div class="endpoint-box">
           <div class="endpoint-method get">GET</div>
           <div class="endpoint-path">/api/games/{game_id}</div>
           <div class="endpoint-description">
-            Obtener detalles de un juego específico
-            <div class="endpoint-details">
-              <span class="detail-label">Params:</span> game_id (integer)
-              <span class="detail-label">Response:</span> GameWithID
-            </div>
+            Obtener un juego específico
           </div>
         </div>
 
-        <!-- PUT /games/{id} -->
+        <!-- POST /api/games -->
+        <div class="endpoint-box">
+          <div class="endpoint-method post">POST</div>
+          <div class="endpoint-path">/api/games</div>
+          <div class="endpoint-description">
+            Crear nuevo juego
+          </div>
+        </div>
+
+        <!-- PUT /api/games/{id} -->
         <div class="endpoint-box">
           <div class="endpoint-method put">PUT</div>
           <div class="endpoint-path">/api/games/{game_id}</div>
           <div class="endpoint-description">
             Actualizar un juego completo
-            <div class="endpoint-details">
-              <span class="detail-label">Params:</span> game_id (integer)
-              <span class="detail-label">Body:</span> Form Data
-              <ul class="endpoint-params">
-                <li>game: string</li>
-                <li>date: string</li>
-                <li>hours_watched: integer</li>
-                <li>peak_viewers: integer</li>
-                <li>peak_channels: integer</li>
-                <li>image: file (opcional)</li>
-              </ul>
-            </div>
           </div>
         </div>
 
-        <!-- PATCH /games/{id} -->
+        <!-- PATCH /api/games/partial-update/{id} -->
         <div class="endpoint-box">
           <div class="endpoint-method patch">PATCH</div>
           <div class="endpoint-path">/api/games/partial-update/{game_id}</div>
           <div class="endpoint-description">
             Actualización parcial de un juego
-            <div class="endpoint-details">
-              <span class="detail-label">Params:</span> game_id (integer)
-              <span class="detail-label">Body:</span> Form Data (campos opcionales)
-            </div>
           </div>
         </div>
 
-        <!-- DELETE /games/{id} -->
+        <!-- DELETE /api/games/{id} -->
         <div class="endpoint-box">
           <div class="endpoint-method delete">DELETE</div>
           <div class="endpoint-path">/api/games/{game_id}</div>
           <div class="endpoint-description">
             Eliminar un juego
-            <div class="endpoint-details">
-              <span class="detail-label">Params:</span> game_id (integer)
-            </div>
           </div>
         </div>
 
-        <!-- Endpoints adicionales de Games -->
-        <!-- GET /games/search -->
+        <!-- GET /api/games/search -->
         <div class="endpoint-box">
           <div class="endpoint-method get">GET</div>
           <div class="endpoint-path">/api/games/search</div>
           <div class="endpoint-description">
             Buscar juegos por nombre
-            <div class="endpoint-details">
-              <span class="detail-label">Query:</span> game_name (string)
-              <span class="detail-label">Response:</span> List[GameWithID]
-            </div>
           </div>
         </div>
 
@@ -520,143 +537,93 @@
           <div class="endpoint-method post">POST</div>
           <div class="endpoint-path">/games/import</div>
           <div class="endpoint-description">
-            Importar juegos desde archivo CSV
-            <div class="endpoint-details">
-              <span class="detail-label">Body:</span> file (CSV)
-              <span class="detail-label">Columns:</span> date, game, hours_watched, peak_viewers, peak_channels
-            </div>
+            Importar juegos desde CSV
           </div>
         </div>
 
-        <!-- GET /games/deleted -->
+        <!-- GET /api/games/deleted -->
         <div class="endpoint-box">
           <div class="endpoint-method get">GET</div>
           <div class="endpoint-path">/api/games/deleted</div>
           <div class="endpoint-description">
-            Obtener lista de juegos eliminados
-            <div class="endpoint-details">
-              <span class="detail-label">Response:</span> List[DeletedGame]
-            </div>
+            Ver juegos eliminados
           </div>
         </div>
 
-        <!-- POST /games/recover/{id} -->
+        <!-- POST /api/games/recover/{id} -->
         <div class="endpoint-box">
           <div class="endpoint-method post">POST</div>
           <div class="endpoint-path">/api/games/recover/{game_id}</div>
           <div class="endpoint-description">
-            Recuperar un juego eliminado
-            <div class="endpoint-details">
-              <span class="detail-label">Params:</span> game_id (integer)
-            </div>
+            Recuperar juego eliminado
           </div>
         </div>
       </div>
 
-      <!-- Streamers Endpoints -->
+      <!-- Endpoints de Streamers -->
       <div class="endpoint-section">
         <h4>🎥 Endpoints de Streamers</h4>
         
-        <!-- GET /streamers -->
+        <!-- GET /api/streamers -->
         <div class="endpoint-box">
           <div class="endpoint-method get">GET</div>
           <div class="endpoint-path">/api/streamers</div>
           <div class="endpoint-description">
-            Obtener lista de todos los streamers
-            <div class="endpoint-details">
-              <span class="detail-label">Response:</span> List[StreamerWithID]
-            </div>
+            Obtener lista de streamers
           </div>
         </div>
 
-        <!-- POST /streamers -->
-        <div class="endpoint-box">
-          <div class="endpoint-method post">POST</div>
-          <div class="endpoint-path">/api/streamers</div>
-          <div class="endpoint-description">
-            Crear un nuevo streamer
-            <div class="endpoint-details">
-              <span class="detail-label">Body:</span> Form Data
-              <ul class="endpoint-params">
-                <li>name: string</li>
-                <li>game: string</li>
-                <li>follower_count: integer</li>
-                <li>avg_viewers: integer</li>
-                <li>image: file (opcional)</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <!-- GET /streamers/{id} -->
+        <!-- GET /api/streamers/{id} -->
         <div class="endpoint-box">
           <div class="endpoint-method get">GET</div>
           <div class="endpoint-path">/api/streamers/{streamer_id}</div>
           <div class="endpoint-description">
-            Obtener detalles de un streamer específico
-            <div class="endpoint-details">
-              <span class="detail-label">Params:</span> streamer_id (integer)
-              <span class="detail-label">Response:</span> StreamerWithID
-            </div>
+            Obtener un streamer específico
           </div>
         </div>
 
-        <!-- PUT /streamers/{id} -->
+        <!-- POST /api/streamers -->
+        <div class="endpoint-box">
+          <div class="endpoint-method post">POST</div>
+          <div class="endpoint-path">/api/streamers</div>
+          <div class="endpoint-description">
+            Crear nuevo streamer
+          </div>
+        </div>
+
+        <!-- PUT /api/streamers/{id} -->
         <div class="endpoint-box">
           <div class="endpoint-method put">PUT</div>
           <div class="endpoint-path">/api/streamers/{streamer_id}</div>
           <div class="endpoint-description">
             Actualizar un streamer completo
-            <div class="endpoint-details">
-              <span class="detail-label">Params:</span> streamer_id (integer)
-              <span class="detail-label">Body:</span> Form Data
-              <ul class="endpoint-params">
-                <li>name: string</li>
-                <li>game: string</li>
-                <li>follower_count: integer</li>
-                <li>avg_viewers: integer</li>
-                <li>image: file (opcional)</li>
-              </ul>
-            </div>
           </div>
         </div>
 
-        <!-- PATCH /streamers/{id} -->
+        <!-- PATCH /api/streamers/partial-update/{id} -->
         <div class="endpoint-box">
           <div class="endpoint-method patch">PATCH</div>
           <div class="endpoint-path">/api/streamers/partial-update/{streamer_id}</div>
           <div class="endpoint-description">
             Actualización parcial de un streamer
-            <div class="endpoint-details">
-              <span class="detail-label">Params:</span> streamer_id (integer)
-              <span class="detail-label">Body:</span> Form Data (campos opcionales)
-            </div>
           </div>
         </div>
 
-        <!-- DELETE /streamers/{id} -->
+        <!-- DELETE /api/streamers/{id} -->
         <div class="endpoint-box">
           <div class="endpoint-method delete">DELETE</div>
           <div class="endpoint-path">/api/streamers/{streamer_id}</div>
           <div class="endpoint-description">
             Eliminar un streamer
-            <div class="endpoint-details">
-              <span class="detail-label">Params:</span> streamer_id (integer)
-            </div>
           </div>
         </div>
 
-        <!-- Endpoints adicionales de Streamers -->
-        <!-- GET /streamers/search -->
+        <!-- GET /api/streamers/search -->
         <div class="endpoint-box">
           <div class="endpoint-method get">GET</div>
           <div class="endpoint-path">/api/streamers/search</div>
           <div class="endpoint-description">
             Buscar streamers por nombre
-            <div class="endpoint-details">
-              <span class="detail-label">Query:</span> name (string)
-              <span class="detail-label">Response:</span> List[StreamerWithID]
-            </div>
           </div>
         </div>
 
@@ -665,35 +632,48 @@
           <div class="endpoint-method post">POST</div>
           <div class="endpoint-path">/streamers/import</div>
           <div class="endpoint-description">
-            Importar streamers desde archivo CSV
-            <div class="endpoint-details">
-              <span class="detail-label">Body:</span> file (CSV)
-              <span class="detail-label">Columns:</span> name, game, follower_count, avg_viewers
-            </div>
+            Importar streamers desde CSV
           </div>
         </div>
 
-        <!-- GET /streamers/deleted -->
+        <!-- GET /api/streamers/deleted -->
         <div class="endpoint-box">
           <div class="endpoint-method get">GET</div>
           <div class="endpoint-path">/api/streamers/deleted</div>
           <div class="endpoint-description">
-            Obtener lista de streamers eliminados
-            <div class="endpoint-details">
-              <span class="detail-label">Response:</span> List[DeletedStreamer]
-            </div>
+            Ver streamers eliminados
           </div>
         </div>
 
-        <!-- POST /streamers/recover/{id} -->
+        <!-- POST /api/streamers/recover/{id} -->
         <div class="endpoint-box">
           <div class="endpoint-method post">POST</div>
           <div class="endpoint-path">/api/streamers/recover/{streamer_id}</div>
           <div class="endpoint-description">
-            Recuperar un streamer eliminado
-            <div class="endpoint-details">
-              <span class="detail-label">Params:</span> streamer_id (integer)
-            </div>
+            Recuperar streamer eliminado
+          </div>
+        </div>
+      </div>
+
+      <!-- Endpoints de Sistema -->
+      <div class="endpoint-section">
+        <h4>⚙️ Endpoints de Sistema</h4>
+        
+        <!-- GET /health -->
+        <div class="endpoint-box">
+          <div class="endpoint-method get">GET</div>
+          <div class="endpoint-path">/health</div>
+          <div class="endpoint-description">
+            Verificar estado de la API
+          </div>
+        </div>
+
+        <!-- GET /db-check -->
+        <div class="endpoint-box">
+          <div class="endpoint-method get">GET</div>
+          <div class="endpoint-path">/db-check</div>
+          <div class="endpoint-description">
+            Verificar conexión a la base de datos
           </div>
         </div>
       </div>
@@ -896,7 +876,7 @@
                 <h5>Contenido</h5>
                 <ul>
                   <li>Documentación interactiva</li>
-                  <li>Tutoriales con video</li>
+                  <li>Secciones informativas</li>
                   <li>FAQs expandibles</li>
                   <li>Enlaces a recursos</li>
                 </ul>
