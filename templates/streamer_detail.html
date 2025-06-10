@@ -2,53 +2,6 @@
 {% block title %}Detalles del Streamer{% endblock %}
 
 {% block content %}
-<div class="rpgui-container framed">
-    <div class="streamer-detail rpgui-container framed-golden">
-        <h2>🎮 {{ streamer.name }}</h2>
-
-        <div class="streamer-info">
-            <div class="info-section">
-                <h3 class="rpgui-label">📊 Estadísticas del Streamer</h3>
-                <div class="stat-grid">
-                    <div class="stat-item">
-                        <span class="stat-label">🎮 Juego Principal</span>
-                        <span class="stat-value">{{ streamer.game }}</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">👥 Seguidores</span>
-                        <span class="stat-value">{{ "{:,}".format(streamer.follower_count) }}</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">👀 Espectadores Promedio</span>
-                        <span class="stat-value">{{ "{:,}".format(streamer.avg_viewers) }}</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">📈 Índice de Popularidad</span>
-                        <span class="stat-value">
-                            {% set popularity = (streamer.follower_count / 10000) + (streamer.avg_viewers * 10) %}
-                            {% if popularity > 1000 %}⭐️⭐️⭐️⭐️⭐️
-                            {% elif popularity > 500 %}⭐️⭐️⭐️⭐️
-                            {% elif popularity > 200 %}⭐️⭐️⭐️
-                            {% elif popularity > 100 %}⭐️⭐️
-                            {% else %}⭐️
-                            {% endif %}
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="action-buttons">
-            <button class="rpgui-button" onclick="showEditForm()" type="button">
-                <span>✏️ Editar</span>
-            </button>
-            <button class="rpgui-button" onclick="confirmDelete()" type="button">
-                <span>🗑️ Eliminar</span>
-            </button>
-            <a href="/" class="rpgui-button" onclick="playBowSound()">
-                <span>↩️ Volver al Inicio</span>
-            </a>
-        </div>
 
         <!-- Formulario de Edición (oculto por defecto) -->
         <div id="editForm" class="edit-form" style="display: none;">

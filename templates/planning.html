@@ -369,20 +369,16 @@
             <div class="use-case-item">
               <h6>Ver listado de juegos</h6>
               <p>• Visualizar grid de juegos con estadísticas</p>
-              <p>• Filtrar por fecha y métricas</p>
               <p>• Ver detalles expandidos</p>
             </div>
             <div class="use-case-item">
               <h6>Ver listado de streamers</h6>
-              <p>• Explorar streamers activos</p>
               <p>• Filtrar por juego y métricas</p>
-              <p>• Acceder a perfiles detallados</p>
             </div>
             <div class="use-case-item">
               <h6>Búsqueda Avanzada</h6>
               <p>• Búsqueda por nombre/título</p>
               <p>• Filtros combinados</p>
-              <p>• Ordenamiento personalizado</p>
             </div>
             <div class="use-case-item">
               <h6>Análisis de Datos</h6>
@@ -443,14 +439,10 @@
             <div class="use-case-item">
               <h6>Gestión de Storage</h6>
               <p>• Almacenamiento en Supabase</p>
-              <p>• Distribución por CDN</p>
-              <p>• Limpieza automática</p>
             </div>
             <div class="use-case-item">
               <h6>Validación de Datos</h6>
               <p>• Verificación de integridad</p>
-              <p>• Sanitización de inputs</p>
-              <p>• Control de duplicados</p>
             </div>
             <div class="use-case-item">
               <h6>Sistema de Logs</h6>
@@ -480,11 +472,11 @@
     <!-- Modelo de Datos Detallado -->
     <div class="planning-card">
       <h3>🗄️ Modelo de Datos Detallado</h3>
-      
+
       <div class="planning-box">
         <h4>Estructura de Base de Datos</h4>
         <img src="/static/image/db_schema.png" alt="Esquema de Base de Datos" style="width: 100%; margin: 20px 0;">
-        
+
         <div class="planning-list">
           <h5>Tabla Games:</h5>
           <ul>
@@ -535,7 +527,7 @@
     <!-- Timeline Detallado -->
     <div class="planning-card">
       <h3>📅 Timeline Detallado del Proyecto</h3>
-      
+
       <div class="timeline">
         <div class="timeline-item">
           <div class="timeline-date">Fase 1: Inicialización</div>
@@ -590,7 +582,7 @@
     <!-- Integración y Deployment Detallado -->
     <div class="planning-card">
       <h3>🚀 Integración y Deployment Detallado</h3>
-      
+
       <div class="planning-box">
         <h4>Clever Cloud Setup</h4>
         <div class="planning-list">
@@ -599,9 +591,6 @@
             <li>PostgreSQL addon con plan dev</li>
             <li>Configuración de puerto 50013</li>
             <li>Setup de variables de entorno</li>
-            <li>Configuración de SSL/TLS</li>
-            <li>Gestión de conexiones pool</li>
-            <li>Backups automáticos diarios</li>
           </ul>
         </div>
 
@@ -645,7 +634,7 @@
     <!-- Control de Versiones Detallado -->
     <div class="planning-card">
       <h3>🔄 Control de Versiones Detallado</h3>
-      
+
       <!-- Abril 2024 - Desarrollo Base -->
       <div class="commit-box">
         <div class="commit-hash">f3e2a1b</div>
@@ -717,7 +706,7 @@
     <!-- Stack Tecnológico Detallado -->
     <div class="planning-card">
       <h3>🛠️ Stack Tecnológico Detallado</h3>
-      
+
       <div class="tech-stack">
         <div class="tech-item">
           <div class="tech-icon">🐍</div>
@@ -769,6 +758,78 @@
               <li>Integración FastAPI</li>
             </ul>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nueva sección: Fuente de Datos -->
+    <div class="planning-card">
+      <h3>📊 Fuente de los Datos</h3>
+      <div class="planning-box">
+        <p>La información utilizada para poblar la base de datos fue obtenida de conjuntos de datos disponibles públicamente en Kaggle, una plataforma reconocida por su amplia recopilación de datasets del mundo real.</p>
+        <div class="planning-list">
+          <h5>Proceso de Datos:</h5>
+          <ul>
+            <li>Limpieza y adaptación de datasets originales</li>
+            <li>Transformación al formato requerido por la plataforma</li>
+            <li>Carga mediante formularios de importación CSV</li>
+            <li>Validación y verificación de integridad</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nueva sección: Casos de Uso -->
+    <div class="planning-card">
+      <h3>👥 Casos de Uso</h3>
+      <div class="planning-box">
+        <h4>Administrador del Sistema:</h4>
+        <ul class="planning-list">
+          <li>Crear, consultar, actualizar, eliminar y recuperar registros de videojuegos y streamers</li>
+          <li>Subir imágenes asociadas a cada entidad mediante formularios HTML personalizados</li>
+          <li>Importar datos en formato CSV para cargar información masiva de manera eficiente</li>
+          <li>Visualizar y gestionar los datos desde interfaces web estilizadas con temática RPG</li>
+          <li>Consultar estadísticas visuales mediante dashboards con gráficas interactivas</li>
+        </ul>
+
+        <h4>Sistema / Plataforma Web:</h4>
+        <ul class="planning-list">
+          <li>Validar entradas de datos antes de almacenarlas</li>
+          <li>Gestionar endpoints CRUD a través de una API REST construida con FastAPI</li>
+          <li>Conectarse a una base de datos PostgreSQL alojada en Clever Cloud</li>
+          <li>Procesar la carga y visualización de imágenes mediante integración con Supabase</li>
+          <li>Renderizar plantillas HTML con Jinja2, permitiendo una interacción fluida con el usuario</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Nueva sección: Modelo de Datos con Soporte de Imágenes -->
+    <div class="planning-card">
+      <h3>🗄️ Modelo de Datos con Soporte de Imágenes</h3>
+      <div class="planning-box">
+        <h4>1. Modelo: Game</h4>
+        <ul class="planning-list">
+          <li>id: Identificador único</li>
+          <li>game: Nombre del videojuego</li>
+          <li>date: Fecha de registro o análisis</li>
+          <li>hours_watched: Total de horas vistas por los espectadores</li>
+          <li>peak_viewers: Máximo de espectadores simultáneos</li>
+          <li>peak_channels: Máximo número de canales transmitiendo el juego</li>
+          <li>image_url: Enlace a la imagen del juego alojada en Supabase</li>
+        </ul>
+
+        <h4>2. Modelo: Streamer</h4>
+        <ul class="planning-list">
+          <li>id: Identificador único</li>
+          <li>name: Nombre del streamer</li>
+          <li>game: Videojuego principal transmitido</li>
+          <li>follower_count: Número total de seguidores</li>
+          <li>avg_viewers: Promedio de espectadores por transmisión</li>
+          <li>image_url: Enlace a la imagen del streamer alojada en Supabase</li>
+        </ul>
+
+        <div class="explanation-box">
+          <p>Ambos modelos permiten la gestión completa de datos mediante formularios web y endpoints REST. Las imágenes son subidas desde el navegador y se almacenan externamente para mejorar el rendimiento y escalabilidad del sistema. Esta estructura facilita tanto la gestión operativa como el análisis visual posterior.</p>
         </div>
       </div>
     </div>

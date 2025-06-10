@@ -15,6 +15,8 @@
     position: sticky;
     top: 20px;
     width: 300px;
+    max-height: calc(100vh - 150px);
+    overflow-y: auto;
 }
 
 .forms-container {
@@ -37,12 +39,16 @@
 .crud-buttons {
     position: sticky;
     top: 0;
+    padding: 15px;
 }
 
 .button-row {
     display: flex;
     flex-direction: column;
     gap: 0.8em;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+    padding-right: 10px;
 }
 
 .button-row .rpgui-button {
@@ -50,6 +56,25 @@
     padding: 0.6em 1.2em !important; /* Match padding with games CRUD */
     font-size: 0.9em; /* Adjust font size for consistency */
     min-height: unset !important;
+}
+
+.button-row::-webkit-scrollbar {
+    width: 8px;
+}
+
+.button-row::-webkit-scrollbar-track {
+    background: rgba(0, 255, 0, 0.1);
+    border-radius: 10px;
+}
+
+.button-row::-webkit-scrollbar-thumb {
+    background: rgba(0, 255, 0, 0.3);
+    border-radius: 10px;
+    border: 2px solid rgba(0, 255, 0, 0.1);
+}
+
+.button-row::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 255, 0, 0.5);
 }
 
 .operation-form {
